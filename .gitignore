@@ -1,4 +1,2 @@
-build/
-traffic_sim
+demo.exe
 *.o
-.DS_Store
