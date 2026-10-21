@@ -2,3 +2,5 @@ build/
 traffic_sim
 *.o
 .DS_Store
+*.exe
+*.out
