@@ -1,24 +1,13 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -Iinclude -g
-SRC_DIR = src
-OBJ_DIR = build
-TARGET = traffic_sim
+CXXFLAGS = -std=c++14 -Wall -Wextra -Iinclude
 
-SRCS = $(wildcard $(SRC_DIR)/*.cpp)
-OBJS = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRCS))
+SRC = src/ConsoleView.cpp src/StatisticsCollector.cpp src/demo_main.cpp
 
-all: $(TARGET)
+demo.exe: $(SRC)
+	$(CXX) $(CXXFLAGS) $(SRC) -o demo.exe
 
-$(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $^
-
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-$(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
+run: demo.exe
+	demo.exe
 
 clean:
-	rm -rf $(OBJ_DIR) $(TARGET)
-
-.PHONY: all clean
+	del /Q demo.exe 2>nul || true
