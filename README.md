@@ -1,5 +1,7 @@
 # Traffic Management System
 
+[![CI](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/workflows/ci-cd.yml)
+
 A C++14 traffic-intersection simulation for the Team 16 project. The current implementation demonstrates randomized vehicle arrivals across four lanes, a rotating green signal, lane queues, and a per-lane traffic summary.
 
 ## Project structure
