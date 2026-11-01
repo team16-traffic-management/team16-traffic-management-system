@@ -1,13 +1,24 @@
 CXX = g++
 CXXFLAGS = -std=c++14 -Wall -Wextra -Iinclude
 
-SRC = src/ConsoleView.cpp src/StatisticsCollector.cpp src/demo_main.cpp
+TARGET = build/traffic-management
+SOURCE = src/main.cpp
 
-demo.exe: $(SRC)
-	$(CXX) $(CXXFLAGS) $(SRC) -o demo.exe
+.PHONY: all test sanitize clean
 
-run: demo.exe
-	demo.exe
+all: $(TARGET)
+
+$(TARGET): $(SOURCE)
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) $(SOURCE) -o $(TARGET)
+
+test: $(TARGET)
+	./$(TARGET)
+
+sanitize:
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) -g -O1 -fno-omit-frame-pointer -fsanitize=address,undefined $(SOURCE) -o build/traffic-management-sanitized
+	ASAN_OPTIONS=detect_leaks=1 ./build/traffic-management-sanitized
 
 clean:
-	del /Q demo.exe 2>nul || true
+	rm -rf build
