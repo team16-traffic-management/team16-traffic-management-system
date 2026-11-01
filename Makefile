@@ -1,22 +1,28 @@
-CXX      = g++
-CXXFLAGS = -std=c++14 -Wall -Wextra
-INCLUDES = -I. -Icommon -Ivehicle -Isimulation -Istatistics -Iconsole
-SOURCES  = main.cpp $(wildcard vehicle/*.cpp) $(wildcard simulation/*.cpp) \
-           $(wildcard statistics/*.cpp) $(wildcard console/*.cpp)
+CXX = g++
+CXXFLAGS = -std=c++14 -Wall -Wextra -Wpedantic
+APP_SOURCES = src/main.cpp vehicle/VehicleGenerator.cpp
+TEST_SOURCES = tests/test_traffic_management.cpp vehicle/VehicleGenerator.cpp
 
 .PHONY: all test sanitize clean
 
-all:
-	mkdir -p build
-	$(CXX) $(CXXFLAGS) $(INCLUDES) $(SOURCES) -o build/traffic-management
+all: build/traffic-management
 
-test: all
+build/traffic-management: $(APP_SOURCES) vehicle/VehicleGenerator.h
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) $(APP_SOURCES) -o $@
+
+build/test-traffic-management: $(TEST_SOURCES) vehicle/VehicleGenerator.h
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) $(TEST_SOURCES) -o $@
+
+test: all build/test-traffic-management
+	./build/test-traffic-management
 	./build/traffic-management
 
 sanitize:
 	mkdir -p build
-	$(CXX) $(CXXFLAGS) -g -O1 -fno-omit-frame-pointer -fsanitize=address,undefined $(INCLUDES) $(SOURCES) -o build/traffic-management-sanitized
-	./build/traffic-management-sanitized
+	$(CXX) $(CXXFLAGS) -g -O1 -fno-omit-frame-pointer -fsanitize=address,undefined $(TEST_SOURCES) -o build/test-traffic-management-sanitized
+	./build/test-traffic-management-sanitized
 
 clean:
 	rm -rf build
