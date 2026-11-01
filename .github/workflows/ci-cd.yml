@@ -11,8 +11,8 @@ permissions:
   contents: read
 
 jobs:
-  build-test:
-    name: Build, smoke test and memory-safety check
+  test:
+    name: test
     runs-on: ubuntu-latest
 
     steps:
