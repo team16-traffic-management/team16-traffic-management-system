@@ -1,24 +1,12 @@
-CXX = g++
-CXXFLAGS = -std=c++14 -Wall -Wextra -Iinclude
+CXX      = g++
+CXXFLAGS = -std=c++14 -Wall -Wextra
+INCLUDES = -I. -Icommon -Ivehicle -Isimulation -Istatistics -Iconsole
+SOURCES  = main.cpp $(wildcard vehicle/*.cpp) $(wildcard simulation/*.cpp) \
+           $(wildcard statistics/*.cpp) $(wildcard console/*.cpp)
 
-TARGET = build/traffic-management
-SOURCE = src/main.cpp
-
-.PHONY: all test sanitize clean
-
-all: $(TARGET)
-
-$(TARGET): $(SOURCE)
+all:
 	mkdir -p build
-	$(CXX) $(CXXFLAGS) $(SOURCE) -o $(TARGET)
-
-test: $(TARGET)
-	./$(TARGET)
-
-sanitize:
-	mkdir -p build
-	$(CXX) $(CXXFLAGS) -g -O1 -fno-omit-frame-pointer -fsanitize=address,undefined $(SOURCE) -o build/traffic-management-sanitized
-	ASAN_OPTIONS=detect_leaks=1 ./build/traffic-management-sanitized
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(SOURCES) -o build/traffic-management
 
 clean:
 	rm -rf build
