@@ -15,8 +15,9 @@ build/test-traffic-management: $(TEST_SOURCES) vehicle/VehicleGenerator.h
 	mkdir -p build
 	$(CXX) $(CXXFLAGS) $(TEST_SOURCES) -o $@
 
-test: build/test-traffic-management
+test: all build/test-traffic-management
 	./build/test-traffic-management
+	./build/traffic-management
 
 sanitize:
 	mkdir -p build
