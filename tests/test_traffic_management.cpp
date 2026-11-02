@@ -233,6 +233,6 @@ int main() {
     testEmergencyPriority();
     testQueueCapacity();
     testEmptyDequeue();
-    std::cout << "All " << passed << " checks passed.\\n";
+    std::cout << "All " << passed << " checks passed.\n";
     return EXIT_SUCCESS;
 }
