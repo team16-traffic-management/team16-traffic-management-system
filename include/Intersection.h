@@ -1,6 +1,7 @@
 #ifndef INTERSECTION_H
 #define INTERSECTION_H
 
+#include <cstddef>
 #include <string>
 #include <vector>
 
@@ -13,7 +14,7 @@ public:
 
     void addLane(
         const std::string& laneName,
-        size_t capacity = 20
+        std::size_t capacity = 20
     );
 
     void update(int tick);
