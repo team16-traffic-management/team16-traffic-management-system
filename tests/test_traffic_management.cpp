@@ -1,4 +1,5 @@
 #include "../vehicle/VehicleGenerator.h"
+#include "../include/StatisticsCollector.h"
 
 #include <cmath>
 #include <cstdlib>
@@ -17,6 +18,29 @@ void check(bool condition, const char* message) {
     ++passed;
 }
 
+void testStatisticsMetrics() {
+    StatisticsCollector stats;
+    const Vehicle one(1, 2), two(2, 5, VehicleType::EMERGENCY);
+    stats.recordDequeue("I1", "North", one, 6);
+    stats.recordDequeue("I1", "North", two, 9);
+    check(stats.averageWaitTime() == 4.0, "average waiting time calculated from dequeue events");
+    check(stats.totalThroughput() == 2, "throughput counts processed vehicles");
+    stats.recordBlocked("I1", "North", 10);
+    stats.recordBlocked("I1", "South", 11);
+    check(stats.totalBlocked() == 2, "blocked vehicles counted");
+    stats.recordPreemption("I1", "North", 12);
+    check(stats.totalPreemptions() == 1, "preemption events counted");
+    check(stats.getBlockedEvents().size() == 2 && stats.getBlockedEvents()[1].tick == 11,
+          "blocked timestamps are retained");
+    check(stats.getPreemptionEvents().size() == 1 && stats.getPreemptionEvents()[0].tick == 12,
+          "preemption timestamps are retained");
+}
+void testEmptyStatistics() {
+    StatisticsCollector stats;
+    check(stats.averageWaitTime() == 0.0, "empty average wait is zero");
+    check(stats.totalThroughput() == 0 && stats.totalBlocked() == 0 && stats.totalPreemptions() == 0,
+          "empty counters are zero");
+}
 void testProbabilityBoundaries() {
     VehicleGenerator generator({0.0, 1.0}, 7);
     for (std::uint64_t tick = 0; tick < 100; ++tick) {
@@ -95,6 +119,8 @@ void testInvalidConfiguration() {
 }
 
 int main() {
+    testStatisticsMetrics();
+    testEmptyStatistics();
     testProbabilityBoundaries();
     testArrivalRates();
     testConfigurationUpdates();
