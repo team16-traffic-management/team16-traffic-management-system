@@ -132,23 +132,11 @@ std::int64_t StatisticsCollector::totalThroughput() const {
 }
 
 std::int64_t StatisticsCollector::totalBlocked() const {
-    std::int64_t total = 0;
-
-    for (const auto& entry : blockedEvents_) {
-        total += entry.second;
-    }
-
-    return total;
+    return static_cast<std::int64_t>(blockedTimestamps_.size());
 }
 
 std::int64_t StatisticsCollector::totalPreemptions() const {
-    std::int64_t total = 0;
-
-    for (const auto& entry : preemptionEvents_) {
-        total += entry.second;
-    }
-
-    return total;
+    return static_cast<std::int64_t>(preemptionTimestamps_.size());
 }
 
 void StatisticsCollector::printEndOfRunReport(int runTicks) const {
