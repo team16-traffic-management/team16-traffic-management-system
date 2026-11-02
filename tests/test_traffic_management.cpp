@@ -1,4 +1,5 @@
 #include "../vehicle/VehicleGenerator.h"
+#include "../include/TrafficSignalController.h"
 
 #include <cmath>
 #include <cstdlib>
@@ -17,6 +18,52 @@ void check(bool condition, const char* message) {
     ++passed;
 }
 
+void testSignalTransitions() {
+    SignalController controller(2, 1, 2);
+    controller.addLane("A"); controller.addLane("B");
+    check(controller.getCurrentPhase("A") == SignalPhase::GREEN, "initial lane is green");
+    controller.updateSignalState(2);
+    check(controller.getCurrentPhase("A") == SignalPhase::YELLOW, "green transitions to yellow");
+    controller.updateSignalState(1);
+    check(controller.getCurrentPhase("A") == SignalPhase::RED, "yellow transitions to red");
+    controller.updateSignalState(2);
+    check(controller.getCurrentPhase("B") == SignalPhase::GREEN, "red transitions to next lane green");
+}
+void testLargeTickUpdates() {
+    SignalController controller(2, 1, 2);
+    controller.addLane("A"); controller.addLane("B");
+    controller.updateSignalState(5);
+    check(controller.getCurrentPhase("B") == SignalPhase::GREEN, "large delta processes multiple transitions");
+    controller.updateSignalState(1);
+    check(controller.getCurrentPhase("B") == SignalPhase::GREEN, "elapsed remainder is preserved");
+}
+void testConflictingGreenSignals() {
+    SignalController controller;
+    controller.addLane("A"); controller.addLane("B");
+    check(controller.getCurrentPhase("A") == SignalPhase::GREEN, "one active lane is green");
+    check(controller.getCurrentPhase("B") == SignalPhase::RED, "conflicting lane remains red");
+}
+void testAdaptiveTimingPreservesBase() {
+    SignalController controller(6, 2, 4);
+    controller.addLane("A"); controller.addLane("B");
+    controller.setAdaptiveMode(true, 5);
+    controller.updateAdaptiveTimers({{"A", 10}});
+    controller.updateSignalState(6);
+    check(controller.getCurrentPhase("A") == SignalPhase::YELLOW, "adaptive green duration extends configured base");
+    controller.updateSignalState(2); controller.updateSignalState(4);
+    check(controller.getCurrentPhase("B") == SignalPhase::GREEN, "cycle advances after configured phases");
+    controller.updateAdaptiveTimers({{"B", 0}});
+    controller.updateSignalState(6);
+    check(controller.getCurrentPhase("B") == SignalPhase::YELLOW, "low queue restores configured base green duration");
+}
+void testEmergencyPreemption() {
+    SignalController controller(10, 3, 10);
+    controller.addLane("A"); controller.addLane("B");
+    check(controller.preempt("B"), "emergency request accepted");
+    check(controller.getCurrentPhase("B") == SignalPhase::GREEN, "emergency lane receives immediate green");
+    check(controller.getCurrentPhase("A") == SignalPhase::RED, "previous lane is immediately red");
+    check(!controller.preempt("missing"), "unknown lane preemption rejected");
+}
 void testProbabilityBoundaries() {
     VehicleGenerator generator({0.0, 1.0}, 7);
     for (std::uint64_t tick = 0; tick < 100; ++tick) {
@@ -95,6 +142,11 @@ void testInvalidConfiguration() {
 }
 
 int main() {
+    testSignalTransitions();
+    testLargeTickUpdates();
+    testConflictingGreenSignals();
+    testAdaptiveTimingPreservesBase();
+    testEmergencyPreemption();
     testProbabilityBoundaries();
     testArrivalRates();
     testConfigurationUpdates();
