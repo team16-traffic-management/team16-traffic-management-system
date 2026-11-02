@@ -1,15 +1,18 @@
+#include "../include/LaneQueue.h"
 #include "../vehicle/VehicleGenerator.h"
 
 #include <array>
 #include <cstddef>
 #include <iostream>
-#include <queue>
 #include <vector>
 
 int main() {
     const std::vector<double> arrivalRates = {0.65, 0.45, 0.30, 0.55};
     VehicleGenerator generator(arrivalRates, 2026);
-    std::array<std::queue<Vehicle>, 4> laneQueues;
+    std::array<LaneQueue, 4> laneQueues = {{
+        LaneQueue("Lane 1", 20), LaneQueue("Lane 2", 20),
+        LaneQueue("Lane 3", 20), LaneQueue("Lane 4", 20)
+    }};
     std::array<std::size_t, 4> vehiclesPassed = {{0, 0, 0, 0}};
     const std::size_t simulationTicks = 20;
     const std::size_t greenLaneDuration = 3;
@@ -20,19 +23,20 @@ int main() {
     for (std::size_t tick = 0; tick < simulationTicks; ++tick) {
         const std::vector<Vehicle> arrivals = generator.generateForTick(tick);
         for (const Vehicle& vehicle : arrivals) {
-            laneQueues[vehicle.lane].push(vehicle);
+            if (!laneQueues[vehicle.lane].enqueue(vehicle)) {
+                std::cout << "Lane " << vehicle.lane + 1 << " is full; vehicle "
+                          << vehicle.id << " was blocked.\n";
+            }
         }
 
         const std::size_t greenLane = (tick / greenLaneDuration) % laneQueues.size();
-        if (!laneQueues[greenLane].empty()) {
-            laneQueues[greenLane].pop();
+        if (!laneQueues[greenLane].isEmpty()) {
+            laneQueues[greenLane].dequeue();
             ++vehiclesPassed[greenLane];
         }
 
         std::size_t waiting = 0;
-        for (const auto& lane : laneQueues) {
-            waiting += lane.size();
-        }
+        for (const auto& lane : laneQueues) waiting += lane.size();
 
         std::cout << "Tick " << tick + 1
                   << " | Green: Lane " << greenLane + 1
