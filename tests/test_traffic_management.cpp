@@ -14,7 +14,7 @@ int passed = 0;
 
 void check(bool condition, const char* message) {
     if (!condition) {
-        std::cerr << "FAIL: " << message << '\\n';
+        std::cerr << "FAIL: " << message << '\n';
         std::exit(EXIT_FAILURE);
     }
     ++passed;
