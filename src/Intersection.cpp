@@ -16,7 +16,7 @@ Intersection::Intersection(std::string id)
 
 void Intersection::addLane(
     const std::string& laneName,
-    size_t capacity
+    std::size_t capacity
 ) {
     if (laneName.empty()) {
         throw std::invalid_argument(
