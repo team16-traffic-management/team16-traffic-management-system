@@ -1,37 +1,93 @@
+
 #ifndef VEHICLE_GENERATOR_H
 #define VEHICLE_GENERATOR_H
 
-#include <cstddef>
 #include <cstdint>
 #include <random>
-#include <vector>
+#include <string>
+#include <tuple>
+#include <unordered_map>
 
-struct Vehicle {
-    std::uint64_t id;
-    std::size_t lane;
-    std::uint64_t tick;
-};
+#include "Vehicle.h"
 
 class VehicleGenerator {
 public:
-    explicit VehicleGenerator(const std::vector<double>& laneArrivalRates,
-                              std::uint32_t seed = std::random_device{}());
+    VehicleGenerator(
+        double arrivalRate = 0.4,
+        double emergencyProbability = 0.05,
+        unsigned int seed = 42
+    );
 
-    std::vector<Vehicle> generateForTick(std::uint64_t tick);
+    // Existing methods (backward compatibility)
+    void configureLane(
+        const std::string& laneName,
+        double arrivalRate
+    );
 
-    void setArrivalRate(std::size_t lane, double probability);
-    void setArrivalRates(const std::vector<double>& probabilities);
+    bool shouldGenerate(const std::string& laneName);
 
-    double getArrivalRate(std::size_t lane) const;
-    std::size_t getLaneCount() const;
+    Vehicle generateVehicle(
+        const std::string& laneName,
+        int currentTick
+    );
+
+    // Intersection-aware methods
+    void configureLane(
+        const std::string& intersectionId,
+        const std::string& laneName,
+        double arrivalRate
+    );
+
+    bool shouldGenerate(
+        const std::string& intersectionId,
+        const std::string& laneName
+    );
+
+    Vehicle generateVehicle(
+        const std::string& intersectionId,
+        const std::string& laneName,
+        int currentTick
+    );
 
 private:
-    static void validateProbability(double probability);
+    struct LaneRandomState {
+        double arrivalRate;
+        std::mt19937 rng;
 
-    std::vector<double> arrivalRates_;
-    std::mt19937 engine_;
-    std::uniform_real_distribution<double> distribution_;
-    std::uint64_t nextVehicleId_;
+        std::uniform_real_distribution<double> arrivalDist{0.0, 1.0};
+        std::uniform_real_distribution<double> emergencyDist{0.0, 1.0};
+
+        LaneRandomState(double rate, unsigned int seed)
+            : arrivalRate(rate), rng(seed) {}
+    };
+
+    double defaultArrivalRate_;
+    double emergencyProbability_;
+
+    std::int64_t nextVehicleId_{1001};
+
+    unsigned int baseSeed_;
+
+    std::unordered_map<std::string, LaneRandomState> laneStates;
+
+    LaneRandomState& getLaneState(
+        const std::string& laneKey
+    );
+
+    static std::string makeLaneKey(
+        const std::string& intersectionId,
+        const std::string& laneName
+    );
+
+    static void validateProbability(
+        double probability,
+        const std::string& fieldName
+    );
+
+    Vehicle generateVehicleFromState(
+        LaneRandomState& state,
+        int currentTick
+    );
 };
 
 #endif
