@@ -54,7 +54,7 @@ void StatisticsCollector::recordBlocked(
         throw std::invalid_argument("Tick cannot be negative");
     }
 
-    blockedEvents_[makeLaneKey(intersectionId, laneName)]++;
+    (void)makeLaneKey(intersectionId, laneName);\n    blockedTimestamps_.push_back({intersectionId, laneName, tick});
 }
 
 void StatisticsCollector::recordPreemption(
@@ -66,7 +66,7 @@ void StatisticsCollector::recordPreemption(
         throw std::invalid_argument("Tick cannot be negative");
     }
 
-    preemptionEvents_[makeLaneKey(intersectionId, laneName)]++;
+    (void)makeLaneKey(intersectionId, laneName);\n    preemptionTimestamps_.push_back({intersectionId, laneName, tick});
 }
 
 void StatisticsCollector::updateMaxQueueLength(
@@ -221,3 +221,7 @@ void StatisticsCollector::printEndOfRunReport(int runTicks) const {
     std::cout
         << "==========================================================================\n\n";
 }
+
+const std::vector<DequeueEvent>& StatisticsCollector::getDequeueEvents() const { return events_; }
+const std::vector<CountEvent>& StatisticsCollector::getBlockedEvents() const { return blockedTimestamps_; }
+const std::vector<CountEvent>& StatisticsCollector::getPreemptionEvents() const { return preemptionTimestamps_; }
