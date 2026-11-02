@@ -1,0 +1,16 @@
+
+# Traffic Management System Configuration
+
+# General simulation settings
+total_ticks=10000
+emergency_probability=0.08
+adaptive_mode=true
+
+# Independent lane arrival probabilities
+North_Bound=0.30
+South_Bound=0.40
+East_Bound=0.50
+West_Bound=0.35
+
+# Lane queue capacity
+queue_capacity=15

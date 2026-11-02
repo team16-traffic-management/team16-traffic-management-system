@@ -1,0 +1,185 @@
+==================================================
+ STARTING TRAFFIC MANAGEMENT SIMULATION
+==================================================
+
+Configuration loaded successfully from config.txt
+
+Configuration:
+Total ticks: 30
+Queue capacity: 15
+Emergency probability: 0.08
+Adaptive mode: enabled
+
+[Tick      1] ----------------------------------------
+  Lane North_Bound  | Signal: GREEN  | Queue: 0  []
+  Lane South_Bound  | Signal: RED    | Queue: 1  [#]
+  Lane East_Bound   | Signal: RED    | Queue: 1  [#]
+  Lane West_Bound   | Signal: RED    | Queue: 0  []
+[Tick 2     ] ----------------------------------------
+  Lane North_Bound  | Signal: GREEN  | Queue: 0  []
+  Lane South_Bound  | Signal: RED    | Queue: 1  [#]
+  Lane East_Bound   | Signal: RED    | Queue: 2  [##]
+  Lane West_Bound   | Signal: RED    | Queue: 1  [#]
+[Tick 3     ] ----------------------------------------
+  Lane North_Bound  | Signal: GREEN  | Queue: 0  []
+  Lane South_Bound  | Signal: RED    | Queue: 1  [#]
+  Lane East_Bound   | Signal: RED    | Queue: 3  [###]
+  Lane West_Bound   | Signal: RED    | Queue: 1  [#]
+[Tick 4     ] ----------------------------------------
+  Lane North_Bound  | Signal: GREEN  | Queue: 0  []
+  Lane South_Bound  | Signal: RED    | Queue: 2  [##]
+  Lane East_Bound   | Signal: RED    | Queue: 3  [###]
+  Lane West_Bound   | Signal: RED    | Queue: 1  [#]
+[Tick 5     ] ----------------------------------------
+  Lane North_Bound  | Signal: GREEN  | Queue: 0  []
+  Lane South_Bound  | Signal: RED    | Queue: 2  [##]
+  Lane East_Bound   | Signal: RED    | Queue: 3  [###]
+  Lane West_Bound   | Signal: RED    | Queue: 1  [#]
+[Tick 6     ] ----------------------------------------
+  Lane North_Bound  | Signal: GREEN  | Queue: 0  []
+  Lane South_Bound  | Signal: RED    | Queue: 2  [##]
+  Lane East_Bound   | Signal: RED    | Queue: 3  [###]
+  Lane West_Bound   | Signal: RED    | Queue: 1  [#]
+[Tick 7     ] ----------------------------------------
+  Lane North_Bound  | Signal: GREEN  | Queue: 0  []
+  Lane South_Bound  | Signal: RED    | Queue: 3  [###]
+  Lane East_Bound   | Signal: RED    | Queue: 4  [####]
+  Lane West_Bound   | Signal: RED    | Queue: 1  [#]
+[Tick 8     ] ----------------------------------------
+  Lane North_Bound  | Signal: GREEN  | Queue: 0  []
+  Lane South_Bound  | Signal: RED    | Queue: 3  [###]
+  Lane East_Bound   | Signal: RED    | Queue: 4  [####]
+  Lane West_Bound   | Signal: RED    | Queue: 1  [#]
+[Tick 9     ] ----------------------------------------
+  Lane North_Bound  | Signal: GREEN  | Queue: 0  []
+  Lane South_Bound  | Signal: RED    | Queue: 4  [####]
+  Lane East_Bound   | Signal: RED    | Queue: 4  [####]
+  Lane West_Bound   | Signal: RED    | Queue: 1  [#]
+[Tick 10    ] ----------------------------------------
+  Lane North_Bound  | Signal: YELLOW | Queue: 0  []
+  Lane South_Bound  | Signal: RED    | Queue: 4  [####]
+  Lane East_Bound   | Signal: RED    | Queue: 4  [####]
+  Lane West_Bound   | Signal: RED    | Queue: 1  [#]
+[Tick 11    ] ----------------------------------------
+  Lane North_Bound  | Signal: YELLOW | Queue: 0  []
+  Lane South_Bound  | Signal: RED    | Queue: 4  [####]
+  Lane East_Bound   | Signal: RED    | Queue: 4  [####]
+  Lane West_Bound   | Signal: RED    | Queue: 2  [##]
+[Tick 12    ] ----------------------------------------
+  Lane North_Bound  | Signal: YELLOW | Queue: 0  []
+  Lane South_Bound  | Signal: RED    | Queue: 5  [#####]
+  Lane East_Bound   | Signal: RED    | Queue: 5  [#####]
+  Lane West_Bound   | Signal: RED    | Queue: 2  [##]
+[Tick 13    ] ----------------------------------------
+  Lane North_Bound  | Signal: RED    | Queue: 0  []
+  Lane South_Bound  | Signal: RED    | Queue: 5  [#####]
+  Lane East_Bound   | Signal: RED    | Queue: 6  [######]
+  Lane West_Bound   | Signal: RED    | Queue: 2  [##]
+[Tick 14    ] ----------------------------------------
+  Lane North_Bound  | Signal: RED    | Queue: 0  []
+  Lane South_Bound  | Signal: RED    | Queue: 5  [#####]
+  Lane East_Bound   | Signal: RED    | Queue: 7  [#######]
+  Lane West_Bound   | Signal: RED    | Queue: 3  [###]
+[Tick 15    ] ----------------------------------------
+  Lane North_Bound  | Signal: RED    | Queue: 0  []
+  Lane South_Bound  | Signal: RED    | Queue: 6  [######]
+  Lane East_Bound   | Signal: RED    | Queue: 8  [########]
+  Lane West_Bound   | Signal: RED    | Queue: 3  [###]
+[Tick 16    ] ----------------------------------------
+  Lane North_Bound  | Signal: RED    | Queue: 0  []
+  Lane South_Bound  | Signal: RED    | Queue: 6  [######]
+  Lane East_Bound   | Signal: RED    | Queue: 9  [#########]
+  Lane West_Bound   | Signal: RED    | Queue: 3  [###]
+[Tick 17    ] ----------------------------------------
+  Lane North_Bound  | Signal: RED    | Queue: 1  [#]
+  Lane South_Bound  | Signal: RED    | Queue: 7  [#######]
+  Lane East_Bound   | Signal: RED    | Queue: 9  [#########]
+  Lane West_Bound   | Signal: RED    | Queue: 3  [###]
+[Tick 18    ] ----------------------------------------
+  Lane North_Bound  | Signal: RED    | Queue: 1  [#]
+  Lane South_Bound  | Signal: RED    | Queue: 7  [#######]
+  Lane East_Bound   | Signal: RED    | Queue: 9  [#########]
+  Lane West_Bound   | Signal: RED    | Queue: 3  [###]
+[Tick 19    ] ----------------------------------------
+  Lane North_Bound  | Signal: RED    | Queue: 1  [#]
+  Lane South_Bound  | Signal: RED    | Queue: 8  [########]
+  Lane East_Bound   | Signal: RED    | Queue: 10 [##########]
+  Lane West_Bound   | Signal: RED    | Queue: 4  [####]
+[Tick 20    ] ----------------------------------------
+  Lane North_Bound  | Signal: RED    | Queue: 1  [#]
+  Lane South_Bound  | Signal: RED    | Queue: 8  [########]
+  Lane East_Bound   | Signal: RED    | Queue: 10 [##########]
+  Lane West_Bound   | Signal: RED    | Queue: 4  [####]
+[Tick 21    ] ----------------------------------------
+  Lane North_Bound  | Signal: RED    | Queue: 1  [#]
+  Lane South_Bound  | Signal: RED    | Queue: 8  [########]
+  Lane East_Bound   | Signal: RED    | Queue: 11 [###########]
+  Lane West_Bound   | Signal: RED    | Queue: 5  [#####]
+[Tick 22    ] ----------------------------------------
+  Lane North_Bound  | Signal: RED    | Queue: 2  [##]
+  Lane South_Bound  | Signal: RED    | Queue: 8  [########]
+  Lane East_Bound   | Signal: RED    | Queue: 12 [############]
+  Lane West_Bound   | Signal: RED    | Queue: 5  [#####]
+[Tick 23    ] ----------------------------------------
+  Lane North_Bound  | Signal: RED    | Queue: 2  [##]
+  Lane South_Bound  | Signal: RED    | Queue: 8  [########]
+  Lane East_Bound   | Signal: GREEN  | Queue: 11 [###########]
+  Lane West_Bound   | Signal: RED    | Queue: 5  [#####]
+[Tick 24    ] ----------------------------------------
+  Lane North_Bound  | Signal: RED    | Queue: 2  [##]
+  Lane South_Bound  | Signal: RED    | Queue: 9  [#########]
+  Lane East_Bound   | Signal: GREEN  | Queue: 10 [##########]
+  Lane West_Bound   | Signal: RED    | Queue: 5  [#####]
+[Tick 25    ] ----------------------------------------
+  Lane North_Bound  | Signal: RED    | Queue: 3  [###]
+  Lane South_Bound  | Signal: RED    | Queue: 9  [#########]
+  Lane East_Bound   | Signal: GREEN  | Queue: 9  [#########]
+  Lane West_Bound   | Signal: RED    | Queue: 5  [#####]
+[Tick 26    ] ----------------------------------------
+  Lane North_Bound  | Signal: RED    | Queue: 3  [###]
+  Lane South_Bound  | Signal: RED    | Queue: 9  [#########]
+  Lane East_Bound   | Signal: GREEN  | Queue: 9  [#########]
+  Lane West_Bound   | Signal: RED    | Queue: 6  [######]
+[Tick 27    ] ----------------------------------------
+  Lane North_Bound  | Signal: RED    | Queue: 3  [###]
+  Lane South_Bound  | Signal: RED    | Queue: 9  [#########]
+  Lane East_Bound   | Signal: GREEN  | Queue: 9  [#########]
+  Lane West_Bound   | Signal: RED    | Queue: 6  [######]
+[Tick 28    ] ----------------------------------------
+  Lane North_Bound  | Signal: RED    | Queue: 3  [###]
+  Lane South_Bound  | Signal: RED    | Queue: 9  [#########]
+  Lane East_Bound   | Signal: GREEN  | Queue: 9  [#########]
+  Lane West_Bound   | Signal: RED    | Queue: 7  [#######]
+[Tick 29    ] ----------------------------------------
+  Lane North_Bound  | Signal: RED    | Queue: 3  [###]
+  Lane South_Bound  | Signal: RED    | Queue: 9  [#########]
+  Lane East_Bound   | Signal: GREEN  | Queue: 8  [########]
+  Lane West_Bound   | Signal: RED    | Queue: 8  [########]
+[Tick 30    ] ----------------------------------------
+  Lane North_Bound  | Signal: RED    | Queue: 3  [###]
+  Lane South_Bound  | Signal: RED    | Queue: 10 [##########]
+  Lane East_Bound   | Signal: GREEN  | Queue: 8  [########]
+  Lane West_Bound   | Signal: RED    | Queue: 9  [#########]
+
+==================================================
+         TMS SIMULATION REPORT (30 TICKS)
+==================================================
+Total Throughput (Processed)        : 11
+Overall Average Wait Time           : 13.18 ticks
+Total Overflow (Blocked) Vehicles   : 0
+Total Emergency Preemption Events   : 0
+
+Per-Lane Breakdown:
+--------------------------------------------------
+Lane Name      Throughput  Avg Wait (ticks)Max Queue   
+--------------------------------------------------
+East_Bound     8           18.12          12          
+North_Bound    3           0.00           3           
+South_Bound    0           0.00           10          
+West_Bound     0           0.00           9           
+==================================================
+
+
+Execution Summary:
+Total Execution Time: 0.00 ms
+Processing Throughput: inf ticks/sec
