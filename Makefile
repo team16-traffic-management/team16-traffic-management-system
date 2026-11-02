@@ -31,10 +31,11 @@ coverage:
 	$(CXX) $(CXXFLAGS) --coverage -O0 -g -c vehicle/VehicleGenerator.cpp -o build/coverage/VehicleGenerator.o
 	$(CXX) $(CXXFLAGS) --coverage -O0 -g -c src/LaneQueue.cpp -o build/coverage/LaneQueue.o
 	$(CXX) $(CXXFLAGS) --coverage -O0 -g -c src/TrafficSignalController.cpp -o build/coverage/TrafficSignalController.o
-	$(CXX) $(CXXFLAGS) --coverage -O0 -g -c src/StatisticsCollector.cpp src/Intersection.cpp -o build/coverage/StatisticsCollector.o
-	$(CXX) --coverage build/coverage/test_traffic_management.o build/coverage/Vehicle.o build/coverage/VehicleGenerator.o build/coverage/LaneQueue.o build/coverage/TrafficSignalController.o build/coverage/StatisticsCollector.o -o build/coverage/test-traffic-management
+	$(CXX) $(CXXFLAGS) --coverage -O0 -g -c src/StatisticsCollector.cpp -o build/coverage/StatisticsCollector.o
+	$(CXX) $(CXXFLAGS) --coverage -O0 -g -c src/Intersection.cpp -o build/coverage/Intersection.o
+	$(CXX) --coverage build/coverage/test_traffic_management.o build/coverage/Vehicle.o build/coverage/VehicleGenerator.o build/coverage/LaneQueue.o build/coverage/TrafficSignalController.o build/coverage/StatisticsCollector.o build/coverage/Intersection.o -o build/coverage/test-traffic-management
 	cd build/coverage && ./test-traffic-management
-	cd build/coverage && gcov -b -c test_traffic_management.gcno Vehicle.gcno VehicleGenerator.gcno LaneQueue.gcno TrafficSignalController.gcno StatisticsCollector.gcno
+	cd build/coverage && gcov -b -c test_traffic_management.gcno Vehicle.gcno VehicleGenerator.gcno LaneQueue.gcno TrafficSignalController.gcno StatisticsCollector.gcno Intersection.gcno
 
 clean:
 	rm -rf build
