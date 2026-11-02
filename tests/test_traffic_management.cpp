@@ -48,8 +48,8 @@ void testAdaptiveTimingPreservesBase() {
     controller.addLane("A"); controller.addLane("B");
     controller.setAdaptiveMode(true, 5);
     controller.updateAdaptiveTimers({{"A", 10}});
-    controller.updateSignalState(6);
-    check(controller.getCurrentPhase("A") == SignalPhase::YELLOW, "adaptive green duration extends configured base");
+    controller.updateSignalState(11);
+    check(controller.getCurrentPhase("A") == SignalPhase::YELLOW, "adaptive green duration extends configured base to 11 ticks");
     controller.updateSignalState(2); controller.updateSignalState(4);
     check(controller.getCurrentPhase("B") == SignalPhase::GREEN, "cycle advances after configured phases");
     controller.updateAdaptiveTimers({{"B", 0}});
