@@ -7,6 +7,7 @@
 #include <map>
 #include <stdexcept>
 #include <unordered_map>
+#include <utility>
 
 SimulationEngine::SimulationEngine() : generator_(0.4, 0.05) {}
 
@@ -76,19 +77,19 @@ void SimulationEngine::connectIntersections(const std::string& sourceId, const s
     }
     for (const auto& sourceLane : source->getLanes())
         connections_.push_back({sourceId, destinationId, sourceLane.name()});
-    std::cout << "Connected intersection " << sourceId << " to " << destinationId << " successfully.\n";
 }
 
 int SimulationEngine::loadConfigFromFile(const std::string& filename) {
     std::ifstream file(filename);
     if (!file.is_open()) throw std::runtime_error("Could not open configuration file: " + filename);
+
     std::unordered_map<std::string, std::string> settings;
     std::string line;
     int lineNumber = 0;
     const auto trim = [](std::string& text) {
-        const std::size_t first = text.find_first_not_of(" \t\r\n");
+        const std::size_t first = text.find_first_not_of(" \\t\\r\\n");
         if (first == std::string::npos) { text.clear(); return; }
-        const std::size_t last = text.find_last_not_of(" \t\r\n");
+        const std::size_t last = text.find_last_not_of(" \\t\\r\\n");
         text = text.substr(first, last - first + 1);
     };
     while (std::getline(file, line)) {
@@ -106,20 +107,16 @@ int SimulationEngine::loadConfigFromFile(const std::string& filename) {
         if (settings.count(key)) throw std::runtime_error("Duplicate configuration key: " + key);
         settings[key] = value;
     }
-    const std::string allowedKeys[] = {"total_ticks", "emergency_probability", "adaptive_mode",
-        "North_Bound", "South_Bound", "East_Bound", "West_Bound", "queue_capacity"};
-    for (const auto& setting : settings) {
-        bool valid = false;
-        for (const auto& allowed : allowedKeys) if (setting.first == allowed) { valid = true; break; }
-        if (!valid) throw std::runtime_error("Unknown configuration key: " + setting.first);
-    }
-    const auto getValue = [&settings](const std::string& key) -> std::string {
+
+    const auto getRequired = [&settings](const std::string& key) -> std::string {
         const auto it = settings.find(key);
         if (it == settings.end()) throw std::runtime_error("Missing configuration key: " + key);
         return it->second;
     };
-    const auto parseProbability = [&getValue](const std::string& key) -> double {
-        const std::string value = getValue(key);
+    const auto parseProbability = [&settings, &getRequired](const std::string& key, double fallback) -> double {
+        const auto it = settings.find(key);
+        if (it == settings.end()) return fallback;
+        const std::string value = it->second;
         std::size_t parsed = 0;
         double result = 0.0;
         try { result = std::stod(value, &parsed); }
@@ -128,36 +125,96 @@ int SimulationEngine::loadConfigFromFile(const std::string& filename) {
             throw std::runtime_error("Value must be a finite number between 0 and 1: " + key);
         return result;
     };
-    const std::string ticksText = getValue("total_ticks");
+
+    const std::string ticksText = getRequired("total_ticks");
     std::size_t parsed = 0;
     int totalTicks = 0;
     try { totalTicks = std::stoi(ticksText, &parsed); }
     catch (...) { throw std::runtime_error("Invalid total_ticks value"); }
     if (parsed != ticksText.size() || totalTicks <= 0 || totalTicks > 10000000)
         throw std::runtime_error("total_ticks must be between 1 and 10000000");
-    const std::string adaptiveText = getValue("adaptive_mode");
+
+    const std::string adaptiveText = getRequired("adaptive_mode");
     bool adaptiveMode = false;
     if (adaptiveText == "true") adaptiveMode = true;
     else if (adaptiveText != "false") throw std::runtime_error("adaptive_mode must be true or false");
-    const std::string capacityText = getValue("queue_capacity");
+
+    const std::string capacityText = getRequired("queue_capacity");
     std::size_t capacityParsed = 0;
     int queueCapacity = 0;
     try { queueCapacity = std::stoi(capacityText, &capacityParsed); }
     catch (...) { throw std::runtime_error("Invalid queue_capacity value"); }
     if (capacityParsed != capacityText.size() || queueCapacity <= 0 || queueCapacity > 10000)
         throw std::runtime_error("queue_capacity must be between 1 and 10000");
+
+    const double arrivalRate = parseProbability("arrival_rate", 0.4);
+    const double emergencyProbability = parseProbability("emergency_probability", 0.05);
+
+    std::map<std::string, std::vector<std::string>> configuredIntersections;
+    std::vector<std::pair<std::string, std::string>> configuredConnections;
+    const std::string prefix = "intersection.";
+    for (const auto& entry : settings) {
+        if (entry.first.compare(0, prefix.size(), prefix) == 0) {
+            const std::string remainder = entry.first.substr(prefix.size());
+            const std::string marker = ".lanes";
+            const std::size_t markerPos = remainder.rfind(marker);
+            if (markerPos == std::string::npos || markerPos + marker.size() != remainder.size())
+                throw std::runtime_error("Unknown intersection setting: " + entry.first);
+            const std::string id = remainder.substr(0, markerPos);
+            if (id.empty()) throw std::runtime_error("Intersection ID cannot be empty");
+            std::vector<std::string> lanes;
+            std::string laneList = entry.second;
+            std::size_t start = 0;
+            while (start <= laneList.size()) {
+                const std::size_t comma = laneList.find(',', start);
+                std::string lane = laneList.substr(start, comma == std::string::npos ? std::string::npos : comma - start);
+                trim(lane);
+                if (lane.empty()) throw std::runtime_error("Empty lane name in intersection: " + id);
+                lanes.push_back(lane);
+                if (comma == std::string::npos) break;
+                start = comma + 1;
+            }
+            if (!configuredIntersections.emplace(id, lanes).second)
+                throw std::runtime_error("Duplicate intersection definition: " + id);
+        } else if (entry.first.compare(0, 11, "connection.") == 0) {
+            const std::string source = entry.first.substr(11);
+            if (source.empty() || entry.second.empty())
+                throw std::runtime_error("Connection source and destination must be specified");
+            configuredConnections.push_back({source, entry.second});
+        } else {
+            const std::string allowed[] = {"total_ticks", "arrival_rate", "emergency_probability",
+                "adaptive_mode", "queue_capacity", "North_Bound", "South_Bound", "East_Bound", "West_Bound"};
+            bool known = false;
+            for (const auto& key : allowed) if (entry.first == key) { known = true; break; }
+            if (!known) throw std::runtime_error("Unknown configuration key: " + entry.first);
+        }
+    }
+
+    if (!configuredIntersections.empty()) {
+        intersections_.clear();
+        connections_.clear();
+        for (const auto& definition : configuredIntersections) {
+            Intersection intersection(definition.first);
+            for (const auto& lane : definition.second)
+                intersection.addLane(lane, static_cast<std::size_t>(queueCapacity));
+            addIntersection(intersection);
+        }
+    }
+
     configuredQueueCapacity_ = queueCapacity;
-    const double emergencyProbability = parseProbability("emergency_probability");
-    const double northRate = parseProbability("North_Bound");
-    const double southRate = parseProbability("South_Bound");
-    const double eastRate = parseProbability("East_Bound");
-    const double westRate = parseProbability("West_Bound");
-    loadConfig(0.4, emergencyProbability, adaptiveMode);
-    configureLaneArrivalRate("North_Bound", northRate);
-    configureLaneArrivalRate("South_Bound", southRate);
-    configureLaneArrivalRate("East_Bound", eastRate);
-    configureLaneArrivalRate("West_Bound", westRate);
-    std::cout << "\nConfiguration loaded successfully from " << filename << "\n";
+    loadConfig(arrivalRate, emergencyProbability, adaptiveMode);
+
+    // Legacy four-lane rate keys remain supported for existing configuration files.
+    const char* legacyLanes[] = {"North_Bound", "South_Bound", "East_Bound", "West_Bound"};
+    for (const char* lane : legacyLanes) {
+        const auto it = settings.find(lane);
+        if (it != settings.end()) configureLaneArrivalRate(lane, parseProbability(lane, arrivalRate));
+    }
+    for (const auto& connection : configuredConnections)
+        connectIntersections(connection.first, connection.second);
+
+    std::cout << "\\nConfiguration loaded successfully from " << filename
+              << " (" << intersections_.size() << " intersection(s))\\n";
     return totalTicks;
 }
 
@@ -229,7 +286,8 @@ void SimulationEngine::tick(bool silent) {
                 if (!scheduled) stats_.recordDequeue(intersectionId, laneName, vehicle, currentTick_);
             }
         }
-        view_.renderTick(currentTick_, intersection.getLanes(), intersection.getSignalController(), silent);
+        view_.renderTick(currentTick_, intersectionId, intersection.getLanes(),
+                         intersection.getSignalController(), silent);
     }
 }
 
@@ -239,10 +297,11 @@ void SimulationEngine::run(int maxTicks, bool silent) {
         throw std::overflow_error("Requested simulation duration exceeds tick limit");
     for (int i = 0; i < maxTicks; ++i) tick(silent);
     stats_.printEndOfRunReport(maxTicks);
-    std::cout << "\nTotal successful vehicle transfers: " << totalTransfers_ << "\n";
-    std::cout << "Vehicles still waiting for transfer: " << pendingTransfers_.size() << "\n";
+    std::cout << "\\nTotal successful vehicle transfers: " << totalTransfers_ << "\\n";
+    std::cout << "Vehicles still waiting for transfer: " << pendingTransfers_.size() << "\\n";
 }
 
 const StatisticsCollector& SimulationEngine::getStats() const { return stats_; }
 int SimulationEngine::getConfiguredQueueCapacity() const { return configuredQueueCapacity_; }
+std::size_t SimulationEngine::getIntersectionCount() const { return intersections_.size(); }
 std::size_t SimulationEngine::getTotalTransfers() const { return totalTransfers_; }

@@ -18,6 +18,7 @@ public:
     void connectIntersections(const std::string& sourceIntersectionId, const std::string& destinationIntersectionId);
     int loadConfigFromFile(const std::string& filename);
     int getConfiguredQueueCapacity() const;
+    std::size_t getIntersectionCount() const;
     void run(int maxTicks, bool silent = false);
     void tick(bool silent = false);
     const StatisticsCollector& getStats() const;

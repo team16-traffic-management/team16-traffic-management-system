@@ -1,19 +1,20 @@
 #include "../include/SimulationEngine.h"
 #include "../include/LaneQueue.h"
+#include "../include/ConsoleView.h"
 #include "../vehicle/VehicleGenerator.h"
-
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <stdexcept>
 #include <vector>
 
 namespace {
 int passed = 0;
 void check(bool condition, const char* message) {
-    if (!condition) { std::cerr << "FAIL: " << message << '\n'; std::exit(EXIT_FAILURE); }
+    if (!condition) { std::cerr << "FAIL: " << message << std::endl; std::exit(EXIT_FAILURE); }
     ++passed;
 }
 template <typename Exception, typename Function>
@@ -71,10 +72,47 @@ void testQueueCapacityAndEmptyDequeue() {
 }
 void testMalformedConfiguration() {
     const char* path = "test_invalid_config.tmp";
-    { std::ofstream file(path); file << "this is not key value\n"; }
+    { std::ofstream file(path); file << "this is not key value" << std::endl; }
     SimulationEngine engine;
     checkThrows<std::runtime_error>([&] { engine.loadConfigFromFile(path); }, "malformed config rejected");
     std::remove(path);
+}
+void testConfigDrivenIntersections() {
+    const char* path = "test_multi_intersection.tmp";
+    {
+        std::ofstream file(path);
+        file << "total_ticks=25" << std::endl
+             << "arrival_rate=1.0" << std::endl
+             << "emergency_probability=0.0" << std::endl
+             << "adaptive_mode=false" << std::endl
+             << "queue_capacity=12" << std::endl
+             << "intersection.Central.lanes=North,South" << std::endl
+             << "intersection.Riverside.lanes=North,South" << std::endl
+             << "connection.Central=Riverside" << std::endl;
+    }
+    SimulationEngine engine;
+    const int ticks = engine.loadConfigFromFile(path);
+    check(ticks == 25, "configured run length is returned");
+    check(engine.getIntersectionCount() == 2, "intersections are created from configuration");
+    check(engine.getConfiguredQueueCapacity() == 12, "configured queue capacity is applied");
+    engine.run(ticks, true);
+    check(engine.getTotalTransfers() > 0, "configured connection transfers vehicles");
+    std::remove(path);
+}
+void testConsoleStatusFields() {
+    Intersection intersection("Console-Test");
+    intersection.addLane("North", 5);
+    std::ostringstream captured;
+    std::streambuf* previous = std::cout.rdbuf(captured.rdbuf());
+    ConsoleView view;
+    view.renderTick(7, intersection.getId(), intersection.getLanes(),
+                    intersection.getSignalController(), false);
+    std::cout.rdbuf(previous);
+    const std::string output = captured.str();
+    check(output.find("Console-Test") != std::string::npos, "console identifies intersection");
+    check(output.find("Tick") != std::string::npos, "console displays current tick");
+    check(output.find("Signal") != std::string::npos, "console displays signal state");
+    check(output.find("Queue") != std::string::npos, "console displays lane queue length");
 }
 void testTenThousandTickStability() {
     SimulationEngine engine;
@@ -97,7 +135,9 @@ int main() {
     testInvalidConfiguration();
     testQueueCapacityAndEmptyDequeue();
     testMalformedConfiguration();
+    testConfigDrivenIntersections();
+    testConsoleStatusFields();
     testTenThousandTickStability();
-    std::cout << "All " << passed << " checks passed.\n";
+    std::cout << "All " << passed << " checks passed." << std::endl;
     return EXIT_SUCCESS;
 }
