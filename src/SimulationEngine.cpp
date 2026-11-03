@@ -87,9 +87,9 @@ int SimulationEngine::loadConfigFromFile(const std::string& filename) {
     std::string line;
     int lineNumber = 0;
     const auto trim = [](std::string& text) {
-        const std::size_t first = text.find_first_not_of(" \\t\\r\\n");
+        const std::size_t first = text.find_first_not_of(" \t\r\n");
         if (first == std::string::npos) { text.clear(); return; }
-        const std::size_t last = text.find_last_not_of(" \\t\\r\\n");
+        const std::size_t last = text.find_last_not_of(" \t\r\n");
         text = text.substr(first, last - first + 1);
     };
     while (std::getline(file, line)) {
