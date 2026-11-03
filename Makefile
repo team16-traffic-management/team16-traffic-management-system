@@ -1,17 +1,17 @@
 CXX = g++
 CXXFLAGS = -std=c++14 -Wall -Wextra -Wpedantic
-APP_SOURCES = src/main.cpp vehicle/Vehicle.cpp vehicle/VehicleGenerator.cpp src/LaneQueue.cpp src/TrafficSignalController.cpp src/StatisticsCollector.cpp src/Intersection.cpp
-TEST_SOURCES = tests/test_traffic_management.cpp vehicle/Vehicle.cpp vehicle/VehicleGenerator.cpp src/LaneQueue.cpp src/TrafficSignalController.cpp src/StatisticsCollector.cpp src/Intersection.cpp
+APP_SOURCES = src/main.cpp vehicle/Vehicle.cpp vehicle/VehicleGenerator.cpp src/LaneQueue.cpp src/TrafficSignalController.cpp src/StatisticsCollector.cpp src/Intersection.cpp src/ConsoleView.cpp src/SimulationEngine.cpp
+TEST_SOURCES = tests/test_traffic_management.cpp vehicle/Vehicle.cpp vehicle/VehicleGenerator.cpp src/LaneQueue.cpp src/TrafficSignalController.cpp src/StatisticsCollector.cpp src/Intersection.cpp src/ConsoleView.cpp src/SimulationEngine.cpp
 
 .PHONY: all test sanitize coverage clean
 
 all: build/traffic-management
 
-build/traffic-management: $(APP_SOURCES) vehicle/Vehicle.h vehicle/VehicleGenerator.h include/LaneQueue.h include/TrafficSignalController.h include/StatisticsCollector.h include/Intersection.h
+build/traffic-management: $(APP_SOURCES) vehicle/Vehicle.h vehicle/VehicleGenerator.h include/LaneQueue.h include/TrafficSignalController.h include/StatisticsCollector.h include/Intersection.h include/ConsoleView.h include/SimulationEngine.h
 	mkdir -p build
 	$(CXX) $(CXXFLAGS) $(APP_SOURCES) -o $@
 
-build/test-traffic-management: $(TEST_SOURCES) vehicle/Vehicle.h vehicle/VehicleGenerator.h include/LaneQueue.h include/TrafficSignalController.h include/StatisticsCollector.h include/Intersection.h
+build/test-traffic-management: $(TEST_SOURCES) vehicle/Vehicle.h vehicle/VehicleGenerator.h include/LaneQueue.h include/TrafficSignalController.h include/StatisticsCollector.h include/Intersection.h include/ConsoleView.h include/SimulationEngine.h
 	mkdir -p build
 	$(CXX) $(CXXFLAGS) $(TEST_SOURCES) -o $@
 
@@ -33,9 +33,11 @@ coverage:
 	$(CXX) $(CXXFLAGS) --coverage -O0 -g -c src/TrafficSignalController.cpp -o build/coverage/TrafficSignalController.o
 	$(CXX) $(CXXFLAGS) --coverage -O0 -g -c src/StatisticsCollector.cpp -o build/coverage/StatisticsCollector.o
 	$(CXX) $(CXXFLAGS) --coverage -O0 -g -c src/Intersection.cpp -o build/coverage/Intersection.o
-	$(CXX) --coverage build/coverage/test_traffic_management.o build/coverage/Vehicle.o build/coverage/VehicleGenerator.o build/coverage/LaneQueue.o build/coverage/TrafficSignalController.o build/coverage/StatisticsCollector.o build/coverage/Intersection.o -o build/coverage/test-traffic-management
+	$(CXX) $(CXXFLAGS) --coverage -O0 -g -c src/ConsoleView.cpp -o build/coverage/ConsoleView.o
+	$(CXX) $(CXXFLAGS) --coverage -O0 -g -c src/SimulationEngine.cpp -o build/coverage/SimulationEngine.o
+	$(CXX) --coverage build/coverage/test_traffic_management.o build/coverage/Vehicle.o build/coverage/VehicleGenerator.o build/coverage/LaneQueue.o build/coverage/TrafficSignalController.o build/coverage/StatisticsCollector.o build/coverage/Intersection.o build/coverage/ConsoleView.o build/coverage/SimulationEngine.o -o build/coverage/test-traffic-management
 	cd build/coverage && ./test-traffic-management
-	cd build/coverage && gcov -b -c test_traffic_management.gcno Vehicle.gcno VehicleGenerator.gcno LaneQueue.gcno TrafficSignalController.gcno StatisticsCollector.gcno Intersection.gcno
+	cd build/coverage && gcov -b -c test_traffic_management.gcno Vehicle.gcno VehicleGenerator.gcno LaneQueue.gcno TrafficSignalController.gcno StatisticsCollector.gcno Intersection.gcno ConsoleView.gcno SimulationEngine.gcno
 
 clean:
 	rm -rf build
