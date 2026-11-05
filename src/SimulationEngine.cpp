@@ -213,8 +213,8 @@ int SimulationEngine::loadConfigFromFile(const std::string& filename) {
     for (const auto& connection : configuredConnections)
         connectIntersections(connection.first, connection.second);
 
-    std::cout << "\\nConfiguration loaded successfully from " << filename
-              << " (" << intersections_.size() << " intersection(s))\\n";
+    std::cout << "\nConfiguration loaded successfully from " << filename
+              << " (" << intersections_.size() << " intersection(s))\n";
     return totalTicks;
 }
 
@@ -297,8 +297,8 @@ void SimulationEngine::run(int maxTicks, bool silent) {
         throw std::overflow_error("Requested simulation duration exceeds tick limit");
     for (int i = 0; i < maxTicks; ++i) tick(silent);
     stats_.printEndOfRunReport(maxTicks);
-    std::cout << "\\nTotal successful vehicle transfers: " << totalTransfers_ << "\\n";
-    std::cout << "Vehicles still waiting for transfer: " << pendingTransfers_.size() << "\\n";
+    std::cout << "\nTotal successful vehicle transfers: " << totalTransfers_ << "\n";
+    std::cout << "Vehicles still waiting for transfer: " << pendingTransfers_.size() << "\n";
 }
 
 const StatisticsCollector& SimulationEngine::getStats() const { return stats_; }
