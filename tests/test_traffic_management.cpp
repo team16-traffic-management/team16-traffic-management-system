@@ -127,6 +127,69 @@ void testTenThousandTickStability() {
     check(engine.getStats().totalThroughput() >= 0, "10,000-tick run completes");
     check(engine.getStats().totalBlocked() >= 0, "stress run reports valid blocked count");
 }
+
+void testSignalPhaseTransitions() {
+    SignalController signals(2, 1, 1);
+    signals.addLane("North");
+    signals.addLane("South");
+    check(signals.getCurrentPhase("North") == SignalPhase::GREEN, "first lane starts green");
+    check(signals.getCurrentPhase("South") == SignalPhase::RED, "inactive lane starts red");
+    signals.updateSignalState(2);
+    check(signals.getCurrentPhase("North") == SignalPhase::YELLOW, "green transitions to yellow");
+    signals.updateSignalState(1);
+    check(signals.getCurrentPhase("North") == SignalPhase::RED, "yellow transitions to red");
+    signals.updateSignalState(1);
+    check(signals.getCurrentPhase("South") == SignalPhase::GREEN, "signal rotates to next lane");
+    checkThrows<std::invalid_argument>([] { SignalController invalid(0, 1, 1); }, "non-positive signal duration rejected");
+    checkThrows<std::invalid_argument>([] { SignalController s; s.addLane(""); }, "empty signal lane rejected");
+    checkThrows<std::invalid_argument>([] { SignalController s; s.addLane("A"); s.addLane("A"); }, "duplicate signal lane rejected");
+}
+void testEmergencyPreemption() {
+    SignalController signals(2, 1, 1);
+    signals.addLane("North");
+    signals.addLane("South");
+    check(!signals.preempt("Unknown"), "unknown emergency lane rejected");
+    check(signals.preempt("South"), "valid emergency request accepted");
+    check(!signals.preempt("North"), "second pending request rejected");
+    signals.updateSignalState(2);
+    signals.updateSignalState(1);
+    signals.updateSignalState(1);
+    check(signals.getCurrentPhase("South") == SignalPhase::GREEN, "emergency lane receives green after current cycle");
+    check(!signals.preempt("South"), "request for already active lane rejected");
+}
+void testStatisticsCalculations() {
+    StatisticsCollector stats;
+    const Vehicle first(101, 2, VehicleType::NORMAL);
+    const Vehicle second(102, 5, VehicleType::EMERGENCY);
+    check(stats.averageWaitTime() == 0.0, "empty statistics have zero average wait");
+    stats.recordDequeue("Central", "North", first, 5);
+    stats.recordDequeue("Central", "South", second, 9);
+    stats.recordBlocked("Central", "North", 6);
+    stats.recordBlocked("Riverside", "South", 7);
+    stats.recordPreemption("Central", "South", 8);
+    stats.updateMaxQueueLength("Central", "North", 4);
+    stats.updateMaxQueueLength("Central", "North", 2);
+    check(stats.totalThroughput() == 2, "throughput counts dequeued vehicles");
+    check(std::fabs(stats.averageWaitTime() - 3.5) < 1e-9, "average wait time is correct");
+    check(stats.totalBlocked() == 2, "blocked events counted across intersections");
+    check(stats.totalPreemptions() == 1, "preemption events counted");
+    checkThrows<std::invalid_argument>([&] { stats.recordDequeue("Central", "North", first, 1); }, "dequeue before arrival rejected");
+    checkThrows<std::invalid_argument>([&] { stats.recordBlocked("Central", "North", -1); }, "negative blocked-event tick rejected");
+    checkThrows<std::invalid_argument>([&] { stats.recordPreemption("Central", "South", -1); }, "negative preemption tick rejected");
+}
+void testIntersectionValidationAndSignalRegistration() {
+    checkThrows<std::invalid_argument>([] { Intersection invalid(""); }, "empty intersection ID rejected");
+    Intersection intersection("Unit-Test");
+    intersection.addLane("North", 3);
+    check(intersection.getId() == "Unit-Test", "intersection ID retained");
+    check(intersection.getLanes().size() == 1, "intersection stores added lane");
+    check(intersection.getLanes()[0].capacity() == 3, "lane capacity retained");
+    check(intersection.getSignalController().getCurrentPhase("North") == SignalPhase::GREEN, "added lane registered with signal controller");
+    checkThrows<std::invalid_argument>([&] { intersection.addLane("North", 3); }, "duplicate intersection lane rejected");
+    checkThrows<std::invalid_argument>([&] { intersection.addLane("South", 0); }, "zero lane capacity rejected");
+    checkThrows<std::invalid_argument>([&] { intersection.addLane("", 3); }, "empty intersection lane rejected");
+}
+
 }
 int main() {
     testProbabilityBoundaries();
@@ -138,6 +201,10 @@ int main() {
     testConfigDrivenIntersections();
     testConsoleStatusFields();
     testTenThousandTickStability();
+    testSignalPhaseTransitions();
+    testEmergencyPreemption();
+    testStatisticsCalculations();
+    testIntersectionValidationAndSignalRegistration();
     std::cout << "All " << passed << " checks passed." << std::endl;
     return EXIT_SUCCESS;
 }
