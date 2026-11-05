@@ -169,6 +169,12 @@ void testStatisticsCalculations() {
     stats.recordPreemption("Central", "South", 8);
     stats.updateMaxQueueLength("Central", "North", 4);
     stats.updateMaxQueueLength("Central", "North", 2);
+    std::ostringstream report;
+    std::streambuf* previous = std::cout.rdbuf(report.rdbuf());
+    stats.printEndOfRunReport(10);
+    std::cout.rdbuf(previous);
+    check(report.str().find("4           ") != std::string::npos,
+          "maximum queue length retains the highest observed value");
     check(stats.totalThroughput() == 2, "throughput counts dequeued vehicles");
     check(std::fabs(stats.averageWaitTime() - 3.5) < 1e-9, "average wait time is correct");
     check(stats.totalBlocked() == 2, "blocked events counted across intersections");
