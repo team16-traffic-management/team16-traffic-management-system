@@ -196,6 +196,29 @@ void testIntersectionValidationAndSignalRegistration() {
     checkThrows<std::invalid_argument>([&] { intersection.addLane("", 3); }, "empty intersection lane rejected");
 }
 
+
+void testNoSimultaneousGreenSignals() {
+    SignalController signals(2, 1, 1);
+    const std::vector<std::string> lanes = {"North", "South", "East", "West"};
+
+    for (const std::string& lane : lanes) {
+        signals.addLane(lane);
+    }
+
+    // Check the initial state and every subsequent tick across multiple cycles.
+    for (int tick = 0; tick < 80; ++tick) {
+        int greenCount = 0;
+        for (const std::string& lane : lanes) {
+            if (signals.getCurrentPhase(lane) == SignalPhase::GREEN) {
+                ++greenCount;
+            }
+        }
+        check(greenCount <= 1,
+              "no more than one lane has a green signal at any tick");
+        signals.updateSignalState(1);
+    }
+}
+
 }
 int main() {
     testProbabilityBoundaries();
@@ -208,6 +231,7 @@ int main() {
     testConsoleStatusFields();
     testTenThousandTickStability();
     testSignalPhaseTransitions();
+    testNoSimultaneousGreenSignals();
     testEmergencyPreemption();
     testStatisticsCalculations();
     testIntersectionValidationAndSignalRegistration();
