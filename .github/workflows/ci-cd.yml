@@ -1,40 +1,48 @@
 name: Traffic Management CI
-
 on:
   push:
-    branches:
-      - main
-      - 'feature/**'
+    branches: [main, 'feature/**']
   pull_request:
-    branches:
-      - main
-      - 'feature/**'
+    branches: [main, 'feature/**']
   workflow_dispatch:
-
 permissions:
   contents: read
-
 jobs:
   build-test:
-    name: Build, test and package (C++14)
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-      - name: Install compiler and Make
-        run: sudo apt-get update && sudo apt-get install --yes build-essential
+      - uses: actions/checkout@v4
+      - name: Set up MinGW-w64 on Windows
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-make
+      - name: Add MinGW to PATH
+        if: runner.os == 'Windows'
+        shell: bash
+        run: echo "C:/msys64/ucrt64/bin" >> "$GITHUB_PATH"
       - name: Verify toolchain
+        shell: bash
         run: g++ --version && make --version
-      - name: Build application and test executable
+      - name: Build application and tests
+        shell: bash
         run: make clean all build/test-traffic-management
-      - name: Run unit tests
+      - name: Run automated tests (includes 10,000-tick stability test)
+        shell: bash
         run: ./build/test-traffic-management
-      - name: Run application smoke test
-        run: ./build/traffic-management
-      - name: Run AddressSanitizer and UndefinedBehaviorSanitizer
+      - name: Run sanitizers on Linux
+        if: runner.os == 'Linux'
+        shell: bash
         run: make sanitize
       - name: Upload Linux executable
+        if: runner.os == 'Linux'
         uses: actions/upload-artifact@v4
         with:
           name: traffic-management-linux
