@@ -77,6 +77,57 @@ void testMalformedConfiguration() {
     checkThrows<std::runtime_error>([&] { engine.loadConfigFromFile(path); }, "malformed config rejected");
     std::remove(path);
 }
+void testConfigurationValidationBoundaries() {
+    const char* path = "test_config_validation.tmp";
+    const std::string validConfig =
+        "total_ticks=10\n"
+        "adaptive_mode=false\n"
+        "queue_capacity=5\n";
+
+    const auto rejectsConfig = [&](const std::string& config, const char* message) {
+        {
+            std::ofstream file(path);
+            file << config;
+        }
+        SimulationEngine engine;
+        checkThrows<std::runtime_error>([&] { engine.loadConfigFromFile(path); }, message);
+        std::remove(path);
+    };
+
+    rejectsConfig("adaptive_mode=false\nqueue_capacity=5\n",
+                  "missing total_ticks rejected");
+    rejectsConfig("total_ticks=0\nadaptive_mode=false\nqueue_capacity=5\n",
+                  "zero total_ticks rejected");
+    rejectsConfig("total_ticks=-1\nadaptive_mode=false\nqueue_capacity=5\n",
+                  "negative total_ticks rejected");
+    rejectsConfig("total_ticks=10000001\nadaptive_mode=false\nqueue_capacity=5\n",
+                  "total_ticks above supported limit rejected");
+    rejectsConfig("total_ticks=10\nadaptive_mode=maybe\nqueue_capacity=5\n",
+                  "invalid adaptive_mode rejected");
+    rejectsConfig("total_ticks=10\nadaptive_mode=false\nqueue_capacity=0\n",
+                  "zero queue capacity rejected");
+    rejectsConfig("total_ticks=10\nadaptive_mode=false\nqueue_capacity=10001\n",
+                  "queue capacity above supported limit rejected");
+    rejectsConfig(validConfig + "arrival_rate=-0.1\n",
+                  "negative arrival rate rejected");
+    rejectsConfig(validConfig + "arrival_rate=1.1\n",
+                  "arrival rate above one rejected");
+    rejectsConfig(validConfig + "arrival_rate=nan\n",
+                  "non-finite arrival rate rejected");
+    rejectsConfig(validConfig + "emergency_probability=0.2junk\n",
+                  "trailing characters in probability rejected");
+    rejectsConfig(validConfig + "unknown_setting=1\n",
+                  "unknown configuration key rejected");
+    rejectsConfig(validConfig + "arrival_rate=0.2\narrival_rate=0.3\n",
+                  "duplicate configuration key rejected");
+    rejectsConfig(validConfig + "intersection.Junction.lanes=North,\n",
+                  "empty lane in intersection configuration rejected");
+    rejectsConfig(validConfig + "intersection.Junction.lanes=North\nconnection.Junction=Junction\n",
+                  "self-connected intersection rejected");
+    rejectsConfig(validConfig + "intersection.Junction.lanes=North\nconnection.Junction=Missing\n",
+                  "connection to missing intersection rejected");
+}
+
 void testConfigDrivenIntersections() {
     const char* path = "test_multi_intersection.tmp";
     {
