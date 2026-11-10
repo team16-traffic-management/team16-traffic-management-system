@@ -278,6 +278,54 @@ void testSignalPhaseTransitions() {
     checkThrows<std::invalid_argument>([] { SignalController s; s.addLane(""); }, "empty signal lane rejected");
     checkThrows<std::invalid_argument>([] { SignalController s; s.addLane("A"); s.addLane("A"); }, "duplicate signal lane rejected");
 }
+
+void testAdaptiveGreenExtensionBounds() {
+    SignalController signals(2, 1, 1);
+    signals.addLane("North");
+    signals.addLane("South");
+    signals.setAdaptiveMode(true, 4);
+
+    const std::map<std::string, std::size_t> heavyQueue = {
+        {"North", 6}, {"South", 0}
+    };
+
+    // The active lane's green duration must extend, but never beyond
+    // the configured base duration (10) plus maxExtension (4).
+    for (int tick = 1; tick <= 10; ++tick) {
+        signals.updateAdaptiveTimers(heavyQueue);
+        signals.updateSignalState(1);
+        check(signals.getCurrentPhase("North") == SignalPhase::GREEN,
+              "adaptive green remains active through configured maximum extension");
+    }
+    signals.updateSignalState(1);
+    check(signals.getCurrentPhase("North") == SignalPhase::YELLOW,
+          "adaptive green transitions after the capped duration");
+
+    // A low queue restores the base green duration for the next cycle.
+    signals.updateSignalState(1); // RED
+    signals.updateSignalState(1); // next lane GREEN
+    signals.updateSignalState(1); // YELLOW
+    signals.updateSignalState(1); // RED
+    signals.updateSignalState(1); // North GREEN
+    const std::map<std::string, std::size_t> lightQueue = {
+        {"North", 0}, {"South", 0}
+    };
+    signals.updateAdaptiveTimers(lightQueue);
+    for (int tick = 1; tick <= 10; ++tick) {
+        signals.updateSignalState(1);
+        if (tick < 10) {
+            check(signals.getCurrentPhase("North") == SignalPhase::GREEN,
+                  "low queue uses base green duration");
+        }
+    }
+    check(signals.getCurrentPhase("North") == SignalPhase::YELLOW,
+          "low queue green ends at base duration");
+
+    checkThrows<std::invalid_argument>(
+        [] { SignalController s; s.setAdaptiveMode(true, -1); },
+        "negative adaptive maximum extension rejected");
+}
+
 void testEmergencyPreemption() {
     SignalController signals(2, 1, 1);
     signals.addLane("North");
@@ -370,6 +418,7 @@ int main() {
     testSigintStopsOpenEndedRun();
     testSignalPhaseTransitions();
     testNoSimultaneousGreenSignals();
+    testAdaptiveGreenExtensionBounds();
     testEmergencyPreemption();
     testStatisticsCalculations();
     testIntersectionValidationAndSignalRegistration();
