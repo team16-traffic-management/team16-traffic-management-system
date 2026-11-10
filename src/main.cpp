@@ -1,16 +1,9 @@
 #include "../include/SimulationEngine.h"
-#include <csignal>
 #include <exception>
 #include <iostream>
 
-namespace {
-void handleStopSignal(int) {
-    requestSimulationStop();
-}
-}
-
 int main(int argc, char* argv[]) {
-    std::signal(SIGINT, handleStopSignal);
+    installSimulationSignalHandlers();
     try {
         SimulationEngine simulation;
         int ticks = 20;
