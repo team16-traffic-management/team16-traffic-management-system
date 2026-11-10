@@ -10,6 +10,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <set>
 #include <thread>
 #include <stdexcept>
 #include <vector>
@@ -35,6 +36,34 @@ void testProbabilityBoundaries() {
         check(vehicles[0].tick == tick, "vehicle stores simulation tick");
     }
 }
+void testVehicleIdsAreUniqueAcrossLanesAndIntersections() {
+    VehicleGenerator generator(1.0, 0.0, 12345);
+    std::set<int> vehicleIds;
+
+    for (int tick = 0; tick < 50; ++tick) {
+        const Vehicle centralNorth =
+            generator.generateVehicle("Central", "North", tick);
+        const Vehicle centralSouth =
+            generator.generateVehicle("Central", "South", tick);
+        const Vehicle riversideNorth =
+            generator.generateVehicle("Riverside", "North", tick);
+        const Vehicle riversideSouth =
+            generator.generateVehicle("Riverside", "South", tick);
+
+        check(vehicleIds.insert(centralNorth.getId()).second,
+              "vehicle ID is unique for Central North");
+        check(vehicleIds.insert(centralSouth.getId()).second,
+              "vehicle ID is unique for Central South");
+        check(vehicleIds.insert(riversideNorth.getId()).second,
+              "vehicle ID is unique for Riverside North");
+        check(vehicleIds.insert(riversideSouth.getId()).second,
+              "vehicle ID is unique for Riverside South");
+    }
+
+    check(vehicleIds.size() == 200,
+          "all generated vehicles across lanes and intersections have distinct IDs");
+}
+
 void testArrivalRates() {
     const double firstRate = 0.20, secondRate = 0.65;
     VehicleGenerator generator({firstRate, secondRate}, 12345);
@@ -493,6 +522,7 @@ void testNoSimultaneousGreenSignals() {
 }
 int main() {
     testProbabilityBoundaries();
+    testVehicleIdsAreUniqueAcrossLanesAndIntersections();
     testArrivalRates();
     testConfigurationUpdates();
     testInvalidConfiguration();
