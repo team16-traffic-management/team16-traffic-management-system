@@ -8,6 +8,8 @@ The repository is a C++17 console-based traffic simulation with a Makefile, auto
 The implementation includes vehicle generation, bounded lane queues, signal phases, emergency preemption, configurable multi-intersection simulation, statistics and graceful user-requested stop. Refer to `Documents/RTM_Implementation_Status.md` for requirement-level status and evidence limitations.
 
 ## Verified evidence
+- QA regression PRs #98, #99, #101 and #102 are merged. Their respective Ubuntu/Windows CI runs #141, #142, #143 and #144 passed. Coverage added: adaptive timing boundaries, destination queue backpressure, emergency queue ordering, and long lane/high queue console output.
+- Post-merge main CI run #149 passed Ubuntu and Windows build, automated tests and smoke tests; Ubuntu ASan/UBSan passed: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796030003.
 - Baseline main workflow #99: 436 automated checks passed on Ubuntu and Windows; default-app and multi-intersection startup smoke tests passed; Ubuntu ASan/UBSan passed.
 - Manual-stop PR #94: merged to main as `339dfed320036ed1c42a375f70bc1189fb5b4244`. PR workflow run #132 passed Ubuntu and Windows builds, automated tests and smoke tests; Ubuntu ASan/UBSan passed.
 - Local Windows performance benchmark: five measured runs, average 84,371.19 and median 88,344.30 ticks/sec against a 500 ticks/sec target for the benchmark fixture only.
@@ -16,10 +18,10 @@ The implementation includes vehicle generation, bounded lane queues, signal phas
 - Execute and record all 66 Test Plan cases individually.
 - Manually verify Ctrl+C behavior and partial-run summary (TMS-F-061).
 - Validate geometric movement conflicts; the existing one-GREEN-lane invariant is narrower than geometric conflict safety.
-- Verify transfer latency, destination-capacity behavior and invalid-intersection isolation.
-- Verify adaptive timing bounds and emergency preemption delay limits.
+- Verify exact one-tick transfer latency and invalid-intersection isolation; destination-capacity backpressure is covered by PR #99.
+- Verify emergency preemption delay limits; adaptive timing boundary cases are covered by PR #98.
 - Run repeated-run memory-growth/leak checks; Linux ASan/UBSan passing is not a leak report.
-- Inspect console formatting for long lane names/high queue lengths.
+- Perform manual visual/usability inspection of console formatting; long lane names/high queue lengths are covered by PR #102 automated assertions.
 - Benchmark connected intersections and evaluator hardware if required.
 - Regenerate final line/branch coverage and record its exact source scope.
 - Resolve the SRS/Test Plan invalid-configuration contradiction and correct the queue-capacity test mapping.
