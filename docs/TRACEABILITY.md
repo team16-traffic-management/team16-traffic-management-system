@@ -41,7 +41,7 @@ The detailed status and limitations are maintained in `Documents/RTM_Implementat
 - PR #105 green-only engine dequeue: CI run #154, merged.
 - PR #107 exact one-tick transfer latency: CI run #159, merged.
 - PR #108 repeated simulation lifecycle: CI run #162, merged.
-- Post-merge main CI run #149 passed Ubuntu/Windows builds, tests and smoke tests; Ubuntu ASan/UBSan passed.
+- Post-merge main CI run #163 passed Ubuntu/Windows builds, tests and smoke tests; Ubuntu ASan/UBSan passed.
 
 ## Evidence rules
 1. Link each requirement to an actual source file and named test case.
