@@ -23,26 +23,27 @@ Use this as a live checklist. Mark an item complete only after the deliverable e
 - [ ] Confirm README instructions work on a clean checkout.
 
 ## Part 3 — Testing and final documentation
-- [x] Unit Test Report records final main-branch CI evidence (436 checks passed on Ubuntu and Windows in run #99).
-- [ ] System Validation Report updated with run #99, PR #90 serialized-green test and PR #91 configuration tests; full SRS/Test Plan execution and remaining NOT RUN cases still require review.
+- [x] Unit Test Report records main-branch CI evidence (436 checks passed on Ubuntu and Windows in run #99).
+- [ ] System Validation Report reviewed against the complete SRS/Test Plan; remaining NOT RUN cases still require review.
 - [ ] Code Coverage Report regenerated from final main-branch coverage output.
 - [ ] Branch Coverage Report regenerated from final main-branch coverage output.
 - [x] Failed, blocked and not-run scope is disclosed in the current draft reports; review again after final validation.
 - [x] Coverage scope names the exact source files included in the initial local GCOV report.
-- [ ] Performance test executed on evaluator environment, or limitation recorded.
-- [x] Linux build evidence confirmed against final main in run #99.
-- [x] Windows build evidence confirmed against final main in run #99.
-- [x] Linux sanitizer result confirmed in final main workflow #99; retain workflow link.
+- [x] Local Windows performance benchmark executed; 5 measured runs, median 88,344.30 ticks/sec against 500 ticks/sec target. Evaluator-hardware and connected-intersection performance evidence remain outstanding.
+- [x] Linux build evidence confirmed against tested main in run #99.
+- [x] Windows build evidence confirmed against tested main in run #99.
+- [x] Linux sanitizer result confirmed in main workflow #99; retain workflow link.
 - [ ] Final Academic Project Report reviewed by the team.
 - [ ] Demo guide and presentation reviewed.
 - [ ] Final repository and submission links checked.
 
 ## Important evidence notes
-- Final main-branch CI run #99: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42450330604
-- The final tested main commit `f8c6cfda5355f3e2cea2ff2bbd71dae23180c540` built successfully on Ubuntu and Windows; both test logs printed 436 checks passed. The Ubuntu sanitizer step passed.
+- Main-branch CI run #99: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42450330604
+- Tested main commit `f8c6cfda5355f3e2cea2ff2bbd71dae23180c540` built successfully on Ubuntu and Windows; both test logs printed 436 checks passed. The Ubuntu sanitizer step passed.
 - PR #90 adds an 80-tick serialized-green regression check; PR #91 adds configuration validation boundary cases. Neither alone constitutes full SRS acceptance.
+- Local Windows performance benchmark: average 84,371.19 ticks/sec; median 88,344.30 ticks/sec; 500 ticks/sec target met for the measured fixture. Four intersections were independent, console rendering was disabled, and hardware/compiler details were not recorded. Do not present this as evaluator-hardware or connected-topology evidence.
 - Existing local GCOV output reports 95.61% line execution across 114 lines in tests/test_traffic_management.cpp and vehicle/VehicleGenerator.cpp. This is not whole-system coverage and must be rerun on the final commit.
-- The old testresult.md claim of 310 checks is superseded by the directly observed 355-check PR CI output for the PR integration ref. Keep PR-run evidence distinct from post-merge main-run evidence.
+- The old testresult.md claim of 310 checks is superseded by directly observed main-branch run #99 output: 436 checks passed on Ubuntu and Windows. Keep PR-run evidence distinct from main-branch evidence.
 
 ## Final sign-off
 | Review | Name | Date | Status / comments |
