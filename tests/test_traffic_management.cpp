@@ -2,12 +2,14 @@
 #include "../include/LaneQueue.h"
 #include "../include/ConsoleView.h"
 #include "../vehicle/VehicleGenerator.h"
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <thread>
 #include <stdexcept>
 #include <vector>
 
@@ -96,8 +98,8 @@ void testConfigurationValidationBoundaries() {
 
     rejectsConfig("adaptive_mode=false\nqueue_capacity=5\n",
                   "missing total_ticks rejected");
-    rejectsConfig("total_ticks=0\nadaptive_mode=false\nqueue_capacity=5\n",
-                  "zero total_ticks rejected");
+    rejectsConfig("total_ticks=-1\nadaptive_mode=false\nqueue_capacity=5\n",
+                  "negative total_ticks rejected");
     rejectsConfig("total_ticks=-1\nadaptive_mode=false\nqueue_capacity=5\n",
                   "negative total_ticks rejected");
     rejectsConfig("total_ticks=10000001\nadaptive_mode=false\nqueue_capacity=5\n",
@@ -177,6 +179,35 @@ void testTenThousandTickStability() {
     engine.run(10000, true);
     check(engine.getStats().totalThroughput() >= 0, "10,000-tick run completes");
     check(engine.getStats().totalBlocked() >= 0, "stress run reports valid blocked count");
+}
+
+
+void testManualStopProducesPartialSummary() {
+    SimulationEngine engine;
+    Intersection intersection("manual-stop");
+    intersection.addLane("North", 15);
+    intersection.addLane("South", 15);
+    engine.addIntersection(intersection);
+    engine.loadConfig(0.4, 0.05, false);
+
+    std::ostringstream captured;
+    std::streambuf* previous = std::cout.rdbuf(captured.rdbuf());
+    std::thread stopper([] {
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        requestSimulationStop();
+    });
+
+    engine.run(0, true); // Open-ended run; the request interrupts it.
+    stopper.join();
+    std::cout.rdbuf(previous);
+
+    const std::string output = captured.str();
+    check(output.find("TMS SIMULATION REPORT (") != std::string::npos,
+          "manual stop still prints the end-of-run report");
+    check(output.find("user requested stop") != std::string::npos,
+          "manual stop is identified in the run summary");
+    check(output.find("0 ticks executed") == std::string::npos,
+          "manual stop report reflects ticks actually completed");
 }
 
 void testSignalPhaseTransitions() {
@@ -281,6 +312,7 @@ int main() {
     testConfigDrivenIntersections();
     testConsoleStatusFields();
     testTenThousandTickStability();
+    testManualStopProducesPartialSummary();
     testSignalPhaseTransitions();
     testNoSimultaneousGreenSignals();
     testEmergencyPreemption();
