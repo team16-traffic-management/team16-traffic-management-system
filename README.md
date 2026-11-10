@@ -21,7 +21,7 @@ To load a topology from a configuration file:
 
 The configuration supports a variable number of intersections. Add an `intersection.<ID>.lanes` entry for each intersection. Lane names are comma-separated. A `connection.<SOURCE>=<DESTINATION>` entry connects matching lane names between two intersections. Shared simulation settings include:
 
-- `total_ticks`: number of simulation ticks (1–10,000,000).
+- `total_ticks`: number of simulation ticks (1–10,000,000); set to `0` for an open-ended run that ends when the user requests a stop.
 - `arrival_rate`: vehicle arrival probability per lane (0–1).
 - `emergency_probability`: emergency-vehicle probability (0–1).
 - `adaptive_mode`: `true` or `false`.
@@ -34,6 +34,10 @@ The engine builds each configured intersection and its lanes from the file; addi
 ## Live console status
 
 Each simulation tick prints a clearly labelled intersection and tick, followed by each lane's active signal phase and queue length. Output is flushed after each intersection block so status is visible as the simulation progresses.
+
+## Graceful stop
+
+Set `total_ticks=0` in the configuration for an open-ended run. Press Ctrl+C to request a graceful stop; the simulation completes the current tick and prints a summary using the actual number of completed ticks.
 
 ## Tests
 
