@@ -21,6 +21,10 @@ Status: Baseline main CI run #99 passed; subsequent manual-stop PR #94 also pass
 - Signal phase transitions, lane rotation and invalid durations.
 - Emergency preemption request acceptance/rejection and deferred activation.
 - Statistics, console status, intersection validation and long-run execution.
+- PR #98: adaptive green-extension cap, low-queue reset and negative extension rejection.
+- PR #99: pending transfer retained under destination queue backpressure and delivered after capacity becomes available.
+- PR #101: emergency vehicles are inserted ahead of normal vehicles while preserving FIFO ordering within each class.
+- PR #102: console output retains long lane names and renders high queue counts/bars.
 - PR #94 adds direct stop-request, open-ended-run, partial-summary and SIGINT regression coverage.
 
 ## Baseline main CI results — run #99
@@ -57,9 +61,20 @@ Application smoke tests:
 ./build/traffic-management examples/multi_intersection.cfg
 ```
 
+## Latest merged regression CI
+| PR | Coverage | Workflow | Ubuntu | Windows |
+|---|---|---|---|---|
+| #98 | Adaptive timing boundaries | [Run #141](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42791702831) | Passed, including ASan/UBSan | Passed |
+| #99 | Transfer backpressure | [Run #142](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42792945910) | Passed, including ASan/UBSan | Passed |
+| #101 | Emergency queue priority/order | [Run #143](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42795154445) | Passed, including ASan/UBSan | Passed |
+| #102 | Long lane names/high queue console output | [Run #144](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42795769676) | Passed, including ASan/UBSan | Passed |
+
+Post-merge main CI [run #149](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796030003) passed Ubuntu and Windows build/tests/smoke tests; Ubuntu ASan/UBSan passed.
+
 ## Limitations
 - Automated checks do not establish that every SRS acceptance criterion is satisfied.
 - At-most-one-GREEN-lane does not prove geometric conflict safety for turning movements.
+- New regression tests cover adaptive timing boundaries, transfer backpressure, emergency queue ordering and console long-lane/high-queue output, but do not close the remaining system-level gaps listed in the System Validation Report.
 - The 10,000-tick run does not prove bounded memory growth or leak-free repeated runs.
 - Manual interactive Ctrl+C acceptance and all 66 Test Plan case executions are not yet recorded.
 - System-level gaps are listed in `reports/System_Validation_Report.md` and `Documents/RTM_Implementation_Status.md`.

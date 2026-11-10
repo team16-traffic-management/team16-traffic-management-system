@@ -32,6 +32,10 @@ Record automated CI evidence, local performance evidence and outstanding system-
 | SYS-09 | Long simulation / memory safety | 10,000-tick test and Linux ASan/UBSan CI | PARTIAL — no repeated-run leak/memory-growth report |
 | SYS-10 | Performance | Five local 10,000-tick runs; average 84,371.19 and median 88,344.30 ticks/sec vs 500 target | PASS — local fixture only |
 | SYS-11 | Graceful manual stop | PR #94 merged; automated direct-stop and SIGINT tests passed on Ubuntu/Windows CI; Linux sanitizer passed | PASS — automated verification; manual interactive acceptance still NOT RUN/documented |
+| SYS-12 | Adaptive green timing boundaries | PR #98 verifies capped extension, low-queue base-duration reset and negative extension rejection; CI run #141 passed Ubuntu/Windows | PASS — tested boundaries only; not full timing policy validation |
+| SYS-13 | Destination queue transfer backpressure | PR #99 verifies pending transfer waits while destination lane is full and is delivered after capacity frees; CI run #142 passed Ubuntu/Windows | PASS — tested scenario; exact one-tick latency and invalid-intersection isolation remain unverified |
+| SYS-14 | Emergency queue ordering | PR #101 verifies emergency-first ordering and FIFO stability within emergency and normal vehicles; CI run #143 passed Ubuntu/Windows | PASS — queue ordering cases only; maximum emergency wait remains unverified |
+| SYS-15 | Console long-lane/high-queue output | PR #102 verifies full long lane name, queue count and visual bar; PR run #144 and main run #149 passed Ubuntu/Windows | PASS — output assertions; manual visual/usability inspection remains outstanding |
 
 ## Local performance benchmark
 One warm-up followed by five measured runs of 10,000 ticks, four independent intersections and four lanes per intersection; console rendering disabled.
@@ -53,13 +57,20 @@ The median is approximately 176.7 times the target. This is evidence for the loc
 - Execute and record all 66 Test Plan cases individually; 436 automated assertions are not equivalent to the 66 planned cases.
 - Perform a manual interactive Ctrl+C run and verify the printed completed-tick count and partial summary.
 - Test geometric movement conflicts between turning movements; current invariant checks only at most one GREEN lane.
-- Test exact one-tick transfer latency, full destination queue behavior and invalid-intersection isolation.
-- Test adaptive timing bounds and emergency maximum-wait/preemption delay.
+- Test exact one-tick transfer latency and invalid-intersection isolation. Destination full-queue backpressure is covered by PR #99.
+- Test emergency maximum-wait/preemption delay. Adaptive timing boundary cases are covered by PR #98.
 - Run repeated create/run/destroy cycles and retain memory-growth/leak evidence; sanitizer pass is not a leak report.
-- Inspect console formatting with long lane names and high queue lengths.
+- Perform manual visual/usability inspection of console formatting; long lane names and high queue lengths are now covered by PR #102 assertions.
 - Benchmark connected intersections and evaluator hardware if required.
 - Resolve SRS PRJ-SR-002 rejection behavior versus Test Plan safe-default expectations; correct `TC-Gen-003-N` mapping.
 - Regenerate final coverage and record exact file scope.
+
+## Latest merged QA regression evidence
+- PR #98 adaptive timing boundaries: [CI run #141](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42791702831), merged.
+- PR #99 transfer backpressure: [CI run #142](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42792945910), merged.
+- PR #101 emergency queue ordering: [CI run #143](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42795154445), merged.
+- PR #102 long-lane/high-queue console output: [CI run #144](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42795769676), merged.
+- Post-merge main CI: [run #149](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796030003) passed Ubuntu and Windows; Ubuntu ASan/UBSan passed.
 
 ## Conclusion
 The repository has successful cross-platform CI evidence, Linux sanitizer evidence, and a local benchmark exceeding the stated throughput target for its fixture. Graceful stop is implemented and automated-CI verified. Overall system acceptance remains PARTIAL until outstanding requirement-level cases are executed, documented and signed off.
