@@ -9,6 +9,9 @@
 #include "../vehicle/VehicleGenerator.h"
 #include "ConsoleView.h"
 
+// Safe to call from a SIGINT handler; the engine checks the request between ticks.
+void requestSimulationStop() noexcept;
+
 class SimulationEngine {
 public:
     SimulationEngine();
