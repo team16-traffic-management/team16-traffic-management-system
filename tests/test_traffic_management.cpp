@@ -232,6 +232,35 @@ void testConfigDrivenIntersections() {
     check(engine.getTotalTransfers() > 0, "configured connection transfers vehicles");
     std::remove(path);
 }
+void testConnectedVehicleTransferTakesOneTick() {
+    SimulationEngine engine;
+    Intersection source("One-Tick-Source");
+    source.addLane("North", 2);
+    Intersection destination("One-Tick-Destination");
+    destination.addLane("North", 2);
+
+    source.getLanes()[0].enqueue(
+        Vehicle(701, 0, VehicleType::NORMAL)
+    );
+
+    engine.addIntersection(source);
+    engine.addIntersection(destination);
+    engine.loadConfig(0.0, 0.0, false);
+    engine.connectIntersections("One-Tick-Source", "One-Tick-Destination");
+
+    engine.tick(true);
+    check(engine.getTotalTransfers() == 0,
+          "transfer is queued after the source vehicle leaves in tick one");
+    check(engine.getStats().totalThroughput() == 0,
+          "connected source vehicle is not counted as processed before delivery");
+
+    engine.tick(true);
+    check(engine.getTotalTransfers() == 1,
+          "pending vehicle is delivered at the start of the following tick");
+    check(engine.getStats().totalThroughput() == 1,
+          "destination processes the transferred vehicle on the following tick");
+}
+
 void testPendingTransferWaitsForDestinationCapacity() {
     SimulationEngine engine;
     Intersection source("Transfer-Source");
@@ -562,6 +591,7 @@ int main() {
     testConfigurationValidationBoundaries();
     testEngineDequeuesVehiclesOnlyOnGreen();
     testConfigDrivenIntersections();
+    testConnectedVehicleTransferTakesOneTick();
     testPendingTransferWaitsForDestinationCapacity();
     testConsoleLongLaneAndHighQueueDisplay();
     testConsoleStatusFields();
