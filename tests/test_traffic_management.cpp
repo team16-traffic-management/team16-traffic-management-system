@@ -191,7 +191,7 @@ void testManualStopProducesPartialSummary() {
     std::ostringstream captured;
     std::streambuf* previous = std::cout.rdbuf(captured.rdbuf());
     std::thread stopper([] {
-        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
         requestSimulationStop();
     });
 
@@ -307,6 +307,7 @@ int main() {
     testInvalidConfiguration();
     testQueueCapacityAndEmptyDequeue();
     testMalformedConfiguration();
+    testConfigurationValidationBoundaries();
     testConfigDrivenIntersections();
     testConsoleStatusFields();
     testTenThousandTickStability();
