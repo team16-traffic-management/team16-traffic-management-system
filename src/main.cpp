@@ -1,8 +1,16 @@
 #include "../include/SimulationEngine.h"
+#include <csignal>
 #include <exception>
 #include <iostream>
 
+namespace {
+void handleStopSignal(int) {
+    requestSimulationStop();
+}
+}
+
 int main(int argc, char* argv[]) {
+    std::signal(SIGINT, handleStopSignal);
     try {
         SimulationEngine simulation;
         int ticks = 20;
@@ -23,7 +31,10 @@ int main(int argc, char* argv[]) {
         }
         std::cout << "TRAFFIC MANAGEMENT SYSTEM\n"
                   << simulation.getIntersectionCount()
-                  << " intersection(s) | " << ticks << " simulation ticks\n";
+                  << " intersection(s) | ";
+        if (ticks == 0) std::cout << "run until stopped\n";
+        else std::cout << ticks << " simulation ticks\n";
+        std::cout << "Press Ctrl+C at any time to stop safely and print the summary.\n";
         simulation.run(ticks);
     } catch (const std::exception& error) {
         std::cerr << "Simulation failed: " << error.what() << '\n';
