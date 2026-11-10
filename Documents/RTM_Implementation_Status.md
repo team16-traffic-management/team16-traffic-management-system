@@ -13,7 +13,7 @@ This matrix summarizes implementation and verification evidence currently availa
 | TMS-F-040–042 | Multiple intersections, configured lane connections, transfers and statistics | Two-intersection configuration test and successful transfer assertion; CI multi-intersection startup smoke test | PARTIAL — exact one-tick transfer latency, full destination lane and invalid-intersection isolation need dedicated tests |
 | TMS-F-050–052 | Throughput, average wait, maximum queue, blocked and preemption statistics | Statistics calculation and report-format checks | PASS for covered calculations; broader end-to-end report workflow remains manual |
 | TMS-F-060 | Configuration parsing, validation and configured run length | PR #91 configuration boundary matrix; CI application/config startup smoke tests | PARTIAL — manual Test Plan cases and clear error behavior should be reconciled case-by-case |
-| TMS-F-061 | Clean start/termination and final summary for configured or user-requested stop | Implementation is in open PR #94; latest branch adds a stop request, SIGINT handler, zero-tick open-ended mode, partial-run summary and related automated tests | PENDING — PR #94 CI run #128 was still in progress at this update; review and merge only after final CI and review. Latest diff's zero-tick config test writes literal `\\n` sequences rather than newline characters and should be corrected before approval |
+| TMS-F-061 | Clean start/termination and final summary for configured or user-requested stop | Merged through PR #94; atomic stop request, SIGINT handling, `total_ticks=0` open-ended mode, actual completed-tick summary, direct-stop and SIGINT regression tests | IMPLEMENTED + AUTOMATED CI VERIFIED — PR #94 workflow run #132 passed Ubuntu and Windows build/tests and smoke tests; Ubuntu ASan/UBSan passed. Manual interactive Ctrl+C acceptance run and full Test Plan case execution remain unrecorded |
 | TMS-NF-001 | Performance target of 500 ticks/second | Local Windows benchmark: five 10,000-tick runs; average 84,371.19 and median 88,344.30 ticks/second | PASS for this fixture only — four independent intersections, console rendering disabled; evaluator hardware and connected topology not tested |
 | TMS-NF-002 | RAII/STL ownership and long-run stability | 10,000-tick run completed; Linux ASan/UBSan passed in CI run #99 | PARTIAL — no repeated-run leak/memory-growth or Valgrind evidence |
 | TMS-NF-003 | Modular source/header structure and config-driven topology | Config-driven multi-intersection setup and transfer test | PASS for covered topology; topology extension and full configuration matrix not exhaustively tested |
@@ -27,14 +27,13 @@ This matrix summarizes implementation and verification evidence currently availa
 
 ## Verified CI and benchmark evidence
 
-### Main-branch CI
+### CI evidence
 
-- Workflow run #99: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42450330604
-- Tested main commit: `f8c6cfda5355f3e2cea2ff2bbd71dae23180c540`
-- Automated test executable reported 436 checks passed on Ubuntu and Windows.
-- Default application and config-driven multi-intersection startup smoke tests passed on both platforms.
-- Ubuntu AddressSanitizer and UndefinedBehaviorSanitizer passed.
-- Windows sanitizer was not run by the workflow.
+- Baseline main workflow run #99: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42450330604
+- Baseline tested main commit: `f8c6cfda5355f3e2cea2ff2bbd71dae23180c540`; 436 automated checks passed on Ubuntu and Windows, both smoke tests passed, and Ubuntu ASan/UBSan passed. Windows sanitizer was skipped.
+- Manual-stop PR #94 workflow run #132: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42785408865
+- PR #94 head `9b8730c4cb0fdb5f8e0a172e40b16912fff49c53`: Ubuntu and Windows builds, automated tests, default-app smoke tests and config-driven multi-intersection smoke tests passed; Ubuntu ASan/UBSan passed.
+- PR #94 was merged to main as `339dfed320036ed1c42a375f70bc1189fb5b4244`.
 
 ### Performance benchmark
 
@@ -46,16 +45,16 @@ This matrix summarizes implementation and verification evidence currently availa
 
 ### Manual-stop implementation
 
-PR #94: https://github.com/team16-traffic-management/team16-traffic-management-system/pull/94
+PR #94: https://github.com/team16-traffic-management/team16-traffic-management-system/pull/94 — merged to `main` as `339dfed320036ed1c42a375f70bc1189fb5b4244`.
 
-The latest PR diff adds a process-level SIGINT handler, atomic stop request, open-ended `total_ticks=0` mode, actual completed-tick reporting and automated tests for direct stop request and SIGINT. At the time this matrix was refreshed, workflow run #128 was still in progress. Do not mark TMS-F-061 as accepted until the test issue noted above is corrected, CI passes, the PR is reviewed and the change is merged.
+The merged implementation adds a process-level SIGINT handler, atomic stop request, open-ended `total_ticks=0` mode, actual completed-tick reporting and automated tests for direct stop request and SIGINT. PR #94 workflow run #132 passed on Ubuntu and Windows; Ubuntu ASan/UBSan passed. Automated CI verification is complete for this change. A separate manual interactive Ctrl+C run is still not evidenced in the repository, so do not claim all manual Test Plan cases are complete.
 
 ## Test Plan execution and acceptance
 
 The automated suite's 436 checks are not the same as the Test Plan's 66 positive/negative cases. Record each planned case's actual execution result separately; do not infer a PASS solely from related unit assertions.
 
 Priority remaining evidence:
-1. TMS-F-061: manual stop, SIGINT handling and accurate partial-run summary after PR #94 is corrected, passes CI and is merged.
+1. TMS-F-061: implementation and cross-platform CI are complete; perform and record one manual interactive Ctrl+C run and verify the displayed partial summary.
 2. TMS-F-022: geometric movement-conflict validation, not merely a maximum-one-GREEN-lane invariant.
 3. TMS-F-040–042: one-tick transfer latency, full destination queue behavior and invalid-intersection handling.
 4. TMS-F-020 / TMS-F-030: adaptive timing bounds and emergency preemption delay.
