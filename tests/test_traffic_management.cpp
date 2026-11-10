@@ -100,8 +100,6 @@ void testConfigurationValidationBoundaries() {
                   "missing total_ticks rejected");
     rejectsConfig("total_ticks=-1\nadaptive_mode=false\nqueue_capacity=5\n",
                   "negative total_ticks rejected");
-    rejectsConfig("total_ticks=-1\nadaptive_mode=false\nqueue_capacity=5\n",
-                  "negative total_ticks rejected");
     rejectsConfig("total_ticks=10000001\nadaptive_mode=false\nqueue_capacity=5\n",
                   "total_ticks above supported limit rejected");
     rejectsConfig("total_ticks=10\nadaptive_mode=maybe\nqueue_capacity=5\n",
