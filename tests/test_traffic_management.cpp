@@ -151,6 +151,38 @@ void testConfigDrivenIntersections() {
     check(engine.getTotalTransfers() > 0, "configured connection transfers vehicles");
     std::remove(path);
 }
+void testPendingTransferWaitsForDestinationCapacity() {
+    SimulationEngine engine;
+    Intersection source("Transfer-Source");
+    source.addLane("North", 2);
+    Intersection destination("Transfer-Destination");
+    destination.addLane("Blocker", 2); // Holds the initial green phase.
+    destination.addLane("North", 1);   // Matching lane starts red and is full.
+
+    source.getLanes()[0].enqueue(
+        Vehicle(901, 0, VehicleType::NORMAL)
+    );
+    destination.getLanes()[1].enqueue(
+        Vehicle(900, 0, VehicleType::NORMAL)
+    );
+
+    engine.addIntersection(source);
+    engine.addIntersection(destination);
+    engine.loadConfig(0.0, 0.0, false);
+    engine.connectIntersections("Transfer-Source", "Transfer-Destination");
+
+    // The source vehicle is scheduled while the destination lane is full.
+    // The transfer must remain pending until the destination lane can accept it.
+    for (int tick = 0; tick < 25; ++tick) {
+        engine.tick(true);
+    }
+
+    check(engine.getTotalTransfers() == 1,
+          "pending transfer is delivered after destination capacity becomes available");
+    check(engine.getStats().totalThroughput() >= 2,
+          "destination processes both its original vehicle and the transferred vehicle");
+}
+
 void testConsoleStatusFields() {
     Intersection intersection("Console-Test");
     intersection.addLane("North", 5);
@@ -420,6 +452,7 @@ int main() {
     testMalformedConfiguration();
     testConfigurationValidationBoundaries();
     testConfigDrivenIntersections();
+    testPendingTransferWaitsForDestinationCapacity();
     testConsoleStatusFields();
     testTenThousandTickStability();
     testZeroTickConfigurationMeansOpenEndedRun();
