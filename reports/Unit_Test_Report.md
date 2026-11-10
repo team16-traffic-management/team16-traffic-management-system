@@ -1,70 +1,69 @@
 # Unit Test Report
 
-Status: Updated against the tested main branch. Main-branch CI run #99 passed on Ubuntu and Windows.
+Status: Baseline main CI run #99 passed; subsequent manual-stop PR #94 also passed cross-platform CI before merge.
 
 ## Test environment
-
 | Field | Value |
 |---|---|
 | Language standard | C++17 |
-| Operating systems | GitHub Actions Ubuntu 26.04 and Windows latest |
-| Compiler | GCC 15.2.0 on Ubuntu; MinGW GCC 15.2.0 on Windows |
-| Build tool | GNU Make 4.4.1 |
+| Operating systems | GitHub Actions Ubuntu and Windows |
 | Test source | `tests/test_traffic_management.cpp` |
-| Implementation sources | Vehicle, VehicleGenerator, LaneQueue, TrafficSignalController, StatisticsCollector, Intersection, ConsoleView and SimulationEngine |
-| Tested main commit | `f8c6cfda5355f3e2cea2ff2bbd71dae23180c540` |
-| Execution date | 8 November 2026 |
-| Workflow run | [GitHub Actions run #99](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42450330604) |
+| Baseline tested main commit | `f8c6cfda5355f3e2cea2ff2bbd71dae23180c540` |
+| Baseline workflow | [Run #99](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42450330604) |
+| Manual-stop PR head | `9b8730c4cb0fdb5f8e0a172e40b16912fff49c53` |
+| Manual-stop workflow | [PR #94 run #132](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42785408865) |
+| Manual-stop merge commit | `339dfed320036ed1c42a375f70bc1189fb5b4244` |
 
-## Test scope
+## Automated test scope
+- Vehicle generation, metadata, probability boundaries and seeded arrival behavior.
+- Bounded lane queues, overflow rejection, FIFO dequeue and empty-dequeue handling.
+- Configuration validation, multi-intersection setup and vehicle transfers.
+- Signal phase transitions, lane rotation and invalid durations.
+- Emergency preemption request acceptance/rejection and deferred activation.
+- Statistics, console status, intersection validation and long-run execution.
+- PR #94 adds direct stop-request, open-ended-run, partial-summary and SIGINT regression coverage.
 
-The automated test executable covers:
-
-- Vehicle generation: probability boundaries, lane/tick metadata, seeded arrival-rate behavior, configuration updates and invalid inputs.
-- Lane queues: capacity, overflow rejection, FIFO dequeue and empty-dequeue handling.
-- Configuration and simulation: malformed configuration, multi-intersection setup, transfers, console status and a 10,000-tick run.
-- Signal controller: phase transitions, lane rotation, invalid durations and lane registration.
-- Emergency handling: valid/invalid preemption requests and deferred activation.
-- Statistics: throughput, average wait, blocked events, preemption counts and invalid timestamps.
-- Intersection validation: ID, lane name, capacity, duplicate lane and signal registration checks.
-
-## Results
-
-| Result | Ubuntu 26.04 | Windows |
+## Baseline main CI results — run #99
+| Result | Ubuntu | Windows |
 |---|---:|---:|
 | Automated checks passed | 436 | 436 |
 | Automated checks failed | 0 | 0 |
-| Test executable exit status | Success | Success |
 | Application build | Passed | Passed |
 | Default application smoke test | Passed | Passed |
 | Multi-intersection startup smoke test | Passed | Passed |
-| AddressSanitizer / UndefinedBehaviorSanitizer | Passed | Not run (Linux-only workflow step) |
+| ASan / UBSan | Passed | Not run (Linux-only workflow step) |
 
-The CI log prints `All 436 checks passed.` on both platforms. The Linux sanitizer target also completed successfully. Windows sanitizer execution is not claimed.
+## Manual-stop PR CI results — run #132
+| Result | Ubuntu | Windows |
+|---|---|---|
+| Application and test build | Passed | Passed |
+| Automated tests | Passed | Passed |
+| Default application smoke test | Passed | Passed |
+| Multi-intersection startup smoke test | Passed | Passed |
+| ASan / UBSan | Passed | Not run (Linux-only workflow step) |
+
+Run #132 is reported as pass/fail by job outcome; this report does not invent a new assertion count for that run.
 
 ## Reproduction commands
-
 ```bash
 make clean all build/test-traffic-management
 ./build/test-traffic-management
 make sanitize
 ```
 
-The sanitizer command is run on Ubuntu in the workflow. The application smoke tests use:
-
+Application smoke tests:
 ```bash
 ./build/traffic-management
 ./build/traffic-management examples/multi_intersection.cfg
 ```
 
 ## Limitations
-
-- CI run #99 is main-branch evidence for commit `f8c6cfda5355f3e2cea2ff2bbd71dae23180c540`; the workflow URL above is the retained evidence.
-- Passing automated checks do not establish that every SRS acceptance criterion is satisfied.
-- The 10,000-tick test proves completion in this run; its current non-negative statistics assertions are not meaningful bounds checks for unsigned counters. PR #90 adds an 80-tick serialized-green regression check (at most one lane GREEN); it does not prove geometric conflict safety for turning movements. PR #91 adds configuration rejection cases for missing/invalid fields, numeric boundaries, duplicate/unknown keys, lane lists and invalid connections.
-- System-level scenarios not explicitly executed are listed as outstanding in the System Validation Report.
-- GCOV line/branch coverage is documented separately and must not be inferred from these test results.
+- Automated checks do not establish that every SRS acceptance criterion is satisfied.
+- At-most-one-GREEN-lane does not prove geometric conflict safety for turning movements.
+- The 10,000-tick run does not prove bounded memory growth or leak-free repeated runs.
+- Manual interactive Ctrl+C acceptance and all 66 Test Plan case executions are not yet recorded.
+- System-level gaps are listed in `reports/System_Validation_Report.md` and `Documents/RTM_Implementation_Status.md`.
+- GCOV line/branch coverage is documented separately and must not be inferred from these results.
 
 ## Conclusion
-
-The test executable completed successfully with 436 checks on Ubuntu and Windows. Linux AddressSanitizer and UndefinedBehaviorSanitizer also completed successfully. This is verified CI evidence for the tested main commit; it is not a full system-validation sign-off.
+Baseline main CI reported 436 checks passed on Ubuntu and Windows. PR #94's manual-stop implementation also passed its Ubuntu and Windows CI jobs, with Ubuntu ASan/UBSan passing, and was merged to main. These are verified automated results for the tested commits, not full system acceptance.
