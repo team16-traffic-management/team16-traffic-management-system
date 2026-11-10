@@ -19,8 +19,8 @@ The detailed status and limitations are maintained in `Documents/RTM_Implementat
 
 | Requirement group | Intended behavior | Evidence | Remaining verification |
 |---|---|---|---|
-| TMS-F-001–003 | Vehicle arrivals, metadata and FIFO handling | Generator and queue tests in `tests/test_traffic_management.cpp` | Explicit unique-ID and all detailed positive/negative cases |
-| TMS-F-010–013 | Lane queues, capacity, green-only dequeue and waiting time | Queue capacity/FIFO/overflow, signal and statistics tests | Direct engine-level green-only dequeue proof if required by case mapping |
+| TMS-F-001–003 | Vehicle arrivals, metadata and FIFO handling | Generator and queue tests; PR #104 verifies 200 distinct IDs across multiple lanes/intersections (CI #153) | All detailed positive/negative Test Plan cases |
+| TMS-F-010–013 | Lane queues, capacity, green-only dequeue and waiting time | Queue capacity/FIFO/overflow; PR #105 engine-level green-only dequeue test (CI #154); signal and statistics tests | Full detailed Test Plan cases and broader wait-time behavior |
 | TMS-F-020–024 | Fixed/adaptive signals and safe phases | Signal transition tests; PR #90 80-tick at-most-one-GREEN-lane invariant; PR #98 adaptive extension cap/reset/invalid-boundary tests (CI #141) | Geometric movement-conflict matrix; full adaptive policy validation beyond tested boundaries |
 | TMS-F-030–032 | Emergency priority and preemption | Emergency request acceptance/rejection/deferred activation tests | Maximum emergency wait/preemption delay boundary |
 | TMS-F-040–042 | Multi-intersection transfer and reporting | Two-intersection transfer test; PR #99 destination-full backpressure test (CI #142); config startup smoke tests | Exact one-tick latency and invalid-intersection isolation |
@@ -37,6 +37,8 @@ The detailed status and limitations are maintained in `Documents/RTM_Implementat
 - PR #99 transfer backpressure: CI run #142, merged.
 - PR #101 emergency queue priority/order: CI run #143, merged.
 - PR #102 console long-lane/high-queue output: CI run #144, merged.
+- PR #104 vehicle ID uniqueness: CI run #153, merged.
+- PR #105 green-only engine dequeue: CI run #154, merged.
 - Post-merge main CI run #149 passed Ubuntu/Windows builds, tests and smoke tests; Ubuntu ASan/UBSan passed.
 
 ## Evidence rules

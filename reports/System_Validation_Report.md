@@ -36,6 +36,8 @@ Record automated CI evidence, local performance evidence and outstanding system-
 | SYS-13 | Destination queue transfer backpressure | PR #99 verifies pending transfer waits while destination lane is full and is delivered after capacity frees; CI run #142 passed Ubuntu/Windows | PASS — tested scenario; exact one-tick latency and invalid-intersection isolation remain unverified |
 | SYS-14 | Emergency queue ordering | PR #101 verifies emergency-first ordering and FIFO stability within emergency and normal vehicles; CI run #143 passed Ubuntu/Windows | PASS — queue ordering cases only; maximum emergency wait remains unverified |
 | SYS-15 | Console long-lane/high-queue output | PR #102 verifies full long lane name, queue count and visual bar; PR run #144 and main run #149 passed Ubuntu/Windows | PASS — output assertions; manual visual/usability inspection remains outstanding |
+| SYS-16 | Vehicle ID uniqueness | PR #104 checks 200 generated vehicles across four lanes in two intersections for duplicate IDs; CI run #153 passed Ubuntu/Windows | PASS — tested generation fixture |
+| SYS-17 | Engine-level green-only dequeue | PR #105 verifies a red-lane vehicle remains queued until its lane turns green; CI run #154 passed Ubuntu/Windows | PASS — tested signal cycle and engine behavior |
 
 ## Local performance benchmark
 One warm-up followed by five measured runs of 10,000 ticks, four independent intersections and four lanes per intersection; console rendering disabled.
@@ -70,6 +72,8 @@ The median is approximately 176.7 times the target. This is evidence for the loc
 - PR #99 transfer backpressure: [CI run #142](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42792945910), merged.
 - PR #101 emergency queue ordering: [CI run #143](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42795154445), merged.
 - PR #102 long-lane/high-queue console output: [CI run #144](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42795769676), merged.
+- PR #104 vehicle ID uniqueness: [CI run #153](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796601039), merged.
+- PR #105 green-only engine dequeue: [CI run #154](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796698371), merged.
 - Post-merge main CI: [run #149](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796030003) passed Ubuntu and Windows; Ubuntu ASan/UBSan passed.
 
 ## Conclusion
