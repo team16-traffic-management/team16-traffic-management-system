@@ -29,7 +29,7 @@ This matrix summarizes implementation and verification evidence currently availa
 
 ### CI evidence
 
-- Latest main CI after QA regression merges: run #149, commit `522da64295b4f5701f7538b6fc1b475f525d9e75`: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796030003 — Ubuntu and Windows build, automated tests and smoke tests passed; Ubuntu ASan/UBSan passed. Windows sanitizer is skipped by the workflow.
+- Latest main CI after QA regression merges: run #163, commit `4ccfc24ee7ef477454041aa5f7c3954e4ce31020`: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42797884604 — Ubuntu and Windows build, automated tests and smoke tests passed; Ubuntu ASan/UBSan passed. Windows sanitizer is skipped by the workflow.
 - PR #98 adaptive timing boundary tests: run #141 passed Ubuntu and Windows: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42791702831. Merged as `32f53971bc6ab77f035d00eb1fe7ba2ffb34c1fd`.
 - PR #99 transfer backpressure test: run #142 passed Ubuntu and Windows: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42792945910. Merged as `0ab0ff995249e7cd0eb26d9debfa618938540d69`.
 - PR #101 emergency queue ordering test: run #143 passed Ubuntu and Windows: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42795154445. Merged as `093a7c5ec684156d44affa2a3c84da6503d76e30`.
