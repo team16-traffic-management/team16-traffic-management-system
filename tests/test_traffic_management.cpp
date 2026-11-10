@@ -334,6 +334,27 @@ void testConsoleStatusFields() {
     check(output.find("Signal") != std::string::npos, "console displays signal state");
     check(output.find("Queue") != std::string::npos, "console displays lane queue length");
 }
+void testRepeatedSimulationLifecycle() {
+    std::ostringstream captured;
+    std::streambuf* previous = std::cout.rdbuf(captured.rdbuf());
+
+    for (int iteration = 0; iteration < 20; ++iteration) {
+        SimulationEngine engine;
+        Intersection intersection("Repeated-Lifecycle-" + std::to_string(iteration));
+        intersection.addLane("North", 10);
+        intersection.addLane("South", 10);
+        engine.addIntersection(intersection);
+        engine.loadConfig(0.2, 0.05, false);
+        engine.run(100, true);
+        check(engine.getCurrentTick() == 100,
+              "repeated simulation instance completes its configured run");
+    }
+
+    std::cout.rdbuf(previous);
+    check(captured.str().find("TMS SIMULATION REPORT") != std::string::npos,
+          "repeated simulation lifecycle produces run summaries");
+}
+
 void testTenThousandTickStability() {
     SimulationEngine engine;
     Intersection intersection("stress");
@@ -595,6 +616,7 @@ int main() {
     testPendingTransferWaitsForDestinationCapacity();
     testConsoleLongLaneAndHighQueueDisplay();
     testConsoleStatusFields();
+    testRepeatedSimulationLifecycle();
     testTenThousandTickStability();
     testZeroTickConfigurationMeansOpenEndedRun();
     testManualStopProducesPartialSummary();
