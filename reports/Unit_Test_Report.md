@@ -25,6 +25,8 @@ Status: Baseline main CI run #99 passed; subsequent manual-stop PR #94 also pass
 - PR #99: pending transfer retained under destination queue backpressure and delivered after capacity becomes available.
 - PR #101: emergency vehicles are inserted ahead of normal vehicles while preserving FIFO ordering within each class.
 - PR #102: console output retains long lane names and renders high queue counts/bars.
+- PR #104: vehicle IDs remain unique across 200 generated vehicles from multiple lanes and intersections.
+- PR #105: engine dequeues a vehicle only when its lane has a GREEN signal; red-lane vehicle remains queued through its preceding phases.
 - PR #94 adds direct stop-request, open-ended-run, partial-summary and SIGINT regression coverage.
 
 ## Baseline main CI results — run #99
@@ -68,6 +70,8 @@ Application smoke tests:
 | #99 | Transfer backpressure | [Run #142](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42792945910) | Passed, including ASan/UBSan | Passed |
 | #101 | Emergency queue priority/order | [Run #143](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42795154445) | Passed, including ASan/UBSan | Passed |
 | #102 | Long lane names/high queue console output | [Run #144](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42795769676) | Passed, including ASan/UBSan | Passed |
+| #104 | Vehicle ID uniqueness across lanes/intersections | [Run #153](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796601039) | Passed, including ASan/UBSan | Passed |
+| #105 | Engine-level green-only dequeue | [Run #154](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796698371) | Passed, including ASan/UBSan | Passed |
 
 Post-merge main CI [run #149](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796030003) passed Ubuntu and Windows build/tests/smoke tests; Ubuntu ASan/UBSan passed.
 
