@@ -1,5 +1,6 @@
 #include "../include/SimulationEngine.h"
 
+#include <atomic>
 #include <cmath>
 #include <fstream>
 #include <iostream>
@@ -8,6 +9,17 @@
 #include <stdexcept>
 #include <unordered_map>
 #include <utility>
+
+namespace {
+// Lock-free atomic flag so a signal handler can request a stop safely.
+static_assert(std::atomic<bool>::is_always_lock_free,
+              "Graceful signal handling requires lock-free atomic<bool>");
+std::atomic<bool> stopRequested{false};
+}
+
+void requestSimulationStop() noexcept {
+    stopRequested.store(true, std::memory_order_relaxed);
+}
 
 SimulationEngine::SimulationEngine() : generator_(0.4, 0.05) {}
 
@@ -131,8 +143,8 @@ int SimulationEngine::loadConfigFromFile(const std::string& filename) {
     int totalTicks = 0;
     try { totalTicks = std::stoi(ticksText, &parsed); }
     catch (...) { throw std::runtime_error("Invalid total_ticks value"); }
-    if (parsed != ticksText.size() || totalTicks <= 0 || totalTicks > 10000000)
-        throw std::runtime_error("total_ticks must be between 1 and 10000000");
+    if (parsed != ticksText.size() || totalTicks < 0 || totalTicks > 10000000)
+        throw std::runtime_error("total_ticks must be between 0 and 10000000 (0 means run until stopped)");
 
     const std::string adaptiveText = getRequired("adaptive_mode");
     bool adaptiveMode = false;
@@ -292,12 +304,27 @@ void SimulationEngine::tick(bool silent) {
 }
 
 void SimulationEngine::run(int maxTicks, bool silent) {
-    if (maxTicks <= 0) throw std::invalid_argument("Simulation ticks must be greater than zero");
-    if (maxTicks > std::numeric_limits<int>::max() - currentTick_)
+    if (maxTicks < 0)
+        throw std::invalid_argument("Simulation ticks cannot be negative");
+    if (maxTicks > 0 && maxTicks > std::numeric_limits<int>::max() - currentTick_)
         throw std::overflow_error("Requested simulation duration exceeds tick limit");
-    for (int i = 0; i < maxTicks; ++i) tick(silent);
-    stats_.printEndOfRunReport(maxTicks);
-    std::cout << "\nTotal successful vehicle transfers: " << totalTransfers_ << "\n";
+
+    // A zero limit means an open-ended run. SIGINT (Ctrl+C) or an explicit
+    // requestSimulationStop() call ends the loop between completed ticks.
+    stopRequested.store(false, std::memory_order_relaxed);
+    int ticksExecuted = 0;
+    while ((maxTicks == 0 || ticksExecuted < maxTicks) &&
+           !stopRequested.load(std::memory_order_relaxed)) {
+        tick(silent);
+        ++ticksExecuted;
+    }
+
+    const bool userStopped = stopRequested.load(std::memory_order_relaxed);
+    stats_.printEndOfRunReport(ticksExecuted);
+    std::cout << "Run termination: "
+              << (userStopped ? "user requested stop" : "configured tick limit reached")
+              << " (" << ticksExecuted << " ticks executed)\n";
+    std::cout << "Total successful vehicle transfers: " << totalTransfers_ << "\n";
     std::cout << "Vehicles still waiting for transfer: " << pendingTransfers_.size() << "\n";
 }
 
