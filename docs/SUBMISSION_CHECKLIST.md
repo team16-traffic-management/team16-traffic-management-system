@@ -16,7 +16,7 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] GitHub Actions workflow builds/tests Ubuntu and Windows.
 - [x] PR #94 graceful-stop implementation merged to main as `339dfed320036ed1c42a375f70bc1189fb5b4244`.
 - [x] PR #94 CI run #132 passed Ubuntu and Windows build, automated tests and smoke tests; Ubuntu ASan/UBSan passed: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42785408865.
-- [ ] Capture a fresh push-to-main CI run after the final documentation merges.
+- [x] Capture fresh push-to-main CI after QA regression merges: run #149 passed Ubuntu/Windows build, tests and smoke tests; Ubuntu ASan/UBSan passed.
 - [ ] Confirm backlog, sprint dates, story points and issue statuses in the team's tracker (Tarun).
 - [ ] Confirm team roles/contributions with all members.
 - [ ] Capture required PR/review evidence and final team approvals.
@@ -30,14 +30,22 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [ ] Execute and record the 66 Test Plan cases individually; do not infer their results from 436 automated assertions.
 - [ ] Perform manual Ctrl+C stop and verify the partial-run summary (TMS-F-061).
 - [ ] Test geometric movement conflicts (TMS-F-022); current automated invariant only checks at most one GREEN lane.
-- [ ] Test exact transfer latency, full destination queue behavior and invalid-intersection isolation (TMS-F-040–042).
-- [ ] Test adaptive timing bounds and emergency maximum-wait/preemption delay (TMS-F-020 / TMS-F-030).
+- [x] Test destination queue backpressure (PR #99; CI run #142 passed); [ ] verify exact one-tick transfer latency and invalid-intersection isolation (TMS-F-040–042).
+- [x] Test adaptive timing boundaries (PR #98; CI run #141 passed); [ ] verify emergency maximum-wait/preemption delay (TMS-F-030).
+- [x] Test emergency queue priority and FIFO ordering (PR #101; CI run #143 passed).
 - [ ] Run repeated simulations and retain memory-growth/leak evidence (TMS-NF-002 / PRJ-SR-003).
-- [ ] Manually inspect console formatting with long lane names and high queue lengths (TMS-NF-004).
+- [x] Automated console assertions for long lane names/high queue lengths (PR #102; CI run #144 passed); [ ] manually inspect visual console usability (TMS-NF-004).
 - [x] Local Windows benchmark met 500 ticks/sec for its fixture (median 88,344.30 ticks/sec); connected-topology and evaluator-hardware evidence remain outstanding.
 - [ ] Regenerate line/branch coverage on final main and state the exact source scope.
 - [ ] Review the final academic report, demo guide and presentation.
 - [ ] Verify final repository/submission links and obtain required sign-offs.
+
+## Latest QA regression evidence
+- PR #98 adaptive timing boundaries: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42791702831
+- PR #99 transfer backpressure: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42792945910
+- PR #101 emergency queue priority/order: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42795154445
+- PR #102 long lane/high queue console output: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42795769676
+- Post-merge main CI: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796030003
 
 ## Evidence notes
 - Baseline main CI run #99: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42450330604 (436 checks passed on Ubuntu and Windows; smoke tests passed; Ubuntu ASan/UBSan passed).
