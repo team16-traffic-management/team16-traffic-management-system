@@ -198,9 +198,9 @@ void testZeroTickConfigurationMeansOpenEndedRun() {
     const char* path = "test_open_ended_config.tmp";
     {
         std::ofstream file(path);
-        file << "total_ticks=0\\n"
-             << "adaptive_mode=false\\n"
-             << "queue_capacity=5\\n";
+        file << "total_ticks=0\n"
+             << "adaptive_mode=false\n"
+             << "queue_capacity=5\n";
     }
     SimulationEngine engine;
     const int configuredTicks = engine.loadConfigFromFile(path);
