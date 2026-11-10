@@ -291,15 +291,16 @@ void testAdaptiveGreenExtensionBounds() {
 
     // The active lane's green duration must extend, but never beyond
     // the configured base duration (10) plus maxExtension (4).
-    for (int tick = 1; tick <= 10; ++tick) {
+    for (int tick = 1; tick <= 13; ++tick) {
         signals.updateAdaptiveTimers(heavyQueue);
         signals.updateSignalState(1);
         check(signals.getCurrentPhase("North") == SignalPhase::GREEN,
-              "adaptive green remains active through configured maximum extension");
+              "adaptive green remains active before the configured maximum extension expires");
     }
+    signals.updateAdaptiveTimers(heavyQueue);
     signals.updateSignalState(1);
     check(signals.getCurrentPhase("North") == SignalPhase::YELLOW,
-          "adaptive green transitions after the capped duration");
+          "adaptive green transitions at the capped duration");
 
     // A low queue restores the base green duration for the next cycle.
     signals.updateSignalState(1); // RED
