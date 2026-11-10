@@ -8,7 +8,7 @@ The repository is a C++17 console-based traffic simulation with a Makefile, auto
 The implementation includes vehicle generation, bounded lane queues, signal phases, emergency preemption, configurable multi-intersection simulation, statistics and graceful user-requested stop. Refer to `Documents/RTM_Implementation_Status.md` for requirement-level status and evidence limitations.
 
 ## Verified evidence
-- QA regression PRs #98, #99, #101 and #102 are merged. Their respective Ubuntu/Windows CI runs #141, #142, #143 and #144 passed. Coverage added: adaptive timing boundaries, destination queue backpressure, emergency queue ordering, and long lane/high queue console output.
+- QA regression PRs #98, #99, #101 and #102 are merged. Their respective Ubuntu/Windows CI runs #141, #142, #143 and #144 passed. Coverage added: adaptive timing boundaries, destination queue backpressure, emergency queue ordering, long lane/high queue console output, vehicle ID uniqueness and engine-level green-only dequeue.
 - Post-merge main CI run #149 passed Ubuntu and Windows build, automated tests and smoke tests; Ubuntu ASan/UBSan passed: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796030003.
 - Baseline main workflow #99: 436 automated checks passed on Ubuntu and Windows; default-app and multi-intersection startup smoke tests passed; Ubuntu ASan/UBSan passed.
 - Manual-stop PR #94: merged to main as `339dfed320036ed1c42a375f70bc1189fb5b4244`. PR workflow run #132 passed Ubuntu and Windows builds, automated tests and smoke tests; Ubuntu ASan/UBSan passed.
