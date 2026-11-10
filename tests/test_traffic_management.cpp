@@ -3,6 +3,7 @@
 #include "../include/ConsoleView.h"
 #include "../vehicle/VehicleGenerator.h"
 #include <chrono>
+#include <csignal>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
