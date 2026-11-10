@@ -63,6 +63,28 @@ void testInvalidConfiguration() {
     checkThrows<std::out_of_range>([] { VehicleGenerator g({0.2}, 1); g.setArrivalRate(2, 0.5); }, "invalid lane index rejected");
     checkThrows<std::invalid_argument>([] { VehicleGenerator g(std::vector<double>(), 1); }, "empty lane configuration rejected");
 }
+void testEmergencyQueuePriorityAndStableOrdering() {
+    LaneQueue queue("Priority", 6);
+    const Vehicle normalFirst(201, 0, VehicleType::NORMAL);
+    const Vehicle emergencyFirst(202, 1, VehicleType::EMERGENCY);
+    const Vehicle normalSecond(203, 2, VehicleType::NORMAL);
+    const Vehicle emergencySecond(204, 3, VehicleType::EMERGENCY);
+
+    check(queue.enqueue(normalFirst), "first normal vehicle accepted");
+    check(queue.enqueue(emergencyFirst), "first emergency vehicle accepted");
+    check(queue.enqueue(normalSecond), "second normal vehicle accepted");
+    check(queue.enqueue(emergencySecond), "second emergency vehicle accepted");
+
+    check(queue.dequeue().getId() == emergencyFirst.getId(),
+          "first emergency vehicle moves ahead of normal traffic");
+    check(queue.dequeue().getId() == emergencySecond.getId(),
+          "emergency vehicles retain FIFO order among themselves");
+    check(queue.dequeue().getId() == normalFirst.getId(),
+          "normal vehicles retain FIFO order after emergency traffic");
+    check(queue.dequeue().getId() == normalSecond.getId(),
+          "later normal vehicle remains behind earlier normal vehicle");
+}
+
 void testQueueCapacityAndEmptyDequeue() {
     LaneQueue queue("North", 1);
     const Vehicle first(1, 1, VehicleType::NORMAL);
@@ -359,6 +381,7 @@ int main() {
     testArrivalRates();
     testConfigurationUpdates();
     testInvalidConfiguration();
+    testEmergencyQueuePriorityAndStableOrdering();
     testQueueCapacityAndEmptyDequeue();
     testMalformedConfiguration();
     testConfigurationValidationBoundaries();
