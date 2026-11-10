@@ -38,6 +38,8 @@ Record automated CI evidence, local performance evidence and outstanding system-
 | SYS-15 | Console long-lane/high-queue output | PR #102 verifies full long lane name, queue count and visual bar; PR run #144 and main run #149 passed Ubuntu/Windows | PASS — output assertions; manual visual/usability inspection remains outstanding |
 | SYS-16 | Vehicle ID uniqueness | PR #104 checks 200 generated vehicles across four lanes in two intersections for duplicate IDs; CI run #153 passed Ubuntu/Windows | PASS — tested generation fixture |
 | SYS-17 | Engine-level green-only dequeue | PR #105 verifies a red-lane vehicle remains queued until its lane turns green; CI run #154 passed Ubuntu/Windows | PASS — tested signal cycle and engine behavior |
+| SYS-18 | Exact one-tick connected transfer latency | PR #107 verifies a vehicle scheduled from the source in tick one is delivered and processed by the destination in tick two; CI run #159 passed Ubuntu/Windows | PASS — tested topology and timing path |
+| SYS-19 | Repeated simulation lifecycle | PR #108 creates, runs and destroys 20 independent SimulationEngine instances, each for 100 ticks; CI run #162 passed Ubuntu/Windows | PASS — repeated lifecycle execution; not a quantified leak/memory-growth measurement |
 
 ## Local performance benchmark
 One warm-up followed by five measured runs of 10,000 ticks, four independent intersections and four lanes per intersection; console rendering disabled.
@@ -61,7 +63,7 @@ The median is approximately 176.7 times the target. This is evidence for the loc
 - Test geometric movement conflicts between turning movements; current invariant checks only at most one GREEN lane.
 - Test exact one-tick transfer latency and invalid-intersection isolation. Destination full-queue backpressure is covered by PR #99.
 - Test emergency maximum-wait/preemption delay. Adaptive timing boundary cases are covered by PR #98.
-- Run repeated create/run/destroy cycles and retain memory-growth/leak evidence; sanitizer pass is not a leak report.
+- PR #108 now runs 20 create/run/destroy cycles under the sanitizer-enabled suite; retain a quantified memory-growth/leak report if required, since repeated lifecycle assertions are not a leak report.
 - Perform manual visual/usability inspection of console formatting; long lane names and high queue lengths are now covered by PR #102 assertions.
 - Benchmark connected intersections and evaluator hardware if required.
 - Resolve SRS PRJ-SR-002 rejection behavior versus Test Plan safe-default expectations; correct `TC-Gen-003-N` mapping.
@@ -74,6 +76,8 @@ The median is approximately 176.7 times the target. This is evidence for the loc
 - PR #102 long-lane/high-queue console output: [CI run #144](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42795769676), merged.
 - PR #104 vehicle ID uniqueness: [CI run #153](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796601039), merged.
 - PR #105 green-only engine dequeue: [CI run #154](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796698371), merged.
+- PR #107 exact one-tick transfer latency: [CI run #159](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42797325343), merged.
+- PR #108 repeated simulation lifecycle: [CI run #162](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42797660386), merged.
 - Post-merge main CI: [run #149](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796030003) passed Ubuntu and Windows; Ubuntu ASan/UBSan passed.
 
 ## Conclusion
