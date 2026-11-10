@@ -78,7 +78,7 @@ The median is approximately 176.7 times the target. This is evidence for the loc
 - PR #105 green-only engine dequeue: [CI run #154](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796698371), merged.
 - PR #107 exact one-tick transfer latency: [CI run #159](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42797325343), merged.
 - PR #108 repeated simulation lifecycle: [CI run #162](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42797660386), merged.
-- Post-merge main CI: [run #149](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796030003) passed Ubuntu and Windows; Ubuntu ASan/UBSan passed.
+- Post-merge main CI: [run #163](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42797884604) passed Ubuntu and Windows; Ubuntu ASan/UBSan passed.
 
 ## Conclusion
 The repository has successful cross-platform CI evidence, Linux sanitizer evidence, and a local benchmark exceeding the stated throughput target for its fixture. Graceful stop is implemented and automated-CI verified. Overall system acceptance remains PARTIAL until outstanding requirement-level cases are executed, documented and signed off.
