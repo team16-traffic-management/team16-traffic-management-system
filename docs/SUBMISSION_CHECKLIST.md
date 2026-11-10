@@ -37,6 +37,8 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] Automated console assertions for long lane names/high queue lengths (PR #102; CI run #144 passed); [ ] manually inspect visual console usability (TMS-NF-004).
 - [x] Verify vehicle ID uniqueness across multiple lanes/intersections (PR #104; CI run #153 passed).
 - [x] Verify engine dequeues vehicles only on green (PR #105; CI run #154 passed).
+- [x] Verify exact one-tick connected transfer latency (PR #107; CI run #159 passed).
+- [x] Execute repeated simulation create/run/destroy lifecycle (PR #108; CI run #162 passed); [ ] retain quantified memory-growth/leak evidence if required.
 - [x] Local Windows benchmark met 500 ticks/sec for its fixture (median 88,344.30 ticks/sec); connected-topology and evaluator-hardware evidence remain outstanding.
 - [ ] Regenerate line/branch coverage on final main and state the exact source scope.
 - [ ] Review the final academic report, demo guide and presentation.
@@ -49,6 +51,8 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - PR #102 long lane/high queue console output: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42795769676
 - PR #104 vehicle ID uniqueness: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796601039
 - PR #105 green-only engine dequeue: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796698371
+- PR #107 exact one-tick transfer latency: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42797325343
+- PR #108 repeated simulation lifecycle: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42797660386
 - Post-merge main CI: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796030003
 
 ## Evidence notes
