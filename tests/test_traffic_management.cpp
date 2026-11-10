@@ -180,6 +180,36 @@ void testConfigurationValidationBoundaries() {
                   "connection to missing intersection rejected");
 }
 
+void testEngineDequeuesVehiclesOnlyOnGreen() {
+    SimulationEngine engine;
+    Intersection intersection("Green-Only-Dequeue");
+    intersection.addLane("North", 5);
+    intersection.addLane("South", 5);
+    intersection.getLanes()[0].enqueue(
+        Vehicle(601, 0, VehicleType::NORMAL)
+    );
+    intersection.getLanes()[1].enqueue(
+        Vehicle(602, 0, VehicleType::NORMAL)
+    );
+
+    engine.addIntersection(intersection);
+    engine.loadConfig(0.0, 0.0, false);
+
+    engine.tick(true);
+    check(engine.getStats().totalThroughput() == 1,
+          "only the initially green lane is dequeued on the first tick");
+
+    for (int tick = 0; tick < 21; ++tick) {
+        engine.tick(true);
+    }
+    check(engine.getStats().totalThroughput() == 1,
+          "red and yellow lane remains queued until it receives green");
+
+    engine.tick(true);
+    check(engine.getStats().totalThroughput() == 2,
+          "second lane is dequeued when its signal becomes green");
+}
+
 void testConfigDrivenIntersections() {
     const char* path = "test_multi_intersection.tmp";
     {
@@ -530,6 +560,7 @@ int main() {
     testQueueCapacityAndEmptyDequeue();
     testMalformedConfiguration();
     testConfigurationValidationBoundaries();
+    testEngineDequeuesVehiclesOnlyOnGreen();
     testConfigDrivenIntersections();
     testPendingTransferWaitsForDestinationCapacity();
     testConsoleLongLaneAndHighQueueDisplay();
