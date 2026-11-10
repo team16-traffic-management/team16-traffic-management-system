@@ -9,6 +9,8 @@
 #include "../vehicle/VehicleGenerator.h"
 #include "ConsoleView.h"
 
+// Install the process-level SIGINT handler used by the executable and integration tests.
+void installSimulationSignalHandlers();
 // Safe to call from a SIGINT handler; the engine checks the request between ticks.
 void requestSimulationStop() noexcept;
 
@@ -26,6 +28,7 @@ public:
     void tick(bool silent = false);
     const StatisticsCollector& getStats() const;
     std::size_t getTotalTransfers() const;
+    int getCurrentTick() const;
 private:
     struct IntersectionConnection { std::string sourceIntersectionId; std::string destinationIntersectionId; std::string laneName; };
     struct PendingTransfer { std::string destinationIntersectionId; std::string laneName; Vehicle vehicle; };
