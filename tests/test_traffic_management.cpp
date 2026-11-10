@@ -92,7 +92,7 @@ void testConfigurationValidationBoundaries() {
             file << config;
         }
         SimulationEngine engine;
-        checkThrows<std::exception>([&] { engine.loadConfigFromFile(path); }, message);
+        checkThrows<std::runtime_error>([&] { engine.loadConfigFromFile(path); }, message);
         std::remove(path);
     };
 
@@ -180,6 +180,34 @@ void testTenThousandTickStability() {
 }
 
 
+int reportedTickCount(const std::string& output) {
+    const std::string marker = "TMS SIMULATION REPORT (";
+    const std::size_t position = output.find(marker);
+    check(position != std::string::npos, "run report is present");
+    return std::stoi(output.substr(position + marker.size()));
+}
+
+void checkReportedTicksMatchCompletedTicks(const std::string& output,
+                                           const SimulationEngine& engine) {
+    check(reportedTickCount(output) == engine.getCurrentTick(),
+          "report tick count matches the number of completed ticks");
+}
+
+void testZeroTickConfigurationMeansOpenEndedRun() {
+    const char* path = "test_open_ended_config.tmp";
+    {
+        std::ofstream file(path);
+        file << "total_ticks=0\\n"
+             << "adaptive_mode=false\\n"
+             << "queue_capacity=5\\n";
+    }
+    SimulationEngine engine;
+    const int configuredTicks = engine.loadConfigFromFile(path);
+    check(configuredTicks == 0,
+          "total_ticks=0 is accepted as an open-ended run");
+    std::remove(path);
+}
+
 void testManualStopProducesPartialSummary() {
     SimulationEngine engine;
     Intersection intersection("manual-stop");
@@ -204,7 +232,33 @@ void testManualStopProducesPartialSummary() {
           "manual stop still prints the end-of-run report");
     check(output.find("user requested stop") != std::string::npos,
           "manual stop is identified in the run summary");
-    // A stop may arrive before the first tick; a zero-tick summary is valid.
+    checkReportedTicksMatchCompletedTicks(output, engine);
+}
+
+void testSigintStopsOpenEndedRun() {
+    installSimulationSignalHandlers();
+    SimulationEngine engine;
+    Intersection intersection("sigint-stop");
+    intersection.addLane("North", 15);
+    intersection.addLane("South", 15);
+    engine.addIntersection(intersection);
+    engine.loadConfig(0.4, 0.05, false);
+
+    std::ostringstream captured;
+    std::streambuf* previous = std::cout.rdbuf(captured.rdbuf());
+    std::thread signalSender([] {
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        std::raise(SIGINT);
+    });
+
+    engine.run(0, true);
+    signalSender.join();
+    std::cout.rdbuf(previous);
+
+    const std::string output = captured.str();
+    check(output.find("user requested stop") != std::string::npos,
+          "SIGINT is handled as a user-requested stop");
+    checkReportedTicksMatchCompletedTicks(output, engine);
 }
 
 void testSignalPhaseTransitions() {
@@ -310,7 +364,9 @@ int main() {
     testConfigDrivenIntersections();
     testConsoleStatusFields();
     testTenThousandTickStability();
+    testZeroTickConfigurationMeansOpenEndedRun();
     testManualStopProducesPartialSummary();
+    testSigintStopsOpenEndedRun();
     testSignalPhaseTransitions();
     testNoSimultaneousGreenSignals();
     testEmergencyPreemption();
