@@ -395,6 +395,7 @@ int main() {
     testMalformedConfiguration();
     testConfigurationValidationBoundaries();
     testConfigDrivenIntersections();
+    testPendingTransferWaitsForDestinationCapacity();
     testConsoleStatusFields();
     testTenThousandTickStability();
     testZeroTickConfigurationMeansOpenEndedRun();
