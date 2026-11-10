@@ -16,7 +16,7 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] GitHub Actions workflow builds/tests Ubuntu and Windows.
 - [x] PR #94 graceful-stop implementation merged to main as `339dfed320036ed1c42a375f70bc1189fb5b4244`.
 - [x] PR #94 CI run #132 passed Ubuntu and Windows build, automated tests and smoke tests; Ubuntu ASan/UBSan passed: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42785408865.
-- [x] Capture fresh push-to-main CI after QA regression merges: run #149 passed Ubuntu/Windows build, tests and smoke tests; Ubuntu ASan/UBSan passed.
+- [x] Capture fresh push-to-main CI after QA regression merges: run #163 passed Ubuntu/Windows build, tests and smoke tests; Ubuntu ASan/UBSan passed.
 - [ ] Confirm backlog, sprint dates, story points and issue statuses in the team's tracker (Tarun).
 - [ ] Confirm team roles/contributions with all members.
 - [ ] Capture required PR/review evidence and final team approvals.
@@ -37,6 +37,8 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] Automated console assertions for long lane names/high queue lengths (PR #102; CI run #144 passed); [ ] manually inspect visual console usability (TMS-NF-004).
 - [x] Verify vehicle ID uniqueness across multiple lanes/intersections (PR #104; CI run #153 passed).
 - [x] Verify engine dequeues vehicles only on green (PR #105; CI run #154 passed).
+- [x] Verify exact one-tick connected transfer latency (PR #107; CI run #159 passed).
+- [x] Execute repeated simulation create/run/destroy lifecycle (PR #108; CI run #162 passed); [ ] retain quantified memory-growth/leak evidence if required.
 - [x] Local Windows benchmark met 500 ticks/sec for its fixture (median 88,344.30 ticks/sec); connected-topology and evaluator-hardware evidence remain outstanding.
 - [ ] Regenerate line/branch coverage on final main and state the exact source scope.
 - [ ] Review the final academic report, demo guide and presentation.
@@ -49,7 +51,9 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - PR #102 long lane/high queue console output: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42795769676
 - PR #104 vehicle ID uniqueness: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796601039
 - PR #105 green-only engine dequeue: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796698371
-- Post-merge main CI: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796030003
+- PR #107 exact one-tick transfer latency: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42797325343
+- PR #108 repeated simulation lifecycle: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42797660386
+- Post-merge main CI: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42797884604
 
 ## Evidence notes
 - Baseline main CI run #99: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42450330604 (436 checks passed on Ubuntu and Windows; smoke tests passed; Ubuntu ASan/UBSan passed).
