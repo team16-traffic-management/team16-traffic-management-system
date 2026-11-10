@@ -23,12 +23,12 @@ The detailed status and limitations are maintained in `Documents/RTM_Implementat
 | TMS-F-010–013 | Lane queues, capacity, green-only dequeue and waiting time | Queue capacity/FIFO/overflow; PR #105 engine-level green-only dequeue test (CI #154); signal and statistics tests | Full detailed Test Plan cases and broader wait-time behavior |
 | TMS-F-020–024 | Fixed/adaptive signals and safe phases | Signal transition tests; PR #90 80-tick at-most-one-GREEN-lane invariant; PR #98 adaptive extension cap/reset/invalid-boundary tests (CI #141) | Geometric movement-conflict matrix; full adaptive policy validation beyond tested boundaries |
 | TMS-F-030–032 | Emergency priority and preemption | Emergency request acceptance/rejection/deferred activation tests | Maximum emergency wait/preemption delay boundary |
-| TMS-F-040–042 | Multi-intersection transfer and reporting | Two-intersection transfer test; PR #99 destination-full backpressure test (CI #142); config startup smoke tests | Exact one-tick latency and invalid-intersection isolation |
+| TMS-F-040–042 | Multi-intersection transfer and reporting | Two-intersection transfer test; PR #99 destination-full backpressure (CI #142); PR #107 exact one-tick transfer (CI #159); config startup smoke tests | Invalid-intersection isolation |
 | TMS-F-050–052 | Statistics and reporting | Statistics calculation and report-format tests | End-to-end report workflow |
 | TMS-F-060 | Configuration and run length | PR #91 configuration boundary tests; application smoke tests | Full Test Plan case-by-case execution and SRS/Test Plan conflict resolution |
 | TMS-F-061 | Graceful start/stop and summary | PR #94 merged; workflow #132 passed Ubuntu/Windows; Linux ASan/UBSan passed | Manual interactive Ctrl+C acceptance record |
 | TMS-NF-001 | Performance | Local benchmark average 84,371.19 / median 88,344.30 ticks/sec | Connected topology and evaluator hardware |
-| TMS-NF-002 / PRJ-SR-003 | Memory safety and long-run stability | 10,000-tick run and Linux ASan/UBSan | Repeated-run memory-growth/leak report |
+| TMS-NF-002 / PRJ-SR-003 | Memory safety and long-run stability | 10,000-tick run; PR #108 20 repeated engine lifecycles (CI #162); Linux ASan/UBSan | Quantified memory-growth/leak report or Valgrind evidence |
 | TMS-NF-003–005 | Modularity, usability and portability | Config-driven topology; PR #102 long lane/high queue console assertions (CI #144); Ubuntu/Windows CI | Manual visual usability and clean-checkout verification |
 | PRJ-SR-001–005 | Bounds, validation, RAII and robustness | Invalid-input tests, queue overflow tests, sanitizers | Full boundary/failure-injection cases |
 
@@ -39,6 +39,8 @@ The detailed status and limitations are maintained in `Documents/RTM_Implementat
 - PR #102 console long-lane/high-queue output: CI run #144, merged.
 - PR #104 vehicle ID uniqueness: CI run #153, merged.
 - PR #105 green-only engine dequeue: CI run #154, merged.
+- PR #107 exact one-tick transfer latency: CI run #159, merged.
+- PR #108 repeated simulation lifecycle: CI run #162, merged.
 - Post-merge main CI run #149 passed Ubuntu/Windows builds, tests and smoke tests; Ubuntu ASan/UBSan passed.
 
 ## Evidence rules
