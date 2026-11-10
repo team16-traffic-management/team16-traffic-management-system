@@ -303,11 +303,19 @@ void testAdaptiveGreenExtensionBounds() {
           "adaptive green transitions at the capped duration");
 
     // A low queue restores the base green duration for the next cycle.
-    signals.updateSignalState(1); // RED
-    signals.updateSignalState(1); // next lane GREEN
-    signals.updateSignalState(1); // YELLOW
-    signals.updateSignalState(1); // RED
+    signals.updateSignalState(1); // North YELLOW -> RED
+    signals.updateSignalState(1); // South GREEN
+
+    // Let the South phase complete at its still-extended duration before
+    // checking the next North cycle.
+    for (int tick = 0; tick < 14; ++tick) {
+        signals.updateSignalState(1);
+    }
+    check(signals.getCurrentPhase("South") == SignalPhase::YELLOW,
+          "second lane completes its extended green phase");
+    signals.updateSignalState(1); // South YELLOW -> RED
     signals.updateSignalState(1); // North GREEN
+
     const std::map<std::string, std::size_t> lightQueue = {
         {"North", 0}, {"South", 0}
     };
