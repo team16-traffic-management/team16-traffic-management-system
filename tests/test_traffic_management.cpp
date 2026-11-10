@@ -151,6 +151,32 @@ void testConfigDrivenIntersections() {
     check(engine.getTotalTransfers() > 0, "configured connection transfers vehicles");
     std::remove(path);
 }
+void testConsoleLongLaneAndHighQueueDisplay() {
+    const std::string longLaneName = "Northbound_Express_Lane_With_Extended_Name";
+    Intersection intersection("Console-Long-Lane");
+    intersection.addLane(longLaneName, 30);
+    for (int id = 1; id <= 25; ++id) {
+        check(intersection.getLanes()[0].enqueue(
+                  Vehicle(static_cast<std::uint64_t>(id), 0, VehicleType::NORMAL)),
+              "high-queue console fixture accepts vehicles");
+    }
+
+    std::ostringstream captured;
+    std::streambuf* previous = std::cout.rdbuf(captured.rdbuf());
+    ConsoleView view;
+    view.renderTick(12, intersection.getId(), intersection.getLanes(),
+                    intersection.getSignalController(), false);
+    std::cout.rdbuf(previous);
+
+    const std::string output = captured.str();
+    check(output.find(longLaneName) != std::string::npos,
+          "console preserves the complete long lane name");
+    check(output.find("25") != std::string::npos,
+          "console displays a high queue length");
+    check(output.find(std::string(25, '#')) != std::string::npos,
+          "console renders the complete high-queue visual bar");
+}
+
 void testConsoleStatusFields() {
     Intersection intersection("Console-Test");
     intersection.addLane("North", 5);
@@ -363,6 +389,7 @@ int main() {
     testMalformedConfiguration();
     testConfigurationValidationBoundaries();
     testConfigDrivenIntersections();
+    testConsoleLongLaneAndHighQueueDisplay();
     testConsoleStatusFields();
     testTenThousandTickStability();
     testZeroTickConfigurationMeansOpenEndedRun();
