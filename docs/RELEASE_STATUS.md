@@ -1,29 +1,31 @@
 # Release and Verification Status
 
-Last repository review: 2 November 2026  
-Documentation branch: docs/submission-structure
+Last repository review: 10 November 2026
 
 ## Repository baseline
-The repository contains a C++14 traffic simulation, Makefile, unit-test source, GitHub Actions workflow, SRS, SAD, Test Plan, component diagram, implementation-status note and test-result Markdown file.
+The repository is a C++17 console-based traffic simulation with a Makefile, automated C++ test suite, GitHub Actions workflow, SRS, SAD, Test Plan, component diagram, benchmark source, reports and submission checklist.
 
-The README describes the current implementation as an initial working foundation and identifies emergency-vehicle priority, adaptive signal timing, multi-intersection coordination and full reporting as future integration work. The implementation-status note describes broader source coverage but also lists verification gaps. Resolve discrepancies by checking current source and tests; this status page does not upgrade unverified requirements to complete.
+The implementation includes vehicle generation, bounded lane queues, signal phases, emergency preemption, configurable multi-intersection simulation, statistics and graceful user-requested stop. Refer to `Documents/RTM_Implementation_Status.md` for requirement-level status and evidence limitations.
 
-## Local GCOV evidence shared during project work
-- tests/test_traffic_management.cpp: 97.30% of 74 lines executed; 86 branches, all executed, with 53.49% taken at least once.
-- vehicle/VehicleGenerator.cpp: 92.50% of 40 lines executed; 91.30% of 46 branches executed, with 67.39% taken at least once.
-- Combined line execution reported by GCOV: 95.61% of 114 lines.
+## Verified evidence
+- Baseline main workflow #99: 436 automated checks passed on Ubuntu and Windows; default-app and multi-intersection startup smoke tests passed; Ubuntu ASan/UBSan passed.
+- Manual-stop PR #94: merged to main as `339dfed320036ed1c42a375f70bc1189fb5b4244`. PR workflow run #132 passed Ubuntu and Windows builds, automated tests and smoke tests; Ubuntu ASan/UBSan passed.
+- Local Windows performance benchmark: five measured runs, average 84,371.19 and median 88,344.30 ticks/sec against a 500 ticks/sec target for the benchmark fixture only.
 
-These are local results for the two reported translation units, not full-system coverage. Regenerate reports from the final submission commit. An earlier GCOV attempt emitted a source-file lookup warning; the later run from the repository root produced the source-specific figures above.
-
-## Open verification items
-- Reconcile the 310-check claim in testresult.md with current test source and exact executable/commit.
-- Confirm latest CI run on the final commit.
-- Add or document dedicated system-level tests for queue/signal/emergency/multi-intersection requirements that are actually implemented.
-- Verify adaptive timing bounds, emergency preemption delay boundary and exact one-tick transfer latency where those features exist.
-- Test malformed/duplicate configuration and graceful stop behavior.
-- Record Linux and Windows build results.
-- Benchmark on evaluator hardware if performance is part of acceptance.
-- Complete team review and required submission sign-offs.
+## Outstanding acceptance work
+- Execute and record all 66 Test Plan cases individually.
+- Manually verify Ctrl+C behavior and partial-run summary (TMS-F-061).
+- Validate geometric movement conflicts; the existing one-GREEN-lane invariant is narrower than geometric conflict safety.
+- Verify transfer latency, destination-capacity behavior and invalid-intersection isolation.
+- Verify adaptive timing bounds and emergency preemption delay limits.
+- Run repeated-run memory-growth/leak checks; Linux ASan/UBSan passing is not a leak report.
+- Inspect console formatting for long lane names/high queue lengths.
+- Benchmark connected intersections and evaluator hardware if required.
+- Regenerate final line/branch coverage and record its exact source scope.
+- Resolve the SRS/Test Plan invalid-configuration contradiction and correct the queue-capacity test mapping.
+- Complete team review, demo/presentation and required sign-offs.
 
 ## Release decision
-Status: Documentation preparation / verification in progress. Do not call the project fully accepted or release-ready until remaining checks are executed and reviewed.
+Status: **Implementation and CI verification substantially complete; system acceptance remains PARTIAL.**
+
+Do not call the project fully accepted or submission-ready until the remaining Test Plan cases, document reconciliation and sign-offs are complete.

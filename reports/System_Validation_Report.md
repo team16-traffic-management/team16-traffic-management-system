@@ -1,55 +1,40 @@
 # System Validation Report
 
-Status: Partial system validation. Main-branch CI run #99 passed; local Windows performance benchmark met the SRS throughput target for the measured fixture. Full SRS/Test Plan acceptance is not signed off.
+Status: Partial system validation. Baseline main CI run #99 passed; manual-stop PR #94 was subsequently merged after cross-platform CI run #132 passed. Full SRS/Test Plan acceptance is not signed off.
 
 ## Objective
+Record automated CI evidence, local performance evidence and outstanding system-level acceptance checks. Automated CI evidence and manual Test Plan execution are separate.
 
-Record checks executed by the repository's GitHub Actions workflow on the final tested main commit `f8c6cfda5355f3e2cea2ff2bbd71dae23180c540`, together with the separately executed local Windows performance benchmark.
-
-## Test environment
-
+## Test environment and evidence
 | Field | Value |
 |---|---|
-| CI operating systems | Ubuntu 26.04 and Windows GitHub-hosted runner |
-| CI compiler | GCC 15.2.0 (Ubuntu); MinGW GCC 15.2.0 (Windows) |
-| CI build system | GNU Make 4.4.1 |
 | Language standard | C++17 |
-| CI tested main commit | `f8c6cfda5355f3e2cea2ff2bbd71dae23180c540` |
-| CI execution date | 8 November 2026 |
-| CI workflow | [Run #99](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42450330604) |
-| Local benchmark OS | Windows (PowerShell; exact OS build not recorded) |
-| Local benchmark compiler | MinGW-w64 GCC; exact version not recorded |
-| Local benchmark flags | `-std=c++17 -O2 -DNDEBUG` |
-| Local benchmark source | `benchmarks/performance_benchmark.cpp` |
+| Baseline main workflow | [Run #99](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42450330604) |
+| Baseline tested commit | `f8c6cfda5355f3e2cea2ff2bbd71dae23180c540` |
+| Baseline result | 436 automated checks passed on Ubuntu and Windows; default-app and multi-intersection startup smoke tests passed; Ubuntu ASan/UBSan passed |
+| Manual-stop PR workflow | [Run #132](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42785408865) |
+| Manual-stop PR head | `9b8730c4cb0fdb5f8e0a172e40b16912fff49c53` |
+| Manual-stop merge commit | `339dfed320036ed1c42a375f70bc1189fb5b4244` |
+| PR #94 CI result | Ubuntu and Windows build, automated tests, default-app and multi-intersection smoke tests passed; Ubuntu ASan/UBSan passed |
+| Benchmark | Local Windows; `-std=c++17 -O2 -DNDEBUG`; exact OS build/compiler/hardware metadata not recorded |
 
 ## Validation register
-
-| ID | Scenario | Actual evidence | Status |
+| ID | Scenario | Evidence | Status |
 |---|---|---|---|
-| SYS-01 | Application starts with default configuration | Default application smoke test exited successfully on Ubuntu and Windows | PASS |
-| SYS-02 | Vehicle arrivals and statistics are exercised | Test executable completed; 10,000-tick run reported throughput 4,341, average wait 59.57 ticks, and 3,745 blocked vehicles in this deterministic CI run | PASS — execution only |
-| SYS-03 | Lane queue behavior | Automated queue capacity, overflow rejection, FIFO and empty-dequeue checks passed | PASS |
-| SYS-04 | Signal phase behavior | Signal transition, lane rotation and maximum-queue-statistics checks passed; PR #90's 80-tick regression check confirmed no more than one lane reports GREEN at a time | PASS |
-| SYS-05 | Conflicting green signals | PR #90 checks serialized GREEN phases for 80 ticks; geometric conflicts between turning movements are not modeled by this test | PASS — serialized-green invariant only |
-| SYS-06 | Emergency vehicle behavior | Preemption request acceptance/rejection and deferred activation checks passed | PASS — tested cases only |
-| SYS-07 | Multi-intersection transfer | Multi-intersection config startup passed on both platforms; automated transfer test passed and CI run reported 11 successful transfers in its 25-tick fixture | PASS — tested configuration only |
-| SYS-08 | Invalid configuration | PR #91 adds missing required fields, out-of-range tick/capacity/rate values, invalid booleans, non-finite/malformed probabilities, duplicate/unknown keys, empty lane entries and invalid connections | PASS — tested inputs only |
-| SYS-09 | Long simulation run | 10,000-tick test completed; Linux ASan/UBSan run completed successfully | PASS — execution/stability evidence |
-| SYS-10 | Performance throughput | Local Windows benchmark: five measured 10,000-tick runs; average 84,371.19 ticks/sec and median 88,344.30 ticks/sec against the 500 ticks/sec SRS target | PASS — local benchmark fixture only |
-
-## CI execution details
-
-- Ubuntu and Windows: application and test executable built with C++17.
-- Ubuntu and Windows: automated test executable reported 436 checks passed, 0 failed.
-- Ubuntu and Windows: default application smoke test passed.
-- Ubuntu and Windows: config-driven multi-intersection startup smoke test passed.
-- Ubuntu: AddressSanitizer and UndefinedBehaviorSanitizer target passed.
-- Ubuntu: Linux application executable uploaded as a workflow artifact.
-- Windows: sanitizer and Linux artifact steps were skipped by workflow design; no Windows sanitizer result is claimed.
+| SYS-01 | Default application startup | Default-app smoke tests passed in baseline and PR #94 CI on Ubuntu/Windows | PASS — CI smoke test |
+| SYS-02 | Vehicle arrivals and statistics | Automated test executable and 10,000-tick fixture completed | PASS — tested execution only |
+| SYS-03 | Lane queue behavior | Capacity, overflow, FIFO and empty-dequeue assertions | PASS — covered assertions |
+| SYS-04 | Signal phase behavior | Phase-transition tests and PR #90 80-tick at-most-one-GREEN-lane invariant | PASS — covered assertions |
+| SYS-05 | Conflicting green signals | At-most-one-GREEN-lane invariant; no geometric movement matrix | PARTIAL — does not prove turning-movement conflict safety |
+| SYS-06 | Emergency behavior | Preemption request acceptance/rejection and deferred activation tests | PASS — tested cases only |
+| SYS-07 | Multi-intersection transfer | Two-intersection transfer assertion and config-driven startup smoke tests | PASS — tested topology only |
+| SYS-08 | Invalid configuration | PR #91 missing/invalid values, numeric boundaries, malformed probabilities, duplicate/unknown keys and invalid connections | PASS — covered inputs only |
+| SYS-09 | Long simulation / memory safety | 10,000-tick test and Linux ASan/UBSan CI | PARTIAL — no repeated-run leak/memory-growth report |
+| SYS-10 | Performance | Five local 10,000-tick runs; average 84,371.19 and median 88,344.30 ticks/sec vs 500 target | PASS — local fixture only |
+| SYS-11 | Graceful manual stop | PR #94 merged; automated direct-stop and SIGINT tests passed on Ubuntu/Windows CI; Linux sanitizer passed | PASS — automated verification; manual interactive acceptance still NOT RUN/documented |
 
 ## Local performance benchmark
-
-The standalone benchmark was compiled and run locally on Windows using `-std=c++17 -O2 -DNDEBUG`. It performed one warm-up followed by five measured runs. Each measured run executed 10,000 ticks with four intersections and four lanes per intersection; console rendering was disabled.
+One warm-up followed by five measured runs of 10,000 ticks, four independent intersections and four lanes per intersection; console rendering disabled.
 
 | Run | Throughput |
 |---|---:|
@@ -62,22 +47,19 @@ The standalone benchmark was compiled and run locally on Windows using `-std=c++
 | Median | 88,344.30 ticks/second |
 | SRS target | 500.00 ticks/second |
 
-The median is approximately 176.7 times the target. This result is evidence for this local benchmark fixture only. The four intersections are independent (not connected by transfer links), console rendering is disabled, and the exact CPU, RAM, Windows build and compiler version were not recorded. It is not evaluator-hardware evidence or a full end-to-end application performance measurement.
+The median is approximately 176.7 times the target. This is evidence for the local fixture only: intersections are independent, rendering is disabled, and exact CPU, RAM, Windows build and compiler version were not recorded. It is not evaluator-hardware or connected-network performance certification.
 
-## Results and limitations
-
-The main-branch workflow run #99 passed on Ubuntu and Windows; both test logs reported 436 checks passed. The 10,000-tick run completed and produced the observed metrics above. This does not by itself prove bounded memory growth or every simulation invariant. The current test's non-negative checks on unsigned totals are not meaningful invariant assertions.
-
-The workflow's multi-intersection smoke test proves successful startup with the supplied example configuration; the automated integration test adds evidence of transfers, but does not validate every possible topology or transfer timing boundary.
-
-The following remain outside the evidence recorded here:
-- Full SRS/Test Plan walkthrough and requirement-by-requirement acceptance.
-- A geometric movement-conflict matrix and proof that conflicting turning movements are never green simultaneously; the current regression only checks at most one GREEN lane.
-- Graceful user-stop behavior.
-- Performance benchmark on evaluator hardware and a connected multi-intersection benchmark fixture.
-- Full leak/memory-growth analysis across repeated create/remove cycles.
-- Independent manual end-to-end validation with retained screenshots/logs.
+## Remaining validation
+- Execute and record all 66 Test Plan cases individually; 436 automated assertions are not equivalent to the 66 planned cases.
+- Perform a manual interactive Ctrl+C run and verify the printed completed-tick count and partial summary.
+- Test geometric movement conflicts between turning movements; current invariant checks only at most one GREEN lane.
+- Test exact one-tick transfer latency, full destination queue behavior and invalid-intersection isolation.
+- Test adaptive timing bounds and emergency maximum-wait/preemption delay.
+- Run repeated create/run/destroy cycles and retain memory-growth/leak evidence; sanitizer pass is not a leak report.
+- Inspect console formatting with long lane names and high queue lengths.
+- Benchmark connected intersections and evaluator hardware if required.
+- Resolve SRS PRJ-SR-002 rejection behavior versus Test Plan safe-default expectations; correct `TC-Gen-003-N` mapping.
+- Regenerate final coverage and record exact file scope.
 
 ## Conclusion
-
-CI provides successful cross-platform build, automated test, default startup and multi-intersection startup evidence, plus Linux sanitizer evidence. The local Windows performance benchmark exceeded the 500 ticks/sec target for its measured fixture. These results support the tested scenarios only. Overall system validation remains partial; do not mark the entire system accepted until the remaining scenarios are executed and documented.
+The repository has successful cross-platform CI evidence, Linux sanitizer evidence, and a local benchmark exceeding the stated throughput target for its fixture. Graceful stop is implemented and automated-CI verified. Overall system acceptance remains PARTIAL until outstanding requirement-level cases are executed, documented and signed off.

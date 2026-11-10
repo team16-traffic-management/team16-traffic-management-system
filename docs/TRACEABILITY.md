@@ -1,39 +1,44 @@
 # Requirements Traceability Matrix — Traffic Management System
 
-Purpose: connect requirements to implementation locations and test evidence. A requirement is not verified merely because it appears in a design document.
+Purpose: connect each requirement group to implementation and actual verification evidence. Presence in source code alone does not establish acceptance.
 
 ## Source and test inventory
 | Area | Repository location | Evidence scope |
 |---|---|---|
-| Simulation entry point | src/main.cpp | Application entry point and simulation loop, as described in README. |
-| Vehicle generation | vehicle/VehicleGenerator.h and .cpp | Seeded per-lane randomized generation and configuration validation. |
-| Automated tests | tests/test_traffic_management.cpp | Tests focused on vehicle generation/configuration; inspect the current file before claiming broader coverage. |
-| Build | Makefile | Build, test, sanitizer and coverage-related commands present on the checked-out branch. |
-| CI | .github/workflows/ci-cd.yml | Linux build, tests, smoke test, sanitizer and artifact workflow; confirm latest run. |
+| Simulation entry point | `src/main.cpp`, `src/SimulationEngine.cpp` | Application entry, configuration-driven simulation and graceful stop |
+| Vehicle generation | `vehicle/VehicleGenerator.h/.cpp` | Seeded per-lane generation and configuration validation |
+| Vehicle and queues | `vehicle/Vehicle.h/.cpp`, `include/LaneQueue.h`, `src/LaneQueue.cpp` | Vehicle metadata, bounded FIFO queue and overflow behavior |
+| Signals and intersections | `include/TrafficSignalController.h`, `src/TrafficSignalController.cpp`, `include/Intersection.h`, `src/Intersection.cpp` | Signal phases, lane registration and intersection behavior |
+| Statistics / console | `include/StatisticsCollector.h`, `src/StatisticsCollector.cpp`, `src/ConsoleView.cpp` | Metrics and console output |
+| Automated tests | `tests/test_traffic_management.cpp` | Unit/integration assertions; see Unit Test Report and RTM for limitations |
+| Performance | `benchmarks/performance_benchmark.cpp` | Local four-independent-intersection benchmark fixture |
+| Build / CI | `Makefile`, `.github/workflows/ci-cd.yml` | C++17 build, Ubuntu/Windows tests, Linux sanitizer |
 
 ## Requirement-to-evidence mapping
-The identifiers below follow Documents/RTM_Implementation_Status.md. This table does not claim that every requirement has passed acceptance testing.
+The detailed status and limitations are maintained in `Documents/RTM_Implementation_Status.md`. The following is a concise index, not an assertion that every requirement has passed acceptance.
 
-| Requirement group | Intended behavior | Evidence location | Verification status / gap |
+| Requirement group | Intended behavior | Evidence | Remaining verification |
 |---|---|---|---|
-| TMS-F-001–003 | Vehicle arrivals, metadata and FIFO handling | vehicle/VehicleGenerator.*, src/main.cpp, tests/test_traffic_management.cpp | Vehicle generation has automated tests. Verify queue/FIFO behavior against current source and dedicated tests. |
-| TMS-F-010–013 | Lane queues, capacity, green-only dequeue and waiting time | Simulation/queue source, if present | Confirm implementation files and dedicated positive/negative tests. Generator tests alone do not establish coverage. |
-| TMS-F-020–024 | Fixed/adaptive signals and safe phases | Signal-controller source, if present | Adaptive timing bounds and phase/conflict scenarios need dedicated evidence. |
-| TMS-F-030–032 | Emergency classification, priority and preemption | Emergency-handling source, if present | Independently test maximum-delay/preemption boundary. |
-| TMS-F-040–042 | Multi-intersection behavior and reporting | Intersection/configuration source, if present | Exact one-tick transfer latency and stress scenarios need dedicated verification. |
-| TMS-F-050–052 | Traffic statistics and reporting | Statistics/reporting source, if present | Record expected-versus-observed values in system tests. |
-| TMS-F-060–061 | Configuration, run length and graceful completion | Configuration and simulation source | Malformed/duplicate configuration and graceful-stop behavior need evidence. |
-| TMS-NF-001 | Performance | Benchmark output and environment | Not certified until benchmarked on evaluator hardware. |
-| TMS-NF-002 | Resource safety / long run | Sanitizer output and long-run test | Retain actual CI run link, date and tested commit. |
-| TMS-NF-003–005 | Modularity, usability and portability | Source review, manual review, Linux/Windows build logs | Record each platform and review actually performed. |
-| PRJ-SR-001–005 | Bounds safety, validation, RAII and robustness | Source, negative tests and sanitizer output | Expand malformed-input and boundary tests before claiming complete verification. |
+| TMS-F-001–003 | Vehicle arrivals, metadata and FIFO handling | Generator and queue tests in `tests/test_traffic_management.cpp` | Explicit unique-ID and all detailed positive/negative cases |
+| TMS-F-010–013 | Lane queues, capacity, green-only dequeue and waiting time | Queue capacity/FIFO/overflow, signal and statistics tests | Direct engine-level green-only dequeue proof if required by case mapping |
+| TMS-F-020–024 | Fixed/adaptive signals and safe phases | Signal transition tests; PR #90 80-tick at-most-one-GREEN-lane invariant | Geometric movement-conflict matrix and adaptive timing bounds |
+| TMS-F-030–032 | Emergency priority and preemption | Emergency request acceptance/rejection/deferred activation tests | Maximum emergency wait/preemption delay boundary |
+| TMS-F-040–042 | Multi-intersection transfer and reporting | Two-intersection transfer test; config startup smoke tests | Exact one-tick latency, full destination queue, invalid-intersection isolation |
+| TMS-F-050–052 | Statistics and reporting | Statistics calculation and report-format tests | End-to-end report workflow |
+| TMS-F-060 | Configuration and run length | PR #91 configuration boundary tests; application smoke tests | Full Test Plan case-by-case execution and SRS/Test Plan conflict resolution |
+| TMS-F-061 | Graceful start/stop and summary | PR #94 merged; workflow #132 passed Ubuntu/Windows; Linux ASan/UBSan passed | Manual interactive Ctrl+C acceptance record |
+| TMS-NF-001 | Performance | Local benchmark average 84,371.19 / median 88,344.30 ticks/sec | Connected topology and evaluator hardware |
+| TMS-NF-002 / PRJ-SR-003 | Memory safety and long-run stability | 10,000-tick run and Linux ASan/UBSan | Repeated-run memory-growth/leak report |
+| TMS-NF-003–005 | Modularity, usability and portability | Config-driven topology, console tests, Ubuntu/Windows CI | Manual usability and clean-checkout verification |
+| PRJ-SR-001–005 | Bounds, validation, RAII and robustness | Invalid-input tests, queue overflow tests, sanitizers | Full boundary/failure-injection cases |
 
 ## Evidence rules
-1. Link each requirement to a real source file and named test case.
-2. Record PASS, FAIL, BLOCKED or NOT RUN; do not turn missing evidence into PASS.
-3. Record commit SHA, date, compiler, operating system and command for each run.
-4. Update this matrix after implementation changes and independent retesting.
-5. Coverage for a subset of source files is not whole-system coverage.
+1. Link each requirement to an actual source file and named test case.
+2. Record PASS, FAIL, BLOCKED or NOT RUN; missing evidence is not PASS.
+3. Record commit SHA, date, compiler, operating system and command for each execution.
+4. Do not equate 436 automated assertions with the 66 Test Plan cases.
+5. Coverage of a subset of source files is not whole-system coverage.
+6. Update this matrix after implementation changes and independent retesting.
 
-## Known verification gaps
-The implementation-status document calls out adaptive signal timing bounds, emergency preemption maximum-delay boundary, exact one-tick transfer latency, malformed configuration cases, graceful user stop, evaluator-hardware performance and platform build evidence. Track these until actual evidence exists.
+## Known acceptance gaps
+See `Documents/RTM_Implementation_Status.md` and `docs/SUBMISSION_CHECKLIST.md` for the current requirement-level list. Overall system acceptance remains PARTIAL.
