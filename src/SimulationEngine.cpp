@@ -1,6 +1,7 @@
 #include "../include/SimulationEngine.h"
 
 #include <atomic>
+#include <csignal>
 #include <cmath>
 #include <fstream>
 #include <iostream>
@@ -15,6 +16,11 @@ namespace {
 static_assert(std::atomic<bool>::is_always_lock_free,
               "Graceful signal handling requires lock-free atomic<bool>");
 std::atomic<bool> stopRequested{false};
+void handleStopSignal(int) { requestSimulationStop(); }
+}
+
+void installSimulationSignalHandlers() {
+    std::signal(SIGINT, handleStopSignal);
 }
 
 void requestSimulationStop() noexcept {
@@ -222,8 +228,13 @@ int SimulationEngine::loadConfigFromFile(const std::string& filename) {
         const auto it = settings.find(lane);
         if (it != settings.end()) configureLaneArrivalRate(lane, parseProbability(lane, arrivalRate));
     }
-    for (const auto& connection : configuredConnections)
-        connectIntersections(connection.first, connection.second);
+    for (const auto& connection : configuredConnections) {
+        try {
+            connectIntersections(connection.first, connection.second);
+        } catch (const std::invalid_argument& error) {
+            throw std::runtime_error(std::string("Invalid configured connection: ") + error.what());
+        }
+    }
 
     std::cout << "\nConfiguration loaded successfully from " << filename
               << " (" << intersections_.size() << " intersection(s))\n";
@@ -332,3 +343,4 @@ const StatisticsCollector& SimulationEngine::getStats() const { return stats_; }
 int SimulationEngine::getConfiguredQueueCapacity() const { return configuredQueueCapacity_; }
 std::size_t SimulationEngine::getIntersectionCount() const { return intersections_.size(); }
 std::size_t SimulationEngine::getTotalTransfers() const { return totalTransfers_; }
+int SimulationEngine::getCurrentTick() const { return currentTick_; }
