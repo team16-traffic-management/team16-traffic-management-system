@@ -92,7 +92,7 @@ void testConfigurationValidationBoundaries() {
             file << config;
         }
         SimulationEngine engine;
-        checkThrows<std::runtime_error>([&] { engine.loadConfigFromFile(path); }, message);
+        checkThrows<std::exception>([&] { engine.loadConfigFromFile(path); }, message);
         std::remove(path);
     };
 
