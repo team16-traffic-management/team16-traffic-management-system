@@ -101,5 +101,5 @@
 
 1. Replace the repository DOCX files with the supplied implementation-aligned revisions, then obtain team/instructor approval.
 2. Execute the existing direct/partial cases using the Test Plan's own steps and record each outcome in `docs/TEST_EXECUTION_REGISTER.md`.
-3. Add targeted automated tests for the remaining cases classified as having no direct automated check, prioritizing invalid-intersection isolation; retain the missing-config case for manual acceptance because the current loader throws on unreadable files.
+3. Add targeted automated tests for the remaining cases classified as having no direct automated check, prioritizing invalid-intersection isolation and the bounds-check requirement where a meaningful product API exists.
 4. Keep memory/leak, usability, performance and portability evidence distinct from ordinary unit-test assertions.
