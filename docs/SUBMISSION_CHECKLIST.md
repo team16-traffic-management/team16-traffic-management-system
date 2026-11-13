@@ -14,7 +14,7 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] Review Test Plan v1.0 content: Sections 1–13, required Sections 3/4/5, Section 5.1, and 66 detailed cases (two per SRS requirement) are present.
 - [ ] The supplied Test Plan v1.1 clarifies the local configuration-file trust boundary and limits of security validation; instructor confirmation is still required.
 - [ ] The supplied Test Plan v1.1 changes invalid/missing configuration expectations to clear rejection, matching SRS PRJ-SR-002 and the parser.
-- [ ] Use the implementation-aligned Test Plan revision: `TC-Gen-003-N` maps to TMS-F-011 / PRJ-SR-004, not FIFO TMS-F-003.
+- [ ] Use the implementation-aligned Test Plan revision: `TC-Gen-003-N` tests FIFO stability when an emergency vehicle is interleaved; queue-capacity tests remain under TMS-F-011 / PRJ-SR-004.
 - [x] Add five current-parser-compatible config fixtures under `tests/data/` (baseline, zero-values, invalid-values, high-load, corrupted) with reproducibility notes.
 - [x] Extend CI to run the three valid fixtures and verify the two invalid fixtures are rejected on Ubuntu and Windows.
 - [ ] Replace the repository Test Plan DOCX with the supplied implementation-aligned v1.1 revision: Section 6.1 and Appendix B use current parser syntax; zero-capacity validation is separated from valid config fixtures.
