@@ -59,6 +59,7 @@ CI builds and runs the automated suite on Ubuntu and Windows (MinGW-w64); Addres
 - [Document compliance audit](docs/DOCUMENT_COMPLIANCE_AUDIT.md)
 - [SAD implementation addendum](docs/SAD_IMPLEMENTATION_ADDENDUM.md)
 - [SAD UML diagram sources](Documents/diagrams/)
+- [Reproducible config fixtures](tests/data/README.md)
 - [UML diagram sources](Documents/diagrams/)
 - [66-case test execution register](docs/TEST_EXECUTION_REGISTER.md)
 - [Final project report](docs/FINAL_PROJECT_REPORT.md)
