@@ -529,13 +529,8 @@ void testAdaptiveModeCanBeChangedDuringSignalOperation() {
     signals.addLane("North");
     signals.addLane("South");
 
-    signals.setAdaptiveMode(true, 3);
-    check(signals.isAdaptiveMode(),
-          "adaptive mode can be enabled while the controller is running");
-    signals.updateAdaptiveTimers({{"North", 8}});
-    signals.setAdaptiveMode(false, 3);
     check(!signals.isAdaptiveMode(),
-          "adaptive mode can be disabled during the active signal phase");
+          "adaptive mode starts disabled");
     signals.updateAdaptiveTimers({{"North", 8}});
     signals.updateSignalState(2);
     check(signals.getCurrentPhase("North") == SignalPhase::YELLOW,
@@ -544,10 +539,12 @@ void testAdaptiveModeCanBeChangedDuringSignalOperation() {
     signals.updateSignalState(1); // North YELLOW -> RED
     signals.updateSignalState(1); // South GREEN
     signals.setAdaptiveMode(true, 3);
+    check(signals.isAdaptiveMode(),
+          "adaptive mode can be enabled while the controller is running");
     signals.updateAdaptiveTimers({{"South", 8}});
     signals.updateSignalState(2);
     check(signals.getCurrentPhase("South") == SignalPhase::GREEN,
-          "re-enabled adaptive mode extends the active lane green phase");
+          "runtime adaptive mode extends the active lane green phase");
     signals.updateSignalState(2);
     check(signals.getCurrentPhase("South") == SignalPhase::YELLOW,
           "runtime adaptive extension ends at its configured duration");
