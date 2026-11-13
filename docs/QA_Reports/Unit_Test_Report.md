@@ -102,7 +102,7 @@ Baseline main CI reported 436 checks passed on Ubuntu and Windows. PR #94's manu
 | #118 | Runtime adaptive signal mode switch | [#43378320849](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43378320849) | Ubuntu/Windows and Linux ASan/UBSan passed |
 | #120 | Adaptive mode loaded from configuration | [#43379351361](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43379351361) | Ubuntu/Windows and Linux ASan/UBSan passed |
 
-PR #121 adds a production-source gcovr coverage job. On its PR head, CI run #230 executed the test suite and reported 88.0% line coverage (667/758), 86.2% function coverage (81/94) and 54.6% branch coverage (683/1,252). See the separate coverage reports and artifact link. These metrics do not convert the 66 Test Plan cases from NOT RUN to PASS.
+PR #121 merged the production-source gcovr coverage job. Final main run #235 reports 88.0% line coverage (667/758), 86.2% function coverage (81/94) and 54.6% branch coverage (683/1,252). See the coverage reports and main-branch artifact link. These metrics do not convert the 66 Test Plan cases from NOT RUN to PASS.
 
 
 ## Final main-branch verification — run #235
