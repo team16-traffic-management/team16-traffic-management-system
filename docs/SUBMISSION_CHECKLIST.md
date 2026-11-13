@@ -6,7 +6,8 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] SRS, SAD and Test Plan are present in `Documents/`.
 - [x] Component diagram is present in `Documents/diagrams/`.
 - [x] Review SRS v0.4 content: sections 1–8, 23 functional requirements, 5 non-functional requirements, acceptance criteria, 3 robustness objectives and 5 robustness requirements are present. See `docs/DOCUMENT_COMPLIANCE_AUDIT.md`.
-- [ ] Verify/add an actual UML use-case diagram in the SRS; Section 7 currently provides textual use-case descriptions, not a clearly evidenced UML diagram.
+- [x] Add PlantUML use-case diagram source at `Documents/diagrams/TMS_Use_Case_Diagram.puml`.
+- [ ] Render and embed the use-case diagram in the SRS DOCX and verify its figure caption/placement; Section 7 currently provides textual use-case descriptions.
 - [ ] Confirm whether the SRS robustness/data-integrity objectives and requirements satisfy the assignment's security objectives/requirements requirement; Section 5.1 is explicitly scoped as robustness, not a conventional security section.
 - [ ] Complete the SRS RTM: Section 8 currently contains only five sample rows for 33 requirements.
 - [ ] Update SRS draft status and obtain approval/sign-off.
@@ -18,12 +19,12 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [ ] Update Test Plan method/interfaces to match the current consolidated C++ test harness; its mock interfaces and execution assumptions differ from the final repo.
 - [ ] Update Test Plan from Draft and obtain approval/sign-off.
 - [x] Review SAD v1.0 content: component responsibilities/descriptions, synchronous tick-driven modular architecture pattern, two textual workflows and partial C++ class interface outlines are present.
-- [ ] Add/verify two actual UML sequence diagrams; current Section 4.1 contains numbered textual workflows, and no sequence-diagram images are in `Documents/diagrams/`.
-- [ ] Add full requirement-to-component/design traceability to SAD.
-- [ ] Add a dedicated security architecture section consistent with the local single-process scope.
-- [ ] Expand API design beyond the two partial class interface outlines and document ownership/return behavior.
-- [ ] Add a dedicated error-handling design section.
-- [ ] Reconcile SAD's initial module/interface design with the final implementation and record deviations.
+- [x] Add two implementation-aligned PlantUML sequence diagram sources under `Documents/diagrams/` (`TMS_Vehicle_Admission_Sequence.puml` and `TMS_Signal_And_Dispatch_Sequence.puml`).
+- [ ] Render and embed both sequence diagrams in the SAD DOCX and verify figure captions/placement.
+- [x] Draft implementation-aligned SAD addendum with requirement-to-design traceability, local-process security boundary, actual public API summary, ownership/return contracts and error-handling design (`docs/SAD_IMPLEMENTATION_ADDENDUM.md`).
+- [ ] Review and incorporate the addendum into the SAD DOCX; confirm the security section meets the instructor's interpretation.
+- [x] Document current implementation architecture and module/interface differences in `docs/SAD_IMPLEMENTATION_ADDENDUM.md`.
+- [ ] Incorporate the documented implementation changes into the SAD DOCX and obtain team approval.
 - [ ] Reconcile all three DOCX documents against final implementation and obtain team review. See `docs/DOCUMENT_COMPLIANCE_AUDIT.md`.
 - [ ] Resolve the PRJ-SR-002 conflict: the SRS requires invalid configuration rejection with a clear error, while some Test Plan cases expect safe defaults.
 - [ ] Correct the Test Plan mapping for `TC-Gen-003-N` (queue capacity belongs to queue-capacity/robustness requirements, not FIFO enqueue).
