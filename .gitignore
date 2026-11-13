@@ -5,3 +5,11 @@ traffic_sim
 *.exe
 *.out
 demo.exe
+
+# Coverage and profiling artifacts
+*.gcda
+*.gcno
+*.gcov
+*.profraw
+*.profdata
+/coverage/
