@@ -7,7 +7,7 @@ import json, re, subprocess, tempfile
 ROOT=Path(__file__).resolve().parents[1]
 WEB=Path(__file__).resolve().parent
 BINARY=ROOT/"build"/"traffic-management"
-SAFE=re.compile(r"^[A-Za-z0-9 _-]{1,32}$")
+SAFE=re.compile(r"^[A-Za-z0-9_-]{1,32}$")
 
 def name(value,label):
     value=str(value or "").strip()
@@ -34,10 +34,13 @@ def config(d):
         ids.add(ident); lanes=[name(x,"Lane name") for x in item.get("lanes",[])]
         if not lanes or len(lanes)>12 or len(set(lanes))!=len(lanes): raise ValueError(f"{ident} needs 1–12 unique lanes.")
         lane_map[ident]=lanes; lines.append(f"intersection.{ident}.lanes={','.join(lanes)}")
+    connected_sources=set()
     for link in d.get("connections",[]):
         src=name(link.get("from"),"Connection source"); dst=name(link.get("to"),"Connection destination")
         if src not in ids or dst not in ids: raise ValueError("Connections must use existing intersections.")
         if src==dst: raise ValueError("An intersection cannot connect to itself.")
+        if src in connected_sources: raise ValueError(f"{src} can have only one outgoing connection.")
+        connected_sources.add(src)
         if set(lane_map[src])!=set(lane_map[dst]): raise ValueError(f"{src} and {dst} must have matching lane names.")
         lines.append(f"connection.{src}={dst}")
     return "\n".join(lines)+"\n"
