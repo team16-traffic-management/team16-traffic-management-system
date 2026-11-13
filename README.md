@@ -56,5 +56,9 @@ CI builds and runs the automated suite on Ubuntu and Windows (MinGW-w64); Addres
 - [Release and verification status](docs/RELEASE_STATUS.md)
 - [Submission checklist](docs/SUBMISSION_CHECKLIST.md)
 - [QA reports](docs/QA_Reports/README.md)
+- [Submission checklist](docs/SUBMISSION_CHECKLIST.md)
+- [Document compliance audit](docs/DOCUMENT_COMPLIANCE_AUDIT.md)
+- [66-case test execution register](docs/TEST_EXECUTION_REGISTER.md)
+- [Final project report](docs/FINAL_PROJECT_REPORT.md)
 
 The QA reports distinguish automated CI checks from the 66-case Test Plan. A passing build does not imply that every requirement has been manually accepted.
