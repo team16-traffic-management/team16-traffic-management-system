@@ -4,10 +4,10 @@ This folder contains the four testing deliverables. Reports distinguish committe
 
 | Report | Purpose | Current status |
 |---|---|---|
-| Unit_Test_Report.md | Unit cases executed against individual units | 984 checks passed on Ubuntu and Windows in final main-branch workflow #235; Linux ASan/UBSan passed |
+| Unit_Test_Report.md | Unit cases executed against individual units | 985 automated checks passed on Ubuntu; Windows build/test/smoke job passed in final main-branch workflow #241; Linux ASan/UBSan passed |
 | System_Validation_Report.md | End-to-end / system-level validation | Main CI evidence and local Windows benchmark recorded; full SRS-based validation remains incomplete |
-| Code_Coverage_Report.md | Line coverage and included source files | Main CI run #235 generated 88.0% line coverage (667/758) on commit 1b4804a |
-| Branch_Coverage_Report.md | Branch execution and outcomes | Main CI run #235 generated 54.6% branch coverage (683/1,252) on commit 1b4804a |
+| Code_Coverage_Report.md | Line coverage and included source files | Main CI run #241 generated 88.0% line coverage (667/758) on commit 1b4804a |
+| Branch_Coverage_Report.md | Branch execution and outcomes | Main CI run #241 generated 54.8% branch coverage (686/1,252) on commit 1b4804a |
 
 ## Evidence metadata
 
@@ -22,14 +22,14 @@ Each report should record:
 
 ## Current CI evidence
 
-Main-branch workflow run #235: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43381117586
+Main-branch workflow run #235: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382188203
 
-Tested commit: `1b4804a331247a3ae2f6c2704dd1a31957334e7a`
+Tested commit: `10873b6686019ff4643463888be0050f491de032`
 
 - Ubuntu and Windows builds, automated tests and smoke tests passed.
 - Both platforms printed `All 984 checks passed.`
 - Linux ASan/UBSan passed.
-- Coverage job generated 88.0% line coverage (667/758), 86.2% function coverage (81/94), and 54.6% branch coverage (683/1,252); HTML/XML artifact: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43381117586/artifacts/14016975299.
+- Coverage job generated 88.0% line coverage (667/758), 86.2% function coverage (81/94), and 54.8% branch coverage (686/1,252); HTML/XML artifact: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382188203/artifacts/14016947229.
 
 Main-branch workflow run #99: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42450330604
 

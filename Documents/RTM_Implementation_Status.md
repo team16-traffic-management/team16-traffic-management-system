@@ -1,6 +1,6 @@
 # SRS / SAD / Test Plan implementation status
 
-This matrix summarizes implementation and verification evidence currently available in the repository. Implementation presence, automated test evidence, manual Test Plan execution and final acceptance are separate statuses. The 436 CI assertions are not equivalent to the 66 planned Test Plan cases.
+This matrix summarizes implementation and verification evidence currently available in the repository. Implementation presence, automated test evidence, manual Test Plan execution and final acceptance are separate statuses. The 985 automated checks in main CI run #241 are not equivalent to the 66 planned Test Plan cases.
 
 ## Requirement traceability
 
@@ -29,7 +29,7 @@ This matrix summarizes implementation and verification evidence currently availa
 
 ### CI evidence
 
-- Latest main CI after QA regression merges: run #163, commit `4ccfc24ee7ef477454041aa5f7c3954e4ce31020`: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42797884604 — Ubuntu and Windows build, automated tests and smoke tests passed; Ubuntu ASan/UBSan passed. Windows sanitizer is skipped by the workflow.
+- Latest main CI after QA regression merges: run #241, commit `10873b6686019ff4643463888be0050f491de032`: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382188203 — Ubuntu and Windows build/tests/smoke tests passed; Ubuntu passed 985 checks, ASan/UBSan and coverage job passed. Coverage: 88.0% line and 54.8% branch. Windows sanitizer is skipped by the workflow.
 - PR #98 adaptive timing boundary tests: run #141 passed Ubuntu and Windows: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42791702831. Merged as `32f53971bc6ab77f035d00eb1fe7ba2ffb34c1fd`.
 - PR #99 transfer backpressure test: run #142 passed Ubuntu and Windows: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42792945910. Merged as `0ab0ff995249e7cd0eb26d9debfa618938540d69`.
 - PR #101 emergency queue ordering test: run #143 passed Ubuntu and Windows: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42795154445. Merged as `093a7c5ec684156d44affa2a3c84da6503d76e30`.
@@ -118,3 +118,9 @@ The SRS RTM and Test Plan RTM must be reconciled case-by-case. Do not mark all 6
 | PRJ-SR-005 | SimulationEngine / main | TC-Rob-005-P/N | Malformed config rejection and top-level controlled error path; runtime module-fault isolation absent | NOT RUN |
 
 **Important:** This RTM maps all 33 requirement IDs to design components and planned cases. It does not mark any requirement accepted. The detailed case register remains 66/66 NOT RUN until the case-specific execution record is completed.
+
+
+### Latest additions (PR #123)
+- Missing config path: direct unit assertion plus Ubuntu/Windows CLI smoke checks verify a descriptive error and non-zero exit.
+- Missing compiler: Makefile check-deps target and Ubuntu CI negative dependency test verify an actionable C++17/CXX message.
+- Crosswalk after PR #123: 44 direct, 18 partial, 4 without direct automated checks. All 66 acceptance cases remain NOT RUN.

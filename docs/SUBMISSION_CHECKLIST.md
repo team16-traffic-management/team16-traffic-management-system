@@ -38,7 +38,7 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] GitHub Actions workflow builds/tests Ubuntu and Windows.
 - [x] PR #94 graceful-stop implementation merged to main as `339dfed320036ed1c42a375f70bc1189fb5b4244`.
 - [x] PR #94 CI run #132 passed Ubuntu and Windows build, automated tests and smoke tests; Ubuntu ASan/UBSan passed: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42785408865.
-- [x] Capture fresh push-to-main CI after QA regression merges: run #235 passed Ubuntu/Windows build, 984 checks and smoke tests; Ubuntu ASan/UBSan and production-source coverage passed.
+- [x] Capture fresh push-to-main CI after QA regression merges: run #241 passed Ubuntu/Windows build, tests and smoke tests; Ubuntu passed 985 checks, ASan/UBSan and production-source coverage passed.
 - [x] PR #110 repository documentation/maintenance cleanup merged to main as `03b8c7f9ca4f168ec86c122a9cbc3c887d309cb7`.
 - [ ] Verify the required GitHub Project is linked to the repository; a separate Jira TMS board (board ID 67) exists, but that does not by itself prove the GitHub Project requirement.
 - [x] Jira TMS board contains 33 SRS-related story issues; all 33 have story-point estimates (108 points total).
@@ -58,7 +58,7 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] RTM updated after PR #94 merge; implementation, automated verification and manual acceptance are separate.
 - [ ] Update the earlier test cases and Test Case Document to reflect changes made during the sprints.
 - [x] Create `docs/TEST_EXECUTION_REGISTER.md` with all 66 Test Plan case IDs, owners and initial NOT RUN status.
-- [x] Refresh `docs/TEST_CASE_AUTOMATION_CROSSWALK.md` after PRs #115–#122 plus the current diagnostic-test PR once merged: 44 cases have direct automated checks, 18 have partial evidence, and 4 have no direct automated check identified (PR #120 and #121 merged; main CI run #235 passed). This remains a mapping, not execution of all 66 Test Plan cases.
+- [x] Refresh `docs/TEST_CASE_AUTOMATION_CROSSWALK.md` after PRs #115–#122 plus the current diagnostic-test PR once merged: 44 cases have direct automated checks, 18 have partial evidence, and 4 have no direct automated check identified (PR #123 added direct checks for TC-Sim-001-N and TC-Port-01-N) (PR #123 added direct checks for TC-Sim-001-N and TC-Port-01-N) (PRs #120–#123 merged; main CI run #241 passed). This remains a mapping, not execution of all 66 Test Plan cases.
 - [ ] Execute and record the 66 Test Plan cases individually; do not infer their results from 436 automated assertions.
 - [ ] Perform manual Ctrl+C stop and verify the partial-run summary (TMS-F-061).
 - [ ] Test geometric movement conflicts (TMS-F-022); current automated invariant only checks at most one GREEN lane.
@@ -75,7 +75,7 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] Verify vehicle ID uniqueness across multiple lanes/intersections (PR #104; CI run #153 passed).
 - [x] Verify engine dequeues vehicles only on green (PR #105; CI run #154 passed).
 - [x] Local Windows benchmark met 500 ticks/sec for its fixture (median 88,344.30 ticks/sec); connected-topology and evaluator-hardware evidence remain outstanding.
-- [x] Generate final main line/branch coverage: run #235, 88.0% lines (667/758), 54.6% branches (683/1,252), scope documented in QA reports.
+- [x] Generate final main line/branch coverage: run #241, 88.0% lines (667/758), 54.8% branches (686/1,252), scope documented in QA reports.
 - [x] Place the four QA reports in `docs/QA_Reports/`, satisfying Part 3's requirement to upload the reports to the `docs` folder. Final main run #235 generated whole-production-source coverage: 88.0% lines and 54.6% branches.
 - [x] Draft `docs/FINAL_PROJECT_REPORT.md` from repository, CI, QA and Jira evidence.
 - [ ] Review and approve `docs/FINAL_PROJECT_REPORT.md` with the full team.

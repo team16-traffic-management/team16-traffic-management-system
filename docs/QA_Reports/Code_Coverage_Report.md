@@ -3,8 +3,8 @@
 <badge color="success">Final main-branch coverage generated</badge>
 
 ## Measurement scope
-- Main-branch workflow: [Run #235](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43381117586).
-- Tested main commit: `1b4804a331247a3ae2f6c2704dd1a31957334e7a`.
+- Main-branch workflow: [Run #241](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382188203).
+- Tested main commit: `10873b6686019ff4643463888be0050f491de032`.
 - Runner/compiler: Ubuntu GitHub Actions runner with GCC (version recorded in workflow log).
 - Instrumentation: GCC `--coverage`, `-O0 -g`.
 - Executed: consolidated automated test executable; baseline, zero-value and high-load application fixtures; invalid and corrupted fixtures (expected non-zero exits).
@@ -19,8 +19,8 @@
 | Line coverage | **88.0%** |
 | Functions executed | 81 / 94 |
 | Function coverage | 86.2% |
-| Branches executed | 683 / 1,252 |
-| Branch coverage | 54.6% |
+| Branches executed | 686 / 1,252 |
+| Branch coverage | 54.8% |
 
 ### Per-file line coverage
 
@@ -39,7 +39,7 @@
 | **TOTAL** | **758** | **667** | **88.0%** |
 
 ## Artifact
-[Download HTML and Cobertura XML coverage artifact](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43381117586/artifacts/14016975299).
+[Download HTML and Cobertura XML coverage artifact](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382188203/artifacts/14016947229).
 
 ## Limitations
 This is final main-branch coverage for the tested commit above. Coverage is execution evidence, not requirements acceptance. It does not mean all 66 Test Plan cases passed; the acceptance register remains 66/66 NOT RUN. Review uncovered lines/branches and add tests only where they serve requirements, not just to inflate the percentage.
