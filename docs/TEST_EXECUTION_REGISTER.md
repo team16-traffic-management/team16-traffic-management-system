@@ -12,7 +12,7 @@ Related coverage analysis: [`docs/TEST_CASE_AUTOMATION_CROSSWALK.md`](TEST_CASE_
 - Allowed statuses: `PASS`, `FAIL`, `BLOCKED`, `NOT RUN`.
 - For every executed case, add commit SHA, date/time, OS/compiler, exact command/config, actual result, expected-result comparison, and an evidence link or log path.
 - A related unit-test assertion or CI run is supporting evidence only; it does not automatically mean the corresponding Test Plan case passed.
-- `TC-Gen-003-N` is mapped to TMS-F-011 (queue capacity), not TMS-F-003 (FIFO).
+- `TC-Gen-003-N` is a FIFO boundary case: interleaved emergency insertion must not reorder normal vehicles. Queue capacity cases remain mapped to TMS-F-011 / PRJ-SR-004.
 - Invalid/missing configuration is rejected with a descriptive error and non-zero exit; the parser does not substitute safe defaults.
 - Zero queue capacity is rejected at construction/config validation; exercise the zero-capacity constructor boundary separately from valid config fixtures.
 
@@ -25,7 +25,7 @@ Related coverage analysis: [`docs/TEST_CASE_AUTOMATION_CROSSWALK.md`](TEST_CASE_
 | TC-Gen-002-P | TMS-F-002 | Unique vehicle ID, arrival tick and valid type | Tarun Gowda P | NOT RUN | |
 | TC-Gen-002-N | TMS-F-002 | Same-tick spawns across lanes retain unique IDs | Tarun Gowda P | NOT RUN | |
 | TC-Gen-003-P | TMS-F-003 | Vehicles enqueue in FIFO order | Tarun Gowda P | NOT RUN | |
-| TC-Gen-003-N | TMS-F-011 / PRJ-SR-004 | Enqueue rejected once lane is at capacity | Tarun Gowda P | NOT RUN | |
+| TC-Gen-003-N | TMS-F-003 | Emergency priority does not reverse FIFO order among normal vehicles | Tarun Gowda P | NOT RUN | |
 | TC-Queue-001-P | TMS-F-010 | Each lane maintains independent queue state | Tejas Shetty | NOT RUN | |
 | TC-Queue-001-N | TMS-F-010 | Operating on one lane does not corrupt sibling lane | Tejas Shetty | NOT RUN | |
 | TC-Queue-002-P | TMS-F-011 | Capacity limit is enforced | Tejas Shetty | NOT RUN | |
