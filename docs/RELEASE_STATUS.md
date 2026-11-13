@@ -42,6 +42,6 @@ Do not call the project fully accepted or submission-ready until the remaining T
 - PR #118 merged: runtime adaptive-mode switch; CI #43378320849 passed Ubuntu/Windows and Linux ASan/UBSan.
 - PR #119 merged: crosswalk and submission evidence refresh.
 - PR #120 merged: adaptive mode loaded from configuration; CI #43379351361 passed Ubuntu/Windows and Linux ASan/UBSan.
-- PR #123 merged missing-config and missing-compiler diagnostic checks; main CI run #241 passed Ubuntu and Windows build/test/smoke jobs, Ubuntu 985 checks, Linux ASan/UBSan and coverage. Final coverage: 88.0% line and 54.8% branch on main commit 10873b66.
-- Main-branch coverage artifact reports 88.0% line coverage (667/758), 86.2% function coverage (81/94), and 54.8% branch coverage (686/1,252): https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382188203/artifacts/14016947229.
+- PR #123 merged missing-config and missing-compiler diagnostic checks; main CI run #243 passed Ubuntu and Windows build/test/smoke jobs, Ubuntu 985 checks, Linux ASan/UBSan and coverage. Final coverage: 88.0% line and 54.8% branch on main commit 10873b66.
+- Main-branch coverage artifact reports 88.0% line coverage (667/758), 86.2% function coverage (81/94), and 54.8% branch coverage (686/1,252): https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382805876/artifacts/14016733343.
 - Automation crosswalk: 42 direct, 18 partial, 6 without direct automated checks. The 66 Test Plan acceptance cases remain NOT RUN.

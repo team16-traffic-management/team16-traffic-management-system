@@ -38,7 +38,7 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] GitHub Actions workflow builds/tests Ubuntu and Windows.
 - [x] PR #94 graceful-stop implementation merged to main as `339dfed320036ed1c42a375f70bc1189fb5b4244`.
 - [x] PR #94 CI run #132 passed Ubuntu and Windows build, automated tests and smoke tests; Ubuntu ASan/UBSan passed: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42785408865.
-- [x] Capture fresh push-to-main CI after QA regression merges: run #241 passed Ubuntu/Windows build, tests and smoke tests; Ubuntu passed 985 checks, ASan/UBSan and production-source coverage passed.
+- [x] Capture fresh push-to-main CI after QA regression merges: run #243 passed Ubuntu/Windows build, tests and smoke tests; Ubuntu passed 985 checks, ASan/UBSan and production-source coverage passed.
 - [x] PR #110 repository documentation/maintenance cleanup merged to main as `03b8c7f9ca4f168ec86c122a9cbc3c887d309cb7`.
 - [ ] Verify the required GitHub Project is linked to the repository; a separate Jira TMS board (board ID 67) exists, but that does not by itself prove the GitHub Project requirement.
 - [x] Jira TMS board contains 33 SRS-related story issues; all 33 have story-point estimates (108 points total).
@@ -50,7 +50,7 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [ ] Upload the required two-minute working-product Sprint 2 video to the repository; no video file is present in the current repository tree.
 - [ ] Confirm team roles/contributions with all members and obtain final approvals.
 - [ ] Record the final presentation walkthrough if required.
-- [ ] Verify README build/run instructions from a clean checkout.
+- [x] Verify README build/run instructions from a clean checkout: main CI run #243 used a fresh checkout and passed compiler preflight, build, tests and smoke tests on Ubuntu/Windows.
 
 ## Part 3 — Testing and final documentation
 - [x] Unit Test Report records baseline main CI run #99: 436 checks passed on Ubuntu and Windows.

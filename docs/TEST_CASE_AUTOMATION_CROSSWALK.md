@@ -1,6 +1,6 @@
 # Test Plan to Automated Test Crosswalk
 
-**Repository baseline:** `main` after PR #123 merge, commit `10873b6686019ff4643463888be0050f491de032`; source includes adaptive-mode config and missing-file assertions; CI also checks missing-compiler diagnostics.  
+**Repository baseline:** `main` after PR #124 merge, commit `43681916f3f18da3b29d19c4bc79ae10c46ae13e`; source includes adaptive-mode config and missing-file assertions; CI also checks missing-compiler diagnostics.  
 **Test source reviewed:** `tests/test_traffic_management.cpp`.  
 **Purpose:** Identify which of the 66 planned Test Plan cases have related automated assertions in the consolidated test executable or CI. This is a coverage map, not a test-execution report.
 
@@ -13,7 +13,7 @@
 | No direct automated check identified | 4 | No corresponding check was found in the reviewed test source/CI workflow. |
 | **Total** | **66** | |
 
-**Important:** All 66 Test Plan cases remain `NOT RUN` in `docs/TEST_EXECUTION_REGISTER.md`. Even a direct unit-test mapping does not automatically count as a complete Test Plan case execution. Each case still needs its specified test data, steps, expected-vs-actual result, environment and evidence recorded. The 985 automated checks in main CI run #241 are not 66 separately executed acceptance cases.
+**Important:** All 66 Test Plan cases remain `NOT RUN` in `docs/TEST_EXECUTION_REGISTER.md`. Even a direct unit-test mapping does not automatically count as a complete Test Plan case execution. Each case still needs its specified test data, steps, expected-vs-actual result, environment and evidence recorded. The 985 automated checks in main CI run #243 are not 66 separately executed acceptance cases.
 
 ## Case-by-case crosswalk
 
