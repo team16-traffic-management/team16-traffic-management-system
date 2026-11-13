@@ -144,7 +144,7 @@ Use the linked workflow runs in Section 5 as evidence. Sanitizers are a Linux-on
 
 ## 7. Team roles and contributions
 
-The repository's current role allocation is documented in `docs/TEAM_ROLES.md`. Jira's TMS board (board ID 67) contains 33 requirement-linked story issues, all with estimates (108 story points in total). All 33 are currently assigned to Khushi Gupta; the team should confirm that this allocation reflects the agreed developer/tester/coordination responsibilities. The board has two closed sprints, but their recorded dates (1–3 Nov and 2–4 Nov 2026) do not match the assignment's 19–23 Oct and 26–30 Oct windows, and they overlap. An additional empty future sprint is present. The GitHub Project requirement must be verified separately; the existence of a Jira board is not proof of a GitHub Project linked to the repository.
+Jira's TMS board (board ID 67) contains 33 requirement-linked story issues, all with estimates (108 story points in total). All 33 are currently assigned to Khushi Gupta; the team should confirm that this allocation reflects the agreed developer/tester/coordination responsibilities. The board has two closed sprints, but their recorded dates (1–3 Nov and 2–4 Nov 2026) do not match the assignment's 19–23 Oct and 26–30 Oct windows, and they overlap. An additional empty future sprint is present. The GitHub Project requirement must be verified separately; the existence of a Jira board is not proof of a GitHub Project linked to the repository.
 
 The repository's current role allocation is documented in `docs/TEAM_ROLES.md`:
 
