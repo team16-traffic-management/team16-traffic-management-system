@@ -76,4 +76,4 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 | Developer handoff | Khushi Gupta | Pending | |
 | Independent testing | Tejas Shetty | Pending | |
 | Jira / CI coordination | Tarun Gowda | Pending | |
-| Faculty / evaluator acceptance, if required | Pending | Pending |
+| Faculty / evaluator acceptance, if required | To confirm | Pending | Pending |
