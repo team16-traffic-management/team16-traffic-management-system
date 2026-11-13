@@ -8,9 +8,9 @@
 
 | Classification | Cases | Meaning |
 |---|---:|---|
-| Direct automated check | 40 | A named automated test checks the core behavior described by the case. |
+| Direct automated check | 41 | A named automated test checks the core behavior described by the case. |
 | Partial / related evidence | 18 | Related behavior is checked, but one or more explicit preconditions, outputs or acceptance criteria are not asserted. |
-| No direct automated check identified | 8 | No corresponding check was found in the reviewed test source/CI workflow. |
+| No direct automated check identified | 7 | No corresponding check was found in the reviewed test source/CI workflow. |
 | **Total** | **66** | |
 
 **Important:** All 66 Test Plan cases remain `NOT RUN` in `docs/TEST_EXECUTION_REGISTER.md`. Even a direct unit-test mapping does not automatically count as a complete Test Plan case execution. Each case still needs its specified test data, steps, expected-vs-actual result, environment and evidence recorded. The 436 historical CI assertions are not 66 separately executed acceptance cases.
@@ -38,7 +38,7 @@
 | TC-Sig-002-P | `testAdaptiveGreenExtensionBounds` | Direct | Checks adaptive green extension for a long queue. |
 | TC-Sig-002-N | `testAdaptiveGreenExtensionBounds` | Direct | Checks the extension cap and restoration to the base duration. |
 | TC-Sig-003-P | `testNoSimultaneousGreenSignals` | Direct | Checks at most one lane is green over repeated phase cycles. |
-| TC-Sig-003-N | `—` | Not identified | No direct rapid/mid-run configuration-change test was found. |
+| TC-Sig-003-N | `testAdaptiveModeCanBeChangedDuringSignalOperation` | Direct | Toggles adaptive mode during signal operation and checks the active green phase follows the enabled/disabled setting. |
 | TC-Sig-004-P | `testSignalPhaseTransitions` | Direct | Checks the Yellow phase occurs between Green and Red. |
 | TC-Sig-004-N | `testSignalPhaseTransitions; testConsoleStatusFields` | Partial | A one-tick Yellow duration is exercised, but the exact one-tick Yellow console rendering is not asserted. |
 | TC-Sig-005-P | `—` | Not identified | No direct valid config-mode-switch test was found. |
