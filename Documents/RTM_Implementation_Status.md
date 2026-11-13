@@ -75,3 +75,46 @@ Priority remaining evidence:
 The Test Plan currently contains a conflict with the SRS for invalid configuration behavior: SRS PRJ-SR-002 calls for rejection with a clear error, while some Test Plan cases expect safe-default substitution. Resolve the document conflict before marking those cases passed. The Test Plan also describes automated scripts as out of scope even though the repository now has an automated C++ test suite; update its execution-method description.
 
 The SRS RTM and Test Plan RTM must be reconciled case-by-case. Do not mark all 66 cases complete from the 436 automated assertion count. Overall system acceptance remains PARTIAL pending the outstanding cases and sign-off.
+
+
+## Full requirement-level RTM
+
+**Status convention:** N = planned acceptance case not individually executed. Automated checks listed below are supporting evidence only and do not change the acceptance status.
+
+| Requirement | Implementation component(s) | Planned Test Plan cases | Current automated evidence | Acceptance status |
+|---|---|---|---|---|
+| TMS-F-001 | VehicleGenerator | TC-Gen-001-P/N | testArrivalRates; testProbabilityBoundaries | NOT RUN |
+| TMS-F-002 | Vehicle / VehicleGenerator | TC-Gen-002-P/N | testVehicleIdsAreUniqueAcrossLanesAndIntersections | NOT RUN |
+| TMS-F-003 | LaneQueue | TC-Gen-003-P | testQueueCapacityAndEmptyDequeue covers FIFO; capacity-negative case is reassigned to TMS-F-011 | NOT RUN |
+| TMS-F-010 | Intersection / LaneQueue | TC-Queue-001-P/N | testSiblingLaneQueueIsolation | NOT RUN |
+| TMS-F-011 | LaneQueue / StatisticsCollector | TC-Gen-003-N; TC-Queue-002-P/N | testQueueCapacityAndEmptyDequeue; testSimultaneousOverflowAcrossEveryLane | NOT RUN |
+| TMS-F-012 | SimulationEngine / SignalController | TC-Queue-003-P/N | testEngineDequeuesVehiclesOnlyOnGreen | NOT RUN |
+| TMS-F-013 | StatisticsCollector | TC-Queue-004-P/N | testStatisticsCalculations (immediate-dequeue edge remains partial) | NOT RUN |
+| TMS-F-020 | SignalController | TC-Sig-001-P/N | testSignalPhaseTransitions (zero-duration config expectation remains a spec edge) | NOT RUN |
+| TMS-F-021 | SignalController | TC-Sig-002-P/N | testAdaptiveGreenExtensionBounds | NOT RUN |
+| TMS-F-022 | SignalController / Intersection | TC-Sig-003-P/N | testNoSimultaneousGreenSignals (does not prove geometric turn-conflict matrix) | NOT RUN |
+| TMS-F-023 | SignalController / ConsoleView | TC-Sig-004-P/N | testSignalPhaseTransitions; testConsoleStatusFields (exact one-tick rendering partial) | NOT RUN |
+| TMS-F-024 | SimulationEngine / SignalController | TC-Sig-005-P/N | testAdaptiveModeLoadedFromConfiguration; testConfigurationValidationBoundaries | NOT RUN |
+| TMS-F-030 | VehicleGenerator / Vehicle | TC-Emg-001-P/N | testEmergencyProbabilityOneAlwaysGeneratesEmergencyVehicles; testZeroEmergencyProbabilityProducesNormalVehicles | NOT RUN |
+| TMS-F-031 | LaneQueue | TC-Emg-002-P/N | testEmergencyQueuePriorityAndStableOrdering | NOT RUN |
+| TMS-F-032 | SignalController / SimulationEngine | TC-Emg-003-P/N | testEmergencyPreemption; testNoSimultaneousGreenSignals (max delay boundary partial) | NOT RUN |
+| TMS-F-040 | SimulationEngine / Intersection | TC-Multi-001-P/N | testConfigDrivenIntersections (fault isolation not implemented/evidenced) | NOT RUN |
+| TMS-F-041 | SimulationEngine / PendingTransfer | TC-Multi-002-P/N | testConnectedVehicleTransferTakesOneTick; testPendingTransferWaitsForDestinationCapacity | NOT RUN |
+| TMS-F-042 | StatisticsCollector / SimulationEngine | TC-Multi-003-P/N | testStatisticsCalculations; testZeroThroughputIntersectionAppearsInAggregateReport | NOT RUN |
+| TMS-F-050 | StatisticsCollector | TC-Stats-001-P/N | testStatisticsCalculations | NOT RUN |
+| TMS-F-051 | StatisticsCollector | TC-Stats-002-P/N | testStatisticsCalculations; testMaxQueueLengthOneBoundary | NOT RUN |
+| TMS-F-052 | StatisticsCollector | TC-Stats-003-P/N | testStatisticsCalculations | NOT RUN |
+| TMS-F-060 | SimulationEngine::loadConfigFromFile | TC-Sim-001-P/N | testConfigDrivenIntersections; testConfigurationValidationBoundaries; config-fixture CI smoke tests | NOT RUN |
+| TMS-F-061 | main / SimulationEngine | TC-Sim-002-P/N | testManualStopProducesPartialSummary; testSigintStopsOpenEndedRun | NOT RUN |
+| TMS-NF-001 | SimulationEngine / ConsoleView | TC-Perf-01-P/N | Local benchmark and testTenThousandTickStability; connected topology/evaluator hardware not covered | NOT RUN |
+| TMS-NF-002 | SimulationEngine / RAII containers | TC-Rel-01-P/N | testTenThousandTickStability; testRepeatedSimulationLifecycle; Linux ASan/UBSan CI (no quantified leak report) | NOT RUN |
+| TMS-NF-003 | SimulationEngine and domain modules | TC-Maint-01-P/N | testConfigDrivenIntersections and invalid topology checks | NOT RUN |
+| TMS-NF-004 | ConsoleView | TC-UX-01-P/N | testConsoleStatusFields; testConsoleLongLaneAndHighQueueDisplay (manual visual inspection outstanding) | NOT RUN |
+| TMS-NF-005 | Makefile / GitHub Actions | TC-Port-01-P/N | Ubuntu/Windows CI build and smoke tests; missing-tool diagnostic case not tested | NOT RUN |
+| PRJ-SR-001 | LaneQueue / Intersection / SimulationEngine | TC-Rob-001-P/N | testInvalidConfiguration; testIntersectionValidationAndSignalRegistration; direct container-bounds acceptance case absent | NOT RUN |
+| PRJ-SR-002 | SimulationEngine::loadConfigFromFile | TC-Rob-002-P/N | testConfigurationValidationBoundaries; testMalformedConfiguration; invalid/corrupted fixture CI | NOT RUN |
+| PRJ-SR-003 | RAII / standard containers | TC-Rob-003-P/N | Linux ASan/UBSan, 10,000-tick and repeated lifecycle checks; leak/exception-injection evidence absent | NOT RUN |
+| PRJ-SR-004 | LaneQueue / StatisticsCollector | TC-Rob-004-P/N | testQueueCapacityAndEmptyDequeue; testSimultaneousOverflowAcrossEveryLane | NOT RUN |
+| PRJ-SR-005 | SimulationEngine / main | TC-Rob-005-P/N | Malformed config rejection and top-level controlled error path; runtime module-fault isolation absent | NOT RUN |
+
+**Important:** This RTM maps all 33 requirement IDs to design components and planned cases. It does not mark any requirement accepted. The detailed case register remains 66/66 NOT RUN until the case-specific execution record is completed.
