@@ -85,7 +85,7 @@ Post-merge main CI [run #163](https://github.com/team16-traffic-management/team1
 - New regression tests cover adaptive timing boundaries, transfer backpressure, emergency queue ordering and console long-lane/high-queue output, but do not close the remaining system-level gaps listed in the System Validation Report.
 - The 10,000-tick run and PR #108 repeated lifecycle test do not quantify memory growth or independently certify leak-free operation.
 - Manual interactive Ctrl+C acceptance and all 66 Test Plan case executions are not yet recorded.
-- System-level gaps are listed in `reports/System_Validation_Report.md` and `Documents/RTM_Implementation_Status.md`.
+- System-level gaps are listed in `docs/QA_Reports/System_Validation_Report.md` and `Documents/RTM_Implementation_Status.md`.
 - GCOV line/branch coverage is documented separately and must not be inferred from these results.
 
 ## Conclusion
