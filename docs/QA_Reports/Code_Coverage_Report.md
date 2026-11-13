@@ -1,14 +1,14 @@
 # Code Coverage Report
 
-<badge color="success">PR CI coverage generated</badge>
+<badge color="success">Final main-branch coverage generated</badge>
 
 ## Measurement scope
-- Workflow: [PR #121 CI run #230](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43380638801).
-- Tested PR head: `7e8b6c58666abfea2fdcc4161217346deed76068` (before merge to main).
-- Runner/compiler: Ubuntu GitHub Actions runner with GCC (version recorded in the workflow log).
+- Main-branch workflow: [Run #235](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43381117586).
+- Tested main commit: `1b4804a331247a3ae2f6c2704dd1a31957334e7a`.
+- Runner/compiler: Ubuntu GitHub Actions runner with GCC (version recorded in workflow log).
 - Instrumentation: GCC `--coverage`, `-O0 -g`.
 - Executed: consolidated automated test executable; baseline, zero-value and high-load application fixtures; invalid and corrupted fixtures (expected non-zero exits).
-- Product scope: all `.cpp` translation units under `src/` and `vehicle/`, including `src/main.cpp`; gcovr also counts the instrumented inline code in `vehicle/VehicleGenerator.h`.
+- Product scope: all `.cpp` translation units under `src/` and `vehicle/`, including `src/main.cpp`; gcovr also counts instrumented inline code in `vehicle/VehicleGenerator.h`.
 - Excluded: `tests/test_traffic_management.cpp` as test harness; `include/` header-only code is not included in the reported scope.
 
 ## Results
@@ -39,7 +39,7 @@
 | **TOTAL** | **758** | **667** | **88.0%** |
 
 ## Artifact
-[Download HTML and Cobertura XML coverage artifact](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43380638801/artifacts/14016517314).
+[Download HTML and Cobertura XML coverage artifact](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43381117586/artifacts/14016975299).
 
 ## Limitations
-This is PR-branch coverage, not yet a post-merge main-branch measurement. Repeat on the final main commit and update the recorded SHA/run before submission. Coverage is execution evidence, not requirements acceptance. It does not mean all 66 Test Plan cases passed; the acceptance register remains 66/66 NOT RUN.
+This is final main-branch coverage for the tested commit above. Coverage is execution evidence, not requirements acceptance. It does not mean all 66 Test Plan cases passed; the acceptance register remains 66/66 NOT RUN. Review uncovered lines/branches and add tests only where they serve requirements, not just to inflate the percentage.
