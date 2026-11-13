@@ -1,6 +1,6 @@
 # Test Plan to Automated Test Crosswalk
 
-**Repository baseline:** `main` after PR #113 merge, commit `1f8932fbf2ce8c8bc4d332daf446f4774cbfb6db` plus the test source revision inspected for this crosswalk.  
+**Repository baseline:** `main` after PR #118 merge, commit `dab99071b11f5a70000b18088871003b2380a7e7`.  
 **Test source reviewed:** `tests/test_traffic_management.cpp`.  
 **Purpose:** Identify which of the 66 planned Test Plan cases have related automated assertions in the consolidated test executable or CI. This is a coverage map, not a test-execution report.
 
@@ -90,16 +90,14 @@
 
 1. **TC-Gen-003-N mapping:** The Test Plan case tests queue capacity, but its requirement field says TMS-F-003 (FIFO). Confirm and correct to the appropriate queue-capacity/robustness requirement before sign-off.
 2. **Configuration behavior conflict:** Test Plan cases expect safe fallback for invalid signal mode and missing config in some places, while the current parser rejects invalid values and throws if the config file cannot be opened. Reconcile SRS, Test Plan and implementation rather than silently changing expected results.
-3. **TC-Multi-001-N and TC-Multi-003-N:** Add explicit fault-isolation and zero-throughput aggregate-statistics tests if these requirements remain in scope.
-4. **TC-Multi-001-N and TC-Multi-003-N:** Add explicit fault-isolation and zero-throughput aggregate-statistics tests if these requirements remain in scope.
-5. **TC-Rob-003-P/N:** Add quantified memory/leak evidence; repeated lifecycle and ASan/UBSan runs alone are not a documented Valgrind leak report or injected-exception cleanup test.
-6. **TC-Rob-004-N:** Add a simultaneous-overflow test across every lane.
-7. **TC-Rob-005-N:** Add a controlled fault-isolation test demonstrating that a failure in one module does not terminate unrelated intersections/modules, if that is the intended requirement.
-8. **TC-Port-01-N:** Add a documented/manual check for missing compiler or Make dependency messaging if this remains a required case.
+3. **TC-Multi-001-N:** Add a controlled invalid-intersection fault-isolation test if this requirement remains in scope; current tests cover sibling-lane isolation, not isolation between failing intersections.
+4. **TC-Rob-003-P/N:** Retain quantified memory/leak evidence if required. Repeated lifecycle and ASan/UBSan runs are useful, but they are not a Valgrind leak report or injected-exception cleanup test.
+5. **TC-Rob-005-N:** Add a controlled module-fault injection test demonstrating that a failure in one module does not terminate unrelated intersections/modules, if that is the intended requirement.
+6. **TC-Port-01-N:** Add a documented/manual check for missing compiler or Make dependency messaging if this remains a required case.
 
 ## Recommended next execution order
 
 1. Resolve specification conflicts and the TC-Gen-003-N mapping.
 2. Execute the existing direct/partial cases using the Test Plan's own steps and record each outcome in `docs/TEST_EXECUTION_REGISTER.md`.
-3. Add targeted automated tests for the cases classified as having no direct automated check, prioritizing lane isolation, invalid-intersection isolation, zero-throughput aggregation, simultaneous overflow and module fault isolation.
+3. Add targeted automated tests for the remaining cases classified as having no direct automated check, prioritizing valid adaptive-mode config loading and invalid-intersection isolation; keep the missing-config behavior conflict explicit until the specification is reconciled.
 4. Keep memory/leak, usability, performance and portability evidence distinct from ordinary unit-test assertions.
