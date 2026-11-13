@@ -550,6 +550,31 @@ void testAdaptiveModeCanBeChangedDuringSignalOperation() {
           "runtime adaptive extension ends at its configured duration");
 }
 
+void testAdaptiveModeLoadedFromConfiguration() {
+    const char* path = "test_adaptive_mode_config.tmp";
+    {
+        std::ofstream file(path);
+        file << "total_ticks=5\n"
+             << "arrival_rate=0\n"
+             << "emergency_probability=0\n"
+             << "adaptive_mode=true\n"
+             << "queue_capacity=4\n"
+             << "intersection.AdaptiveJunction.lanes=North,South\n";
+    }
+
+    SimulationEngine engine;
+    check(engine.loadConfigFromFile(path) == 5,
+          "adaptive-mode config returns configured run length");
+    check(engine.getIntersectionCount() == 1,
+          "adaptive-mode config creates its configured intersection");
+    check(engine.isAdaptiveMode("AdaptiveJunction"),
+          "adaptive_mode=true is applied to the configured intersection");
+    checkThrows<std::out_of_range>(
+        [&] { engine.isAdaptiveMode("MissingJunction"); },
+        "adaptive-mode query rejects an unknown intersection");
+    std::remove(path);
+}
+
 void testEmergencyPreemption() {
     SignalController signals(2, 1, 1);
     signals.addLane("North");
@@ -750,6 +775,7 @@ int main() {
     testNoSimultaneousGreenSignals();
     testAdaptiveGreenExtensionBounds();
     testAdaptiveModeCanBeChangedDuringSignalOperation();
+    testAdaptiveModeLoadedFromConfiguration();
     testEmergencyPreemption();
     testStatisticsCalculations();
     testMaxQueueLengthOneBoundary();

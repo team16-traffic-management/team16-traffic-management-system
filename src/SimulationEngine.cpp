@@ -342,5 +342,12 @@ void SimulationEngine::run(int maxTicks, bool silent) {
 const StatisticsCollector& SimulationEngine::getStats() const { return stats_; }
 int SimulationEngine::getConfiguredQueueCapacity() const { return configuredQueueCapacity_; }
 std::size_t SimulationEngine::getIntersectionCount() const { return intersections_.size(); }
+bool SimulationEngine::isAdaptiveMode(const std::string& intersectionId) const {
+    for (const auto& intersection : intersections_) {
+        if (intersection.getId() == intersectionId)
+            return intersection.getSignalController().isAdaptiveMode();
+    }
+    throw std::out_of_range("Unknown intersection ID: " + intersectionId);
+}
 std::size_t SimulationEngine::getTotalTransfers() const { return totalTransfers_; }
 int SimulationEngine::getCurrentTick() const { return currentTick_; }
