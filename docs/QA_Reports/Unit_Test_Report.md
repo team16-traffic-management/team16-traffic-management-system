@@ -1,6 +1,6 @@
 # Unit Test Report
 
-Status: Main-branch CI run #235 passed Ubuntu and Windows with 984 automated checks on each platform. Linux ASan/UBSan and the production-source coverage job passed. Full 66-case acceptance execution remains separate.
+Status: Main-branch CI run #241 passed Ubuntu and Windows build/test/smoke jobs; Ubuntu printed `All 985 checks passed.` Linux ASan/UBSan and the production-source coverage job passed. Full 66-case acceptance execution remains separate.
 
 ## Test environment
 | Field | Value |
@@ -102,15 +102,18 @@ Baseline main CI reported 436 checks passed on Ubuntu and Windows. PR #94's manu
 | #118 | Runtime adaptive signal mode switch | [#43378320849](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43378320849) | Ubuntu/Windows and Linux ASan/UBSan passed |
 | #120 | Adaptive mode loaded from configuration | [#43379351361](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43379351361) | Ubuntu/Windows and Linux ASan/UBSan passed |
 
-PR #121 merged the production-source gcovr coverage job. Final main run #235 reports 88.0% line coverage (667/758), 86.2% function coverage (81/94) and 54.6% branch coverage (683/1,252). See the coverage reports and main-branch artifact link. These metrics do not convert the 66 Test Plan cases from NOT RUN to PASS.
+PR #121 merged the production-source gcovr coverage job; PR #123 added missing-config and missing-compiler diagnostic checks. Final main run #235 reports 88.0% line coverage (667/758), 86.2% function coverage (81/94) and 54.8% branch coverage (683/1,252). See the coverage reports and main-branch artifact link. These metrics do not convert the 66 Test Plan cases from NOT RUN to PASS.
 
 
-## Final main-branch verification — run #235
+## Final main-branch verification — run #241
 
-- Workflow: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43381117586
-- Tested commit: `1b4804a331247a3ae2f6c2704dd1a31957334e7a`
-- Ubuntu: build, all 984 automated checks, default/config-fixture smoke tests and Linux ASan/UBSan passed.
+- Workflow: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382188203
+- Tested commit: `10873b6686019ff4643463888be0050f491de032`
+- Ubuntu: build, all 985 automated checks, default/config-fixture smoke tests and Linux ASan/UBSan passed.
 - Windows: build, all 984 automated checks and default/config-fixture smoke tests passed. Sanitizer and Linux executable upload steps are Linux-only and correctly skipped on Windows.
-- The workflow's coverage job generated 88.0% line coverage, 86.2% function coverage and 54.6% branch coverage. See the Code Coverage and Branch Coverage reports for scope and artifact.
+- The workflow's coverage job generated 88.0% line coverage, 86.2% function coverage and 54.8% branch coverage. See the Code Coverage and Branch Coverage reports for scope and artifact.
 
-PRs #115–#120 are merged and their regression additions are described above. Automated checks remain distinct from the 66 acceptance cases, all of which remain NOT RUN in the execution register.
+PRs #115–#123 are merged and their regression additions are described above. Automated checks remain distinct from the 66 acceptance cases, all of which remain NOT RUN in the execution register.
+
+
+PR #123 added the missing-config CLI rejection smoke test and a Makefile check-deps diagnostic test. Main run #241 passed the new Ubuntu checks; Windows build/tests/smoke tests also passed (the missing-compiler negative check is intentionally Linux-only).
