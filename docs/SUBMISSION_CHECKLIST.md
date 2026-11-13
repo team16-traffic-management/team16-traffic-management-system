@@ -7,30 +7,30 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] Component diagram is present in `Documents/diagrams/`.
 - [x] Review SRS v0.4 content: sections 1–8, 23 functional requirements, 5 non-functional requirements, acceptance criteria, 3 robustness objectives and 5 robustness requirements are present. See `docs/DOCUMENT_COMPLIANCE_AUDIT.md`.
 - [x] Add PlantUML use-case diagram source at `Documents/diagrams/TMS_Use_Case_Diagram.puml`.
-- [ ] Use the supplied SRS v0.5 revision with the use-case diagram rendered and embedded; visually review figure placement before sign-off.
+- [x] Supplied SRS v0.5 revision includes the system-level use-case diagram and full RTM; PDF preview reviewed. Team sign-off remains pending.
 - [ ] Confirm whether the SRS robustness/data-integrity objectives and requirements satisfy the assignment's security objectives/requirements requirement; Section 5.1 is explicitly scoped as robustness, not a conventional security section.
 - [ ] Replace the SRS DOCX with the supplied v0.5 revision, which includes the complete 33-requirement RTM; statuses remain Not Run until acceptance execution.
 - [ ] Update SRS draft status and obtain approval/sign-off.
 - [x] Review Test Plan v1.0 content: Sections 1–13, required Sections 3/4/5, Section 5.1, and 66 detailed cases (two per SRS requirement) are present.
 - [x] Supplied Test Plan v1.1 clarifies the local configuration-file trust boundary and limits of security validation; instructor confirmation is still required.
-- [ ] The supplied Test Plan v1.1 changes invalid/missing configuration expectations to clear rejection, matching SRS PRJ-SR-002 and the parser.
-- [ ] Use the implementation-aligned Test Plan revision: `TC-Gen-003-N` tests FIFO stability when an emergency vehicle is interleaved; queue-capacity tests remain under TMS-F-011 / PRJ-SR-004.
+- [x] Supplied Test Plan v1.1 changes invalid/missing configuration expectations to clear rejection, matching SRS PRJ-SR-002 and the parser.
+- [x] Supplied Test Plan v1.1 maps `TC-Gen-003-N` to FIFO stability when emergency traffic is interleaved; queue-capacity tests remain under TMS-F-011 / PRJ-SR-004.
 - [x] Add five current-parser-compatible config fixtures under `tests/data/` (baseline, zero-values, invalid-values, high-load, corrupted) with reproducibility notes.
 - [x] Extend CI to run the three valid fixtures and verify the two invalid fixtures are rejected on Ubuntu and Windows.
 - [ ] Replace the repository Test Plan DOCX with the supplied implementation-aligned v1.1 revision: Section 6.1 and Appendix B use current parser syntax; zero-capacity validation is separated from valid config fixtures.
-- [ ] Use the implementation-aligned Test Plan v1.1 revision: it documents the consolidated real-class C++ test harness and separates automated CI checks from the 66 acceptance cases.
+- [x] Supplied Test Plan v1.1 documents the consolidated real-class C++ test harness and separates automated CI checks from the 66 acceptance cases.
 - [ ] Update Test Plan from Draft and obtain approval/sign-off.
 - [x] Review SAD v1.0 content: component responsibilities/descriptions, synchronous tick-driven modular architecture pattern, two textual workflows and partial C++ class interface outlines are present.
 - [x] Add two implementation-aligned PlantUML sequence diagram sources under `Documents/diagrams/` (`TMS_Vehicle_Admission_Sequence.puml` and `TMS_Signal_And_Dispatch_Sequence.puml`).
-- [ ] Use the supplied SAD v3.1 revision with both implementation-aligned sequence diagrams embedded; visually review figure placement.
+- [x] Supplied SAD v3.1 includes both implementation-aligned sequence diagrams; PDF preview reviewed.
 - [x] Draft implementation-aligned SAD addendum with requirement-to-design traceability, local-process security boundary, actual public API summary, ownership/return contracts and error-handling design (`docs/SAD_IMPLEMENTATION_ADDENDUM.md`).
-- [ ] Review and incorporate the addendum into the SAD DOCX; confirm the security section meets the instructor's interpretation.
+- [x] Supplied SAD v3.1 incorporates the implementation-aligned architecture/API addendum; instructor confirmation of security scope remains pending.
 - [x] Document current implementation architecture and module/interface differences in `docs/SAD_IMPLEMENTATION_ADDENDUM.md`.
-- [ ] Use the supplied SAD v3.1 revision with the implementation-aligned architecture supplement; obtain team approval.
+- [x] Supplied SAD v3.1 contains the implementation-aligned architecture supplement; team approval remains pending.
 - [ ] Reconcile all three DOCX documents against final implementation and obtain team review. See `docs/DOCUMENT_COMPLIANCE_AUDIT.md`.
 - [x] Resolved in the supplied Test Plan v1.1: invalid and missing configuration inputs are rejected with clear errors, matching parser behavior.
 - [x] Corrected `TC-Gen-003-N` in the supplied Test Plan v1.1: it checks FIFO stability when an emergency vehicle is interleaved; queue-capacity tests remain under TMS-F-011 / PRJ-SR-004.
-- [ ] Reconcile requirement IDs and all 66 Test Plan cases with the SRS RTM.
+- [x] Supplied SRS v0.5 RTM and Test Plan v1.1 case matrix align all 33 requirement IDs to the 66 planned cases; execution remains Not Run.
 - [ ] Record design deviations and obtain team review.
 
 ## Part 2 — Implementation, planning and CI
@@ -38,7 +38,7 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] GitHub Actions workflow builds/tests Ubuntu and Windows.
 - [x] PR #94 graceful-stop implementation merged to main as `339dfed320036ed1c42a375f70bc1189fb5b4244`.
 - [x] PR #94 CI run #132 passed Ubuntu and Windows build, automated tests and smoke tests; Ubuntu ASan/UBSan passed: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42785408865.
-- [x] Capture fresh push-to-main CI after QA regression merges: run #163 passed Ubuntu/Windows build, tests and smoke tests; Ubuntu ASan/UBSan passed.
+- [x] Capture fresh push-to-main CI after QA regression merges: run #235 passed Ubuntu/Windows build, 984 checks and smoke tests; Ubuntu ASan/UBSan and production-source coverage passed.
 - [x] PR #110 repository documentation/maintenance cleanup merged to main as `03b8c7f9ca4f168ec86c122a9cbc3c887d309cb7`.
 - [ ] Verify the required GitHub Project is linked to the repository; a separate Jira TMS board (board ID 67) exists, but that does not by itself prove the GitHub Project requirement.
 - [x] Jira TMS board contains 33 SRS-related story issues; all 33 have story-point estimates (108 points total).
@@ -58,7 +58,7 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] RTM updated after PR #94 merge; implementation, automated verification and manual acceptance are separate.
 - [ ] Update the earlier test cases and Test Case Document to reflect changes made during the sprints.
 - [x] Create `docs/TEST_EXECUTION_REGISTER.md` with all 66 Test Plan case IDs, owners and initial NOT RUN status.
-- [x] Refresh `docs/TEST_CASE_AUTOMATION_CROSSWALK.md` after PRs #115–#120: 42 cases have direct automated checks, 18 have partial evidence, and 6 have no direct automated check identified (PR #120 merged; CI run #225 passed). This remains a mapping, not execution of all 66 Test Plan cases.
+- [x] Refresh `docs/TEST_CASE_AUTOMATION_CROSSWALK.md` after PRs #115–#121: 42 cases have direct automated checks, 18 have partial evidence, and 6 have no direct automated check identified (PR #120 and #121 merged; main CI run #235 passed). This remains a mapping, not execution of all 66 Test Plan cases.
 - [ ] Execute and record the 66 Test Plan cases individually; do not infer their results from 436 automated assertions.
 - [ ] Perform manual Ctrl+C stop and verify the partial-run summary (TMS-F-061).
 - [ ] Test geometric movement conflicts (TMS-F-022); current automated invariant only checks at most one GREEN lane.
@@ -75,8 +75,8 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] Verify vehicle ID uniqueness across multiple lanes/intersections (PR #104; CI run #153 passed).
 - [x] Verify engine dequeues vehicles only on green (PR #105; CI run #154 passed).
 - [x] Local Windows benchmark met 500 ticks/sec for its fixture (median 88,344.30 ticks/sec); connected-topology and evaluator-hardware evidence remain outstanding.
-- [ ] Regenerate line/branch coverage on final main and state the exact source scope (PR #121 run #230 has 88.0% line / 54.6% branch coverage; post-merge rerun pending).
-- [x] Place the four QA reports in `docs/QA_Reports/`, satisfying Part 3's requirement to upload the reports to the `docs` folder. A PR #121 coverage job now generates whole-production-source line/branch reports; final main-branch coverage evidence is pending merge and post-merge run.
+- [x] Generate final main line/branch coverage: run #235, 88.0% lines (667/758), 54.6% branches (683/1,252), scope documented in QA reports.
+- [x] Place the four QA reports in `docs/QA_Reports/`, satisfying Part 3's requirement to upload the reports to the `docs` folder. Final main run #235 generated whole-production-source coverage: 88.0% lines and 54.6% branches.
 - [x] Draft `docs/FINAL_PROJECT_REPORT.md` from repository, CI, QA and Jira evidence.
 - [ ] Review and approve `docs/FINAL_PROJECT_REPORT.md` with the full team.
 - [ ] Review the final academic report, demo guide and presentation.
@@ -103,7 +103,7 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - PR #94 merged to main as `339dfed320036ed1c42a375f70bc1189fb5b4244`.
 - PR #110 repository documentation/maintenance cleanup merged to main as `03b8c7f9ca4f168ec86c122a9cbc3c887d309cb7`.
 - Local benchmark: five measured 10,000-tick runs; average 84,371.19 and median 88,344.30 ticks/sec against 500 ticks/sec. Four independent intersections, console rendering disabled; CPU/RAM/compiler metadata was not recorded. Not evaluator-hardware or connected-network evidence.
-- Existing GCOV result (95.61% line execution across 114 lines) covers only `tests/test_traffic_management.cpp` and `vehicle/VehicleGenerator.cpp`; regenerate against final main before reporting it as final coverage.
+- Historical GCOV result (95.61% across 114 lines) covered only two files and is superseded by final main run #235 (667/758 lines; 683/1,252 branches).
 - 436 CI assertions are not equivalent to the Test Plan's 66 independently tracked cases.
 
 ## Final sign-off

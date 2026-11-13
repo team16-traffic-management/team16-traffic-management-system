@@ -1,6 +1,6 @@
 # Unit Test Report
 
-Status: Baseline and subsequent QA regression CI runs passed; PR #121 adds a final-source coverage job. Full 66-case acceptance execution remains separate.
+Status: Main-branch CI run #235 passed Ubuntu and Windows with 984 automated checks on each platform. Linux ASan/UBSan and the production-source coverage job passed. Full 66-case acceptance execution remains separate.
 
 ## Test environment
 | Field | Value |
@@ -102,4 +102,15 @@ Baseline main CI reported 436 checks passed on Ubuntu and Windows. PR #94's manu
 | #118 | Runtime adaptive signal mode switch | [#43378320849](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43378320849) | Ubuntu/Windows and Linux ASan/UBSan passed |
 | #120 | Adaptive mode loaded from configuration | [#43379351361](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43379351361) | Ubuntu/Windows and Linux ASan/UBSan passed |
 
-PR #121 adds a production-source gcovr coverage job. On its PR head, CI run #230 executed the test suite and reported 88.0% line coverage (667/758), 86.2% function coverage (81/94) and 54.6% branch coverage (683/1,252). See the separate coverage reports and artifact link. These metrics do not convert the 66 Test Plan cases from NOT RUN to PASS.
+PR #121 merged the production-source gcovr coverage job. Final main run #235 reports 88.0% line coverage (667/758), 86.2% function coverage (81/94) and 54.6% branch coverage (683/1,252). See the coverage reports and main-branch artifact link. These metrics do not convert the 66 Test Plan cases from NOT RUN to PASS.
+
+
+## Final main-branch verification — run #235
+
+- Workflow: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43381117586
+- Tested commit: `1b4804a331247a3ae2f6c2704dd1a31957334e7a`
+- Ubuntu: build, all 984 automated checks, default/config-fixture smoke tests and Linux ASan/UBSan passed.
+- Windows: build, all 984 automated checks and default/config-fixture smoke tests passed. Sanitizer and Linux executable upload steps are Linux-only and correctly skipped on Windows.
+- The workflow's coverage job generated 88.0% line coverage, 86.2% function coverage and 54.6% branch coverage. See the Code Coverage and Branch Coverage reports for scope and artifact.
+
+PRs #115–#120 are merged and their regression additions are described above. Automated checks remain distinct from the 66 acceptance cases, all of which remain NOT RUN in the execution register.

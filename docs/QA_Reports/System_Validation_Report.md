@@ -1,6 +1,6 @@
 # System Validation Report
 
-Status: Partial system validation. PRs #115–#120 add further boundary and regression assertions; PR #121 adds production-source line/branch coverage. PR #121 run #230 Ubuntu build/tests/smoke tests and Linux ASan/UBSan passed, and coverage generated. Windows job is still in progress at this report revision. Full SRS/Test Plan acceptance is not signed off.
+Status: Partial system validation. Main-branch run #235 passed Ubuntu/Windows build, 984 automated checks and smoke tests; Linux ASan/UBSan and the production-source coverage job passed. Full SRS/Test Plan acceptance is not signed off.
 
 ## Objective
 Record automated CI evidence, local performance evidence and outstanding system-level acceptance checks. Automated CI evidence and manual Test Plan execution are separate.
@@ -15,8 +15,8 @@ Record automated CI evidence, local performance evidence and outstanding system-
 | Manual-stop PR workflow | [Run #132](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42785408865) |
 | Manual-stop PR head | `9b8730c4cb0fdb5f8e0a172e40b16912fff49c53` |
 | Manual-stop merge commit | `339dfed320036ed1c42a375f70bc1189fb5b4244` |
-| Latest application-changing main commit | `4ccfc24ee7ef477454041aa5f7c3954e4ce31020` |
-| Latest application-changing main CI | [Run #163](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42797884604) |
+| Latest main commit | `1b4804a331247a3ae2f6c2704dd1a31957334e7a` |
+| Latest main CI | [Run #235](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43381117586) |
 | PR #94 CI result | Ubuntu and Windows build, automated tests, default-app and multi-intersection smoke tests passed; Ubuntu ASan/UBSan passed |
 | Benchmark | Local Windows; `-std=c++17 -O2 -DNDEBUG`; exact OS build/compiler/hardware metadata not recorded |
 
@@ -93,6 +93,6 @@ The repository has successful cross-platform CI evidence, Linux sanitizer eviden
 - PR #117 max-queue-one, zero-throughput report and simultaneous-overflow cases: [CI #43378089050](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43378089050), Ubuntu/Windows and Linux ASan/UBSan passed.
 - PR #118 runtime adaptive mode switch: [CI #43378320849](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43378320849), Ubuntu/Windows and Linux ASan/UBSan passed.
 - PR #120 adaptive mode config loading: [CI #43379351361](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43379351361), Ubuntu/Windows and Linux ASan/UBSan passed.
-- PR #121 production-source coverage: [CI #43380638801](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43380638801). Ubuntu build/tests/smoke tests and ASan/UBSan passed; gcovr reported 88.0% line coverage (667/758), 86.2% function coverage (81/94), and 54.6% branch coverage (683/1,252). Artifact: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43380638801/artifacts/14016517314. Windows was still running when this paragraph was prepared.
+- PR #121 merged to main. Post-merge main run #235: [CI #43381117586](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43381117586). Ubuntu and Windows builds, all 984 automated checks and smoke tests passed; Linux ASan/UBSan passed. Main-branch coverage: 88.0% line (667/758), 86.2% function (81/94), 54.6% branch (683/1,252). Artifact: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43381117586/artifacts/14016975299.
 
 The automation crosswalk now classifies 42 of 66 cases as direct, 18 partial and 6 without direct automated checks. This is mapping evidence only; the 66-case acceptance register remains NOT RUN.
