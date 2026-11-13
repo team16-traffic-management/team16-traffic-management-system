@@ -1,6 +1,6 @@
 # Test Execution Register — Traffic Management System
 
-**Source:** Section 13 of `Documents/Test_Plan_Traffic_Management_System.docx` (Version 1.0).  
+**Source:** Section 13 of `Documents/Test_Plan_Traffic_Management_System.docx` (implementation-aligned revision 1.1; revised DOCX supplied separately).  
 **Purpose:** Track the 66 planned test cases individually. This register does not replace the approved Test Plan or its expected-result steps.
 
 Related coverage analysis: [`docs/TEST_CASE_AUTOMATION_CROSSWALK.md`](TEST_CASE_AUTOMATION_CROSSWALK.md). This identifies related automated checks but does not change any case status.
@@ -12,7 +12,9 @@ Related coverage analysis: [`docs/TEST_CASE_AUTOMATION_CROSSWALK.md`](TEST_CASE_
 - Allowed statuses: `PASS`, `FAIL`, `BLOCKED`, `NOT RUN`.
 - For every executed case, add commit SHA, date/time, OS/compiler, exact command/config, actual result, expected-result comparison, and an evidence link or log path.
 - A related unit-test assertion or CI run is supporting evidence only; it does not automatically mean the corresponding Test Plan case passed.
-- Resolve the documented `TC-Gen-003-N` requirement-mapping error and PRJ-SR-002 expected-result conflict before execution.
+- `TC-Gen-003-N` is a FIFO boundary case: interleaved emergency insertion must not reorder normal vehicles. Queue capacity cases remain mapped to TMS-F-011 / PRJ-SR-004.
+- Invalid/missing configuration is rejected with a descriptive error and non-zero exit; the parser does not substitute safe defaults.
+- Zero queue capacity is rejected at construction/config validation; exercise the zero-capacity constructor boundary separately from valid config fixtures.
 
 ## Case register
 
@@ -23,7 +25,7 @@ Related coverage analysis: [`docs/TEST_CASE_AUTOMATION_CROSSWALK.md`](TEST_CASE_
 | TC-Gen-002-P | TMS-F-002 | Unique vehicle ID, arrival tick and valid type | Tarun Gowda P | NOT RUN | |
 | TC-Gen-002-N | TMS-F-002 | Same-tick spawns across lanes retain unique IDs | Tarun Gowda P | NOT RUN | |
 | TC-Gen-003-P | TMS-F-003 | Vehicles enqueue in FIFO order | Tarun Gowda P | NOT RUN | |
-| TC-Gen-003-N | TMS-F-003 (mis-mapped; likely TMS-F-011 / PRJ-SR-004) | Enqueue rejected once lane is at capacity | Tarun Gowda P | NOT RUN | |
+| TC-Gen-003-N | TMS-F-003 | Emergency priority does not reverse FIFO order among normal vehicles | Tarun Gowda P | NOT RUN | |
 | TC-Queue-001-P | TMS-F-010 | Each lane maintains independent queue state | Tejas Shetty | NOT RUN | |
 | TC-Queue-001-N | TMS-F-010 | Operating on one lane does not corrupt sibling lane | Tejas Shetty | NOT RUN | |
 | TC-Queue-002-P | TMS-F-011 | Capacity limit is enforced | Tejas Shetty | NOT RUN | |
@@ -41,7 +43,7 @@ Related coverage analysis: [`docs/TEST_CASE_AUTOMATION_CROSSWALK.md`](TEST_CASE_
 | TC-Sig-004-P | TMS-F-023 | Yellow phase occurs before Red | Tejas Shetty | NOT RUN | |
 | TC-Sig-004-N | TMS-F-023 | One-tick Yellow duration renders correctly | Tejas Shetty | NOT RUN | |
 | TC-Sig-005-P | TMS-F-024 | Signal mode switches via config alone | Tejas Shetty | NOT RUN | |
-| TC-Sig-005-N | TMS-F-024 | Invalid mode value falls back safely | Tejas Shetty | NOT RUN | |
+| TC-Sig-005-N | TMS-F-024 | Invalid adaptive_mode is rejected with a clear error | Tejas Shetty | NOT RUN | |
 | TC-Emg-001-P | TMS-F-030 | Emergency vehicles spawn at configured probability | Tejas Shetty | NOT RUN | |
 | TC-Emg-001-N | TMS-F-030 | Zero emergency probability produces no emergency vehicles | Tejas Shetty | NOT RUN | |
 | TC-Emg-002-P | TMS-F-031 | Emergency vehicle dequeued ahead of normal vehicles | Tejas Shetty | NOT RUN | |
@@ -61,7 +63,7 @@ Related coverage analysis: [`docs/TEST_CASE_AUTOMATION_CROSSWALK.md`](TEST_CASE_
 | TC-Stats-003-P | TMS-F-052 | Throughput count is accurate | Khushi Gupta | NOT RUN | |
 | TC-Stats-003-N | TMS-F-052 | Blocked/dropped vehicles are not counted as throughput | Khushi Gupta | NOT RUN | |
 | TC-Sim-001-P | TMS-F-060 | Config values are applied correctly | Khushi Gupta | NOT RUN | |
-| TC-Sim-001-N | TMS-F-060 | Missing config file falls back to safe defaults | Khushi Gupta | NOT RUN | |
+| TC-Sim-001-N | TMS-F-060 | Missing config file is rejected with a clear error and non-zero exit | Khushi Gupta | NOT RUN | |
 | TC-Sim-002-P | TMS-F-061 | Natural run completion produces clean summary | Khushi Gupta | NOT RUN | |
 | TC-Sim-002-N | TMS-F-061 | Manually stopped run produces clean summary | Khushi Gupta | NOT RUN | |
 | TC-Perf-01-P | TMS-NF-001 | Throughput performance target is met | Tarun Gowda P | NOT RUN | |

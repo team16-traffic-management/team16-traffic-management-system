@@ -1,19 +1,25 @@
 # Branch Coverage Report
 
-Status: Initial local GCOV evidence — limited source scope.
+<badge color="success">PR CI branch coverage generated</badge>
 
-## Environment and scope
-- Compiler/tool: GCC / GCOV 16.2.0 (MSYS2, local Windows environment).
-- Covered translation units: tests/test_traffic_management.cpp and vehicle/VehicleGenerator.cpp.
-- Execution date and tested commit: [Record from final rerun].
+## Measurement scope
+- Workflow: [PR #121 CI run #230](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43380638801).
+- Tested PR head: `7e8b6c58666abfea2fdcc4161217346deed76068` (before merge to main).
+- Script: `scripts/run_coverage.sh`; GCC `--coverage` at `-O0 -g`.
+- Included production translation units: all `.cpp` files under `src/` and `vehicle/`, including `src/main.cpp`, plus instrumented inline code in `vehicle/VehicleGenerator.h`.
+- Excluded: test harness source and `include/` header-only code.
+- The workflow uploads the gcovr HTML and Cobertura XML report.
 
 ## Results
-| Source file | Branches | Branches executed | Executed | Taken at least once |
-|---|---:|---:|---:|---:|
-| tests/test_traffic_management.cpp | 86 | 86 | 100.00% | 53.49% |
-| vehicle/VehicleGenerator.cpp | 46 | 42 | 91.30% | 67.39% |
 
-## Interpretation
-GCOV reports whether branch paths were executed and whether an outcome was taken at least once. These are different measurements; do not describe 100% branches executed as 100% branch outcomes taken.
+| Metric | Result |
+|---|---:|
+| Branches executed | 683 / 1,252 |
+| Branch coverage | **54.6%** |
+| Line coverage (context) | 667 / 758 (88.0%) |
 
-This report covers only the two listed translation units. It does not establish branch coverage for the entire traffic-management application. Re-run on the final commit and retain raw GCOV output.
+## Artifact
+[Download HTML and Cobertura XML coverage artifact](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43380638801/artifacts/14016517314).
+
+## Interpretation and limitations
+Branch coverage is not the same as line coverage. The current result is from the PR branch before merge; rerun on final main and update the commit/run reference. Coverage does not prove geometric movement-conflict safety, runtime fault isolation, or full requirement acceptance. All 66 planned acceptance cases remain NOT RUN until executed and recorded individually.

@@ -7,29 +7,29 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] Component diagram is present in `Documents/diagrams/`.
 - [x] Review SRS v0.4 content: sections 1–8, 23 functional requirements, 5 non-functional requirements, acceptance criteria, 3 robustness objectives and 5 robustness requirements are present. See `docs/DOCUMENT_COMPLIANCE_AUDIT.md`.
 - [x] Add PlantUML use-case diagram source at `Documents/diagrams/TMS_Use_Case_Diagram.puml`.
-- [ ] Render and embed the use-case diagram in the SRS DOCX and verify its figure caption/placement; Section 7 currently provides textual use-case descriptions.
+- [ ] Use the supplied SRS v0.5 revision with the use-case diagram rendered and embedded; visually review figure placement before sign-off.
 - [ ] Confirm whether the SRS robustness/data-integrity objectives and requirements satisfy the assignment's security objectives/requirements requirement; Section 5.1 is explicitly scoped as robustness, not a conventional security section.
-- [ ] Complete the SRS RTM: Section 8 currently contains only five sample rows for 33 requirements.
+- [ ] Replace the SRS DOCX with the supplied v0.5 revision, which includes the complete 33-requirement RTM; statuses remain Not Run until acceptance execution.
 - [ ] Update SRS draft status and obtain approval/sign-off.
 - [x] Review Test Plan v1.0 content: Sections 1–13, required Sections 3/4/5, Section 5.1, and 66 detailed cases (two per SRS requirement) are present.
-- [ ] Confirm/add security validation to Test Plan Section 5.1; current content is robustness/data-integrity validation.
-- [ ] Reconcile the SRS PRJ-SR-002 rejection requirement with Test Plan cases that expect safe defaults/fallback.
-- [ ] Correct `TC-Gen-003-N`: it tests capacity/overflow but maps to FIFO requirement TMS-F-003 instead of TMS-F-011 / PRJ-SR-004.
+- [x] Supplied Test Plan v1.1 clarifies the local configuration-file trust boundary and limits of security validation; instructor confirmation is still required.
+- [ ] The supplied Test Plan v1.1 changes invalid/missing configuration expectations to clear rejection, matching SRS PRJ-SR-002 and the parser.
+- [ ] Use the implementation-aligned Test Plan revision: `TC-Gen-003-N` tests FIFO stability when an emergency vehicle is interleaved; queue-capacity tests remain under TMS-F-011 / PRJ-SR-004.
 - [x] Add five current-parser-compatible config fixtures under `tests/data/` (baseline, zero-values, invalid-values, high-load, corrupted) with reproducibility notes.
 - [x] Extend CI to run the three valid fixtures and verify the two invalid fixtures are rejected on Ubuntu and Windows.
-- [ ] Update Test Plan Section 6.1 and Appendix B to match the current parser syntax; zero-capacity behavior must be tested through LaneQueue, not config.
-- [ ] Update Test Plan method/interfaces to match the current consolidated C++ test harness; its mock interfaces and execution assumptions differ from the final repo.
+- [ ] Replace the repository Test Plan DOCX with the supplied implementation-aligned v1.1 revision: Section 6.1 and Appendix B use current parser syntax; zero-capacity validation is separated from valid config fixtures.
+- [ ] Use the implementation-aligned Test Plan v1.1 revision: it documents the consolidated real-class C++ test harness and separates automated CI checks from the 66 acceptance cases.
 - [ ] Update Test Plan from Draft and obtain approval/sign-off.
 - [x] Review SAD v1.0 content: component responsibilities/descriptions, synchronous tick-driven modular architecture pattern, two textual workflows and partial C++ class interface outlines are present.
 - [x] Add two implementation-aligned PlantUML sequence diagram sources under `Documents/diagrams/` (`TMS_Vehicle_Admission_Sequence.puml` and `TMS_Signal_And_Dispatch_Sequence.puml`).
-- [ ] Render and embed both sequence diagrams in the SAD DOCX and verify figure captions/placement.
+- [ ] Use the supplied SAD v3.1 revision with both implementation-aligned sequence diagrams embedded; visually review figure placement.
 - [x] Draft implementation-aligned SAD addendum with requirement-to-design traceability, local-process security boundary, actual public API summary, ownership/return contracts and error-handling design (`docs/SAD_IMPLEMENTATION_ADDENDUM.md`).
 - [ ] Review and incorporate the addendum into the SAD DOCX; confirm the security section meets the instructor's interpretation.
 - [x] Document current implementation architecture and module/interface differences in `docs/SAD_IMPLEMENTATION_ADDENDUM.md`.
-- [ ] Incorporate the documented implementation changes into the SAD DOCX and obtain team approval.
+- [ ] Use the supplied SAD v3.1 revision with the implementation-aligned architecture supplement; obtain team approval.
 - [ ] Reconcile all three DOCX documents against final implementation and obtain team review. See `docs/DOCUMENT_COMPLIANCE_AUDIT.md`.
-- [ ] Resolve the PRJ-SR-002 conflict: the SRS requires invalid configuration rejection with a clear error, while some Test Plan cases expect safe defaults.
-- [ ] Correct the Test Plan mapping for `TC-Gen-003-N` (queue capacity belongs to queue-capacity/robustness requirements, not FIFO enqueue).
+- [x] Resolved in the supplied Test Plan v1.1: invalid and missing configuration inputs are rejected with clear errors, matching parser behavior.
+- [x] Corrected `TC-Gen-003-N` in the supplied Test Plan v1.1: it checks FIFO stability when an emergency vehicle is interleaved; queue-capacity tests remain under TMS-F-011 / PRJ-SR-004.
 - [ ] Reconcile requirement IDs and all 66 Test Plan cases with the SRS RTM.
 - [ ] Record design deviations and obtain team review.
 
@@ -58,7 +58,7 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] RTM updated after PR #94 merge; implementation, automated verification and manual acceptance are separate.
 - [ ] Update the earlier test cases and Test Case Document to reflect changes made during the sprints.
 - [x] Create `docs/TEST_EXECUTION_REGISTER.md` with all 66 Test Plan case IDs, owners and initial NOT RUN status.
-- [x] Refresh `docs/TEST_CASE_AUTOMATION_CROSSWALK.md` after PRs #115–#118: 42 cases have direct automated checks, 18 have partial evidence, and 6 have no direct automated check identified (pending PR #120 CI and merge). This remains a mapping, not execution of all 66 Test Plan cases.
+- [x] Refresh `docs/TEST_CASE_AUTOMATION_CROSSWALK.md` after PRs #115–#120: 42 cases have direct automated checks, 18 have partial evidence, and 6 have no direct automated check identified (PR #120 merged; CI run #225 passed). This remains a mapping, not execution of all 66 Test Plan cases.
 - [ ] Execute and record the 66 Test Plan cases individually; do not infer their results from 436 automated assertions.
 - [ ] Perform manual Ctrl+C stop and verify the partial-run summary (TMS-F-061).
 - [ ] Test geometric movement conflicts (TMS-F-022); current automated invariant only checks at most one GREEN lane.
@@ -75,8 +75,8 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] Verify vehicle ID uniqueness across multiple lanes/intersections (PR #104; CI run #153 passed).
 - [x] Verify engine dequeues vehicles only on green (PR #105; CI run #154 passed).
 - [x] Local Windows benchmark met 500 ticks/sec for its fixture (median 88,344.30 ticks/sec); connected-topology and evaluator-hardware evidence remain outstanding.
-- [ ] Regenerate line/branch coverage on final main and state the exact source scope.
-- [x] Place the four QA reports in `docs/QA_Reports/`, satisfying Part 3's requirement to upload the reports to the `docs` folder. Coverage values remain initial/limited and must still be regenerated on final main.
+- [ ] Regenerate line/branch coverage on final main and state the exact source scope (PR #121 run #230 has 88.0% line / 54.6% branch coverage; post-merge rerun pending).
+- [x] Place the four QA reports in `docs/QA_Reports/`, satisfying Part 3's requirement to upload the reports to the `docs` folder. A PR #121 coverage job now generates whole-production-source line/branch reports; final main-branch coverage evidence is pending merge and post-merge run.
 - [x] Draft `docs/FINAL_PROJECT_REPORT.md` from repository, CI, QA and Jira evidence.
 - [ ] Review and approve `docs/FINAL_PROJECT_REPORT.md` with the full team.
 - [ ] Review the final academic report, demo guide and presentation.

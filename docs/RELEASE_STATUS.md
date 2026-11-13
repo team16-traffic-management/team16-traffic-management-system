@@ -1,6 +1,6 @@
 # Release and Verification Status
 
-Last repository review: 10 November 2026
+Last repository review: 13 November 2026
 
 ## Repository baseline
 The repository is a C++17 console-based traffic simulation with a Makefile, automated C++ test suite, GitHub Actions workflow, SRS, SAD, Test Plan, component diagram, benchmark source, reports and submission checklist.
@@ -32,3 +32,16 @@ The implementation includes vehicle generation, bounded lane queues, signal phas
 Status: **Implementation and CI verification substantially complete; system acceptance remains PARTIAL.**
 
 Do not call the project fully accepted or submission-ready until the remaining Test Plan cases, document reconciliation and sign-offs are complete.
+
+
+## Latest QA additions — 13 November 2026
+
+- PR #115 merged: sibling-lane isolation and zero emergency probability; CI #43377370669 passed Ubuntu/Windows.
+- PR #116 merged: guaranteed emergency generation boundary; CI #43377755772 passed Ubuntu/Windows and Linux ASan/UBSan.
+- PR #117 merged: queue/statistics boundaries and simultaneous all-lane overflow; CI #43378089050 passed Ubuntu/Windows and Linux ASan/UBSan.
+- PR #118 merged: runtime adaptive-mode switch; CI #43378320849 passed Ubuntu/Windows and Linux ASan/UBSan.
+- PR #119 merged: crosswalk and submission evidence refresh.
+- PR #120 merged: adaptive mode loaded from configuration; CI #43379351361 passed Ubuntu/Windows and Linux ASan/UBSan.
+- PR #121 is the current open documentation/coverage PR. Its Ubuntu coverage job and Ubuntu build/test/smoke/sanitizer jobs passed in run #43380638801; the Windows job was still in progress at this review point.
+- PR #121 coverage artifact reports 88.0% line coverage (667/758), 86.2% function coverage (81/94), and 54.6% branch coverage (683/1,252). This is pre-merge PR-branch evidence; final main coverage is pending.
+- Automation crosswalk: 42 direct, 18 partial, 6 without direct automated checks. The 66 Test Plan acceptance cases remain NOT RUN.

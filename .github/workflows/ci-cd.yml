@@ -82,3 +82,28 @@ jobs:
           path: build/traffic-management
           if-no-files-found: error
           retention-days: 14
+
+  coverage:
+    name: Source line and branch coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install gcovr
+        run: python -m pip install --upgrade gcovr
+      - name: Build, execute and collect coverage for application and tests
+        shell: bash
+        run: bash scripts/run_coverage.sh
+      - name: Upload line and branch coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: traffic-management-coverage
+          path: |
+            build/coverage/index.html
+            build/coverage/coverage.xml
+          if-no-files-found: error
+          retention-days: 30
