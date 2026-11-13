@@ -19,7 +19,7 @@ This document summarizes robustness checks present in the current main branch an
 - The CI workflow builds and runs tests on Ubuntu and Windows; Linux also runs AddressSanitizer and UndefinedBehaviorSanitizer.
 - The latest application-changing main CI run (#163) passed both platform jobs and Linux sanitizers.
 
-See `reports/Unit_Test_Report.md` and `reports/System_Validation_Report.md` for exact evidence and links.
+See `docs/QA_Reports/Unit_Test_Report.md` and `docs/QA_Reports/System_Validation_Report.md` for exact evidence and links.
 
 ## Remaining limitations
 - The repeated lifecycle test and sanitizer pass are not a quantified memory-growth measurement or standalone Valgrind leak report.
