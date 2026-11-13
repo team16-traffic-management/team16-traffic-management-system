@@ -628,6 +628,17 @@ void testZeroEmergencyProbabilityProducesNormalVehicles() {
     }
 }
 
+
+void testEmergencyProbabilityOneAlwaysGeneratesEmergencyVehicles() {
+    VehicleGenerator generator(1.0, 1.0, 456);
+    for (int tick = 0; tick < 100; ++tick) {
+        const Vehicle vehicle =
+            generator.generateVehicle("Central", "North", tick);
+        check(vehicle.isEmergency(),
+              "emergency probability one generates only emergency vehicles");
+    }
+}
+
 }
 int main() {
     testProbabilityBoundaries();
@@ -658,6 +669,7 @@ int main() {
     testIntersectionValidationAndSignalRegistration();
     testSiblingLaneQueueIsolation();
     testZeroEmergencyProbabilityProducesNormalVehicles();
+    testEmergencyProbabilityOneAlwaysGeneratesEmergencyVehicles();
     std::cout << "All " << passed << " checks passed." << std::endl;
     return EXIT_SUCCESS;
 }
