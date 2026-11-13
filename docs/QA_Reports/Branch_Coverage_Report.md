@@ -19,7 +19,7 @@
 | Line coverage (context) | 667 / 758 (88.0%) |
 
 ## Artifact
-[Download HTML and Cobertura XML coverage artifact](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43381117586/artifacts/14016947229).
+[Download HTML and Cobertura XML coverage artifact](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382188203/artifacts/14016947229).
 
 ## Interpretation and limitations
 Branch coverage is not the same as line coverage. This is the final main-branch result for the commit above. Coverage does not prove geometric movement-conflict safety, runtime fault isolation, or full requirement acceptance. All 66 planned acceptance cases remain NOT RUN until executed and recorded individually.
