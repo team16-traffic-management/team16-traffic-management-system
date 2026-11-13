@@ -34,6 +34,7 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] Unit Test Report records baseline main CI run #99: 436 checks passed on Ubuntu and Windows.
 - [x] System Validation Report distinguishes automated CI evidence from manual Test Plan execution.
 - [x] RTM updated after PR #94 merge; implementation, automated verification and manual acceptance are separate.
+- [ ] Update the earlier test cases and Test Case Document to reflect changes made during the sprints.
 - [ ] Execute and record the 66 Test Plan cases individually; do not infer their results from 436 automated assertions.
 - [ ] Perform manual Ctrl+C stop and verify the partial-run summary (TMS-F-061).
 - [ ] Test geometric movement conflicts (TMS-F-022); current automated invariant only checks at most one GREEN lane.
