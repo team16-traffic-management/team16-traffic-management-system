@@ -599,6 +599,35 @@ void testNoSimultaneousGreenSignals() {
     }
 }
 
+
+void testSiblingLaneQueueIsolation() {
+    LaneQueue north("North", 2);
+    LaneQueue south("South", 2);
+    const Vehicle northVehicle(901, 0, VehicleType::NORMAL);
+    const Vehicle southVehicle(902, 0, VehicleType::NORMAL);
+
+    check(north.enqueue(northVehicle), "North accepts its vehicle");
+    check(north.size() == 1 && south.size() == 0,
+          "enqueue in North does not change South queue state");
+    check(south.enqueue(southVehicle), "South accepts its vehicle");
+    check(north.size() == 1 && south.size() == 1,
+          "sibling lanes retain independent queue contents");
+    check(north.dequeue().getId() == northVehicle.getId(),
+          "North dequeue returns only its own vehicle");
+    check(south.size() == 1 && south.dequeue().getId() == southVehicle.getId(),
+          "North operations do not corrupt South queue");
+}
+
+void testZeroEmergencyProbabilityProducesNormalVehicles() {
+    VehicleGenerator generator(1.0, 0.0, 123);
+    for (int tick = 0; tick < 100; ++tick) {
+        const Vehicle vehicle =
+            generator.generateVehicle("Central", "North", tick);
+        check(!vehicle.isEmergency(),
+              "zero emergency probability generates only normal vehicles");
+    }
+}
+
 }
 int main() {
     testProbabilityBoundaries();
@@ -627,6 +656,8 @@ int main() {
     testEmergencyPreemption();
     testStatisticsCalculations();
     testIntersectionValidationAndSignalRegistration();
+    testSiblingLaneQueueIsolation();
+    testZeroEmergencyProbabilityProducesNormalVehicles();
     std::cout << "All " << passed << " checks passed." << std::endl;
     return EXIT_SUCCESS;
 }
