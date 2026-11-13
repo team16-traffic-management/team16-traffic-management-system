@@ -54,7 +54,14 @@ CI builds and runs the automated suite on Ubuntu and Windows (MinGW-w64); Addres
 - [Team roles](docs/TEAM_ROLES.md)
 - [Requirements traceability](docs/TRACEABILITY.md)
 - [Release and verification status](docs/RELEASE_STATUS.md)
-- [Submission checklist](docs/SUBMISSION_CHECKLIST.md)
 - [QA reports](docs/QA_Reports/README.md)
+- [Submission checklist](docs/SUBMISSION_CHECKLIST.md)
+- [Document compliance audit](docs/DOCUMENT_COMPLIANCE_AUDIT.md)
+- [SAD implementation addendum](docs/SAD_IMPLEMENTATION_ADDENDUM.md)
+- [SAD UML diagram sources](Documents/diagrams/)
+- [Reproducible config fixtures](tests/data/README.md)
+- [UML diagram sources](Documents/diagrams/)
+- [66-case test execution register](docs/TEST_EXECUTION_REGISTER.md)
+- [Final project report](docs/FINAL_PROJECT_REPORT.md)
 
 The QA reports distinguish automated CI checks from the 66-case Test Plan. A passing build does not imply that every requirement has been manually accepted.

@@ -5,10 +5,29 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 ## Part 1 — Requirements and design
 - [x] SRS, SAD and Test Plan are present in `Documents/`.
 - [x] Component diagram is present in `Documents/diagrams/`.
-- [ ] Verify SRS IEEE format, descriptive sections, clear/measurable FRs and NFRs, at least one UML use-case diagram, and at least two security objectives plus two security requirements.
-- [ ] Verify Test Plan IEEE format, required Sections 3/4/5, Section 5.1 security validation, SRS traceability, and sufficient functional/non-functional test cases (at least 7–10).
-- [ ] Verify SAD IEEE format, component diagram and description, architecture pattern, requirement traceability, security architecture, at least two UML sequence diagrams, API design and error handling.
-- [ ] Reconcile SRS, SAD and Test Plan against the final implementation; the DOCX contents and embedded diagrams still need a detailed review.
+- [x] Review SRS v0.4 content: sections 1–8, 23 functional requirements, 5 non-functional requirements, acceptance criteria, 3 robustness objectives and 5 robustness requirements are present. See `docs/DOCUMENT_COMPLIANCE_AUDIT.md`.
+- [x] Add PlantUML use-case diagram source at `Documents/diagrams/TMS_Use_Case_Diagram.puml`.
+- [ ] Render and embed the use-case diagram in the SRS DOCX and verify its figure caption/placement; Section 7 currently provides textual use-case descriptions.
+- [ ] Confirm whether the SRS robustness/data-integrity objectives and requirements satisfy the assignment's security objectives/requirements requirement; Section 5.1 is explicitly scoped as robustness, not a conventional security section.
+- [ ] Complete the SRS RTM: Section 8 currently contains only five sample rows for 33 requirements.
+- [ ] Update SRS draft status and obtain approval/sign-off.
+- [x] Review Test Plan v1.0 content: Sections 1–13, required Sections 3/4/5, Section 5.1, and 66 detailed cases (two per SRS requirement) are present.
+- [ ] Confirm/add security validation to Test Plan Section 5.1; current content is robustness/data-integrity validation.
+- [ ] Reconcile the SRS PRJ-SR-002 rejection requirement with Test Plan cases that expect safe defaults/fallback.
+- [ ] Correct `TC-Gen-003-N`: it tests capacity/overflow but maps to FIFO requirement TMS-F-003 instead of TMS-F-011 / PRJ-SR-004.
+- [x] Add five current-parser-compatible config fixtures under `tests/data/` (baseline, zero-values, invalid-values, high-load, corrupted) with reproducibility notes.
+- [x] Extend CI to run the three valid fixtures and verify the two invalid fixtures are rejected on Ubuntu and Windows.
+- [ ] Update Test Plan Section 6.1 and Appendix B to match the current parser syntax; zero-capacity behavior must be tested through LaneQueue, not config.
+- [ ] Update Test Plan method/interfaces to match the current consolidated C++ test harness; its mock interfaces and execution assumptions differ from the final repo.
+- [ ] Update Test Plan from Draft and obtain approval/sign-off.
+- [x] Review SAD v1.0 content: component responsibilities/descriptions, synchronous tick-driven modular architecture pattern, two textual workflows and partial C++ class interface outlines are present.
+- [x] Add two implementation-aligned PlantUML sequence diagram sources under `Documents/diagrams/` (`TMS_Vehicle_Admission_Sequence.puml` and `TMS_Signal_And_Dispatch_Sequence.puml`).
+- [ ] Render and embed both sequence diagrams in the SAD DOCX and verify figure captions/placement.
+- [x] Draft implementation-aligned SAD addendum with requirement-to-design traceability, local-process security boundary, actual public API summary, ownership/return contracts and error-handling design (`docs/SAD_IMPLEMENTATION_ADDENDUM.md`).
+- [ ] Review and incorporate the addendum into the SAD DOCX; confirm the security section meets the instructor's interpretation.
+- [x] Document current implementation architecture and module/interface differences in `docs/SAD_IMPLEMENTATION_ADDENDUM.md`.
+- [ ] Incorporate the documented implementation changes into the SAD DOCX and obtain team approval.
+- [ ] Reconcile all three DOCX documents against final implementation and obtain team review. See `docs/DOCUMENT_COMPLIANCE_AUDIT.md`.
 - [ ] Resolve the PRJ-SR-002 conflict: the SRS requires invalid configuration rejection with a clear error, while some Test Plan cases expect safe defaults.
 - [ ] Correct the Test Plan mapping for `TC-Gen-003-N` (queue capacity belongs to queue-capacity/robustness requirements, not FIFO enqueue).
 - [ ] Reconcile requirement IDs and all 66 Test Plan cases with the SRS RTM.
@@ -38,6 +57,7 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] System Validation Report distinguishes automated CI evidence from manual Test Plan execution.
 - [x] RTM updated after PR #94 merge; implementation, automated verification and manual acceptance are separate.
 - [ ] Update the earlier test cases and Test Case Document to reflect changes made during the sprints.
+- [x] Create `docs/TEST_EXECUTION_REGISTER.md` with all 66 Test Plan case IDs, owners and initial NOT RUN status.
 - [ ] Execute and record the 66 Test Plan cases individually; do not infer their results from 436 automated assertions.
 - [ ] Perform manual Ctrl+C stop and verify the partial-run summary (TMS-F-061).
 - [ ] Test geometric movement conflicts (TMS-F-022); current automated invariant only checks at most one GREEN lane.
@@ -56,7 +76,8 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] Local Windows benchmark met 500 ticks/sec for its fixture (median 88,344.30 ticks/sec); connected-topology and evaluator-hardware evidence remain outstanding.
 - [ ] Regenerate line/branch coverage on final main and state the exact source scope.
 - [x] Place the four QA reports in `docs/QA_Reports/`, satisfying Part 3's requirement to upload the reports to the `docs` folder. Coverage values remain initial/limited and must still be regenerated on final main.
-- [ ] Complete `docs/FINAL_PROJECT_REPORT.md`; it is currently a working template with placeholders.
+- [x] Draft `docs/FINAL_PROJECT_REPORT.md` from repository, CI, QA and Jira evidence.
+- [ ] Review and approve `docs/FINAL_PROJECT_REPORT.md` with the full team.
 - [ ] Review the final academic report, demo guide and presentation.
 - [ ] Verify final repository/submission links and obtain required sign-offs.
 

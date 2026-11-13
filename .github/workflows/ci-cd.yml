@@ -47,6 +47,29 @@ jobs:
       - name: Smoke-test config-driven multi-intersection startup
         shell: bash
         run: ./build/traffic-management examples/multi_intersection.cfg
+      - name: Smoke-test baseline test fixture
+        shell: bash
+        run: ./build/traffic-management tests/data/baseline.cfg
+      - name: Smoke-test zero-value test fixture
+        shell: bash
+        run: ./build/traffic-management tests/data/zero_values.cfg
+      - name: Smoke-test high-load connected-intersection fixture
+        shell: bash
+        run: ./build/traffic-management tests/data/high_load.cfg
+      - name: Verify invalid-value fixture is rejected
+        shell: bash
+        run: |
+          if ./build/traffic-management tests/data/invalid_values.cfg; then
+            echo "Expected invalid_values.cfg to be rejected"
+            exit 1
+          fi
+      - name: Verify corrupted fixture is rejected
+        shell: bash
+        run: |
+          if ./build/traffic-management tests/data/corrupted.cfg; then
+            echo "Expected corrupted.cfg to be rejected"
+            exit 1
+          fi
       - name: Run AddressSanitizer and UndefinedBehaviorSanitizer
         if: runner.os == 'Linux'
         shell: bash

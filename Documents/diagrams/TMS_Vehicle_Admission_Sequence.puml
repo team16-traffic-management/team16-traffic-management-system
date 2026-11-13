@@ -1,0 +1,27 @@
+@startuml
+participant "SimulationEngine" as Engine
+participant "VehicleGenerator" as Generator
+participant "LaneQueue" as Queue
+participant "StatisticsCollector" as Stats
+
+loop each simulation tick, intersection and lane
+  Engine -> Generator : shouldGenerate(intersectionId, laneName)
+  alt vehicle arrival selected
+    Engine -> Generator : generateVehicle(intersectionId, laneName, tick)
+    Generator --> Engine : Vehicle
+    Engine -> Queue : enqueue(vehicle)
+    alt queue has capacity
+      Queue --> Engine : true
+    else queue full
+      Queue --> Engine : false
+      Engine -> Stats : recordBlocked(intersectionId, laneName, tick)
+    end
+  end
+  Engine -> Stats : updateMaxQueueLength(intersectionId, laneName, queueSize)
+end
+note over Engine,Stats
+  Signal updates, dispatch and rendering occur later
+  in the same intersection tick and are shown in the
+  separate signal/dispatch sequence diagram.
+end note
+@enduml
