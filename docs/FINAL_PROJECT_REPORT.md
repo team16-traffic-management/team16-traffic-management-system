@@ -188,3 +188,17 @@ The available evidence supports substantial implementation and automated verific
 - Sprint 2 working-product video (two minutes): **Team to add the repository path/link; no video file is present in the current repository tree.**
 - Final presentation walkthrough: **Team to add the final approved recording/link if required.**
 - Team review/sign-off: **Pending confirmation from all members.**
+
+
+## 8. Latest QA and document alignment
+
+PRs #115–#120 extended the automated suite with sibling-lane isolation, emergency-probability boundaries, queue/statistics boundaries, runtime adaptive-mode changes and adaptive-mode configuration loading. The automation crosswalk now identifies 42 direct automated checks, 18 partial mappings and 6 cases without direct automated checks.
+
+PR #121 adds a reproducible Ubuntu gcovr job and HTML/XML artifacts. On PR head `7e8b6c58666abfea2fdcc4161217346deed76068`, workflow run #230 reported 88.0% line coverage (667/758), 86.2% function coverage (81/94) and 54.6% branch coverage (683/1,252). This is PR-branch evidence; repeat after merge to record final-main coverage. The 66 acceptance cases remain NOT RUN.
+
+Implementation-aligned document revisions have been prepared separately:
+- SRS v0.5: full 33-requirement RTM with Not Run statuses and an embedded operator use-case diagram.
+- Test Plan v1.1: current parser syntax, real C++ test harness, corrected FIFO boundary case and invalid-config rejection expectations; all 66 cases remain Not Run.
+- SAD v3.1: implementation-aligned module/API supplement and embedded sequence diagrams.
+
+The repository's existing DOCX copies must be replaced with those revised files and visually reviewed in Word before final submission. Security-scope interpretation, team sign-offs, demo videos and manual acceptance execution remain outstanding.
