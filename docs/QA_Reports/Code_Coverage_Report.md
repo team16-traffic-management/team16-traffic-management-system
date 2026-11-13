@@ -39,7 +39,7 @@
 | **TOTAL** | **758** | **667** | **88.0%** |
 
 ## Artifact
-[Download HTML and Cobertura XML coverage artifact](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43381117586/artifacts/14016947229).
+[Download HTML and Cobertura XML coverage artifact](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382188203/artifacts/14016947229).
 
 ## Limitations
 This is final main-branch coverage for the tested commit above. Coverage is execution evidence, not requirements acceptance. It does not mean all 66 Test Plan cases passed; the acceptance register remains 66/66 NOT RUN. Review uncovered lines/branches and add tests only where they serve requirements, not just to inflate the percentage.
