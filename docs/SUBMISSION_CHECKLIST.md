@@ -58,6 +58,7 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] RTM updated after PR #94 merge; implementation, automated verification and manual acceptance are separate.
 - [ ] Update the earlier test cases and Test Case Document to reflect changes made during the sprints.
 - [x] Create `docs/TEST_EXECUTION_REGISTER.md` with all 66 Test Plan case IDs, owners and initial NOT RUN status.
+- [x] Create `docs/TEST_CASE_AUTOMATION_CROSSWALK.md`: 33 cases have direct automated checks, 18 have partial evidence, and 15 have no direct automated check identified.
 - [ ] Execute and record the 66 Test Plan cases individually; do not infer their results from 436 automated assertions.
 - [ ] Perform manual Ctrl+C stop and verify the partial-run summary (TMS-F-061).
 - [ ] Test geometric movement conflicts (TMS-F-022); current automated invariant only checks at most one GREEN lane.
