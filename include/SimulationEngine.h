@@ -24,6 +24,7 @@ public:
     int loadConfigFromFile(const std::string& filename);
     int getConfiguredQueueCapacity() const;
     std::size_t getIntersectionCount() const;
+    bool isAdaptiveMode(const std::string& intersectionId) const;
     void run(int maxTicks, bool silent = false);
     void tick(bool silent = false);
     const StatisticsCollector& getStats() const;
