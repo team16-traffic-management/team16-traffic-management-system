@@ -45,7 +45,7 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] Verify engine dequeues vehicles only on green (PR #105; CI run #154 passed).
 - [x] Local Windows benchmark met 500 ticks/sec for its fixture (median 88,344.30 ticks/sec); connected-topology and evaluator-hardware evidence remain outstanding.
 - [ ] Regenerate line/branch coverage on final main and state the exact source scope.
-- [ ] Place the four QA reports in the Part 3-required `docs/` folder, or obtain confirmation that the existing `docs/QA_Reports/` folder satisfies the submission instruction. Current report files are under `docs/QA_Reports/`.
+- [x] Place the four QA reports in `docs/QA_Reports/`, satisfying Part 3's requirement to upload the reports to the `docs` folder. Coverage values remain initial/limited and must still be regenerated on final main.
 - [ ] Complete `docs/FINAL_PROJECT_REPORT.md`; it is currently a working template with placeholders.
 - [ ] Review the final academic report, demo guide and presentation.
 - [ ] Verify final repository/submission links and obtain required sign-offs.
