@@ -554,12 +554,12 @@ void testAdaptiveModeLoadedFromConfiguration() {
     const char* path = "test_adaptive_mode_config.tmp";
     {
         std::ofstream file(path);
-        file << "total_ticks=5\\n"
-             << "arrival_rate=0\\n"
-             << "emergency_probability=0\\n"
-             << "adaptive_mode=true\\n"
-             << "queue_capacity=4\\n"
-             << "intersection.AdaptiveJunction.lanes=North,South\\n";
+        file << "total_ticks=5\n"
+             << "arrival_rate=0\n"
+             << "emergency_probability=0\n"
+             << "adaptive_mode=true\n"
+             << "queue_capacity=4\n"
+             << "intersection.AdaptiveJunction.lanes=North,South\n";
     }
 
     SimulationEngine engine;
