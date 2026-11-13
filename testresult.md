@@ -1,52 +1,28 @@
-# QA Test Report – TMS-23
+# Historical QA Test Report — TMS-23
 
-**Issue:** TMS-23 – Generate Vehicles at Randomized Intervals  
+> **Historical record:** This report documents a scoped test run from 2 November 2026. Its C++14 environment and 310-check count are not the current repository baseline and must not be used as current project-wide QA evidence.
+
+**Issue:** TMS-23 — Generate Vehicles at Randomized Intervals  
 **Date:** 2 November 2026  
-**Branch:** feature/TMS-23-randomized-vehicle-arrivals  
-**Tested by:** QA
+**Branch:** `feature/TMS-23-randomized-vehicle-arrivals`  
+**Scope:** Vehicle generation and randomized arrival behavior
 
-## 1. Objective
-
-Verify randomized vehicle arrivals, lane-specific probabilities, and vehicle tracking.
-
-## 2. Test Environment
-
+## Historical test environment
 - Language: C++
-- Standard: C++14
+- Standard recorded at the time: C++14
 - Compiler: g++
 - Build system: Makefile
 
-## 3. Tests Executed
+## Historical results
+The original scoped report recorded a clean build, 310 automated checks, a 20-tick application smoke test, and AddressSanitizer/UndefinedBehaviorSanitizer passing for that test run.
 
-| Test | Result |
-|---|---|
-| Clean build | PASS |
-| Automated unit tests | PASS – 310 checks |
-| Application smoke test | PASS – 20 ticks |
-| AddressSanitizer | PASS – no errors reported |
-| UndefinedBehaviorSanitizer | PASS – no errors reported |
+The recorded functional scope included randomized arrivals, independent lane probabilities, vehicle IDs and tick tracking, probability validation, invalid lane handling, arrival-rate updates and seeded reproducibility.
 
-## 4. Functional Verification
+## Current source of truth
+For current test-suite scope, CI evidence, tested commits and limitations, use:
+- `reports/Unit_Test_Report.md`
+- `reports/System_Validation_Report.md`
+- `docs/TRACEABILITY.md`
+- `Documents/RTM_Implementation_Status.md`
 
-- Randomized vehicle arrivals.
-- Independent lane arrival probabilities.
-- Unique vehicle IDs.
-- Lane and tick tracking.
-- Probability validation.
-- Invalid lane handling.
-- Arrival-rate updates.
-- Reproducible generation using a seed.
-
-## 5. Observations
-
-All 310 automated checks passed. The application compiled and completed its 20-tick simulation successfully. No sanitizer errors were reported.
-
-## 6. Defects Observed
-
-No defects observed during the tests executed.
-
-## 7. Final QA Result
-
-**PASS – TESTED SCOPE**
-
-The current implementation passed the automated tests, smoke test, and sanitizer run. This report does not claim that every possible scenario has been tested.
+Do not add the historical 310 checks to current CI totals or describe this scoped report as final system acceptance.
