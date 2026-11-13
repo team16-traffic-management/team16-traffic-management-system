@@ -3,6 +3,8 @@
 **Source:** Section 13 of `Documents/Test_Plan_Traffic_Management_System.docx` (Version 1.0).  
 **Purpose:** Track the 66 planned test cases individually. This register does not replace the approved Test Plan or its expected-result steps.
 
+Related coverage analysis: [`docs/TEST_CASE_AUTOMATION_CROSSWALK.md`](TEST_CASE_AUTOMATION_CROSSWALK.md). This identifies related automated checks but does not change any case status.
+
 ## Execution rules
 
 - Initial status for every case is **NOT RUN**, matching the Test Plan's explicit status.
