@@ -18,7 +18,7 @@ The documents are present and contain substantial requirements, design and test-
 - Section 5.1 contains **3 robustness/data-integrity objectives** and **5 robustness requirements** (PRJ-SR-001 to PRJ-SR-005).
 
 ### Gaps / decisions required
-1. **UML use-case diagram:** Section 7.1 and 7.2 describe two use cases in prose, but the extracted document content shows descriptions, not a UML diagram. The repository's `Documents/diagrams/` folder contains only `TMS_Component_Diagram.png`. Inspect the DOCX visually and add at least one actual UML use-case diagram if it is not embedded.
+1. **UML use-case diagram:** Section 7.1 and 7.2 describe two use cases in prose, but the extracted DOCX content does not evidence an embedded UML diagram. A PlantUML source has now been added at `Documents/diagrams/TMS_Use_Case_Diagram.puml`; render it and embed it in the SRS DOCX, then verify the figure caption and placement.
 2. **Security section:** Section 5.1 is explicitly titled “Robustness & Data-Integrity Requirements” and says there is no user-account/network attack surface. It contains enough objectives and requirements numerically (3 and 5), but they are robustness/data-integrity content, not clearly presented as security objectives/requirements. Ask the instructor whether this scoped treatment satisfies Part 1; otherwise add a short security objectives/requirements subsection appropriate to a standalone local simulation, without inventing a network attack surface.
 3. **Approval:** The SRS is still marked Draft and the course coordinator approval fields are blank. Obtain review/sign-off or update the status accurately.
 4. **RTM:** The SRS RTM shown in Section 8 contains only five sample rows and says it will be completed later. It does not provide a full mapping for all 33 requirements.
@@ -57,11 +57,11 @@ The documents are present and contain substantial requirements, design and test-
 
 ### Gaps / decisions required
 1. **Component diagram:** A separate `Documents/diagrams/TMS_Component_Diagram.png` exists. Ensure it is embedded or clearly referenced in the SAD with a figure number and description.
-2. **UML sequence diagrams:** The two Section 4.1 workflows are numbered prose steps, not UML sequence diagrams. The current `Documents/diagrams/` folder has no sequence-diagram images. Add at least two UML sequence diagrams (for example, vehicle spawn/enqueue and signal update/dequeue/statistics).
-3. **Requirement traceability:** No full requirement-to-component/design mapping is present in the extracted SAD content. Add a design traceability table mapping all 33 SRS requirement IDs to components/classes and relevant design sections.
-4. **Security architecture:** No dedicated security architecture section is present. Add a proportionate section explaining the local, single-process threat boundary, input validation, bounds checks, memory ownership and error handling. Keep it consistent with the SRS scope and instructor expectations.
-5. **API design:** Section 4.2 provides only partial class interface outlines. Expand this into a consistent API/interface description for the actual modules, including key methods, inputs/outputs, ownership and error/return behavior.
-6. **Error handling:** Error/overflow behavior is mentioned within workflows, but there is no clear dedicated error-handling design section. Document config parsing failures, invalid values, queue overflow, invalid connections, stop requests and reporting behavior.
+2. **UML sequence diagrams:** The two Section 4.1 workflows are numbered prose steps, not embedded UML sequence diagrams. Two implementation-aligned PlantUML sources now exist: `TMS_Vehicle_Admission_Sequence.puml` and `TMS_Signal_And_Dispatch_Sequence.puml`. Render and embed them in the SAD DOCX, then verify figure captions and placement.
+3. **Requirement traceability:** No full requirement-to-component/design mapping is present in the extracted SAD DOCX content. A source-aligned requirement-group-to-component mapping is drafted in `docs/SAD_IMPLEMENTATION_ADDENDUM.md`; review it against the approved SRS and incorporate a complete mapping in the SAD DOCX.
+4. **Security architecture:** No dedicated security architecture section is present in the SAD DOCX. A proportionate local-process trust-boundary section is drafted in `docs/SAD_IMPLEMENTATION_ADDENDUM.md`; obtain instructor confirmation that this satisfies the assignment's security requirement and incorporate it into the SAD DOCX.
+5. **API design:** Section 4.2 provides only partial class interface outlines. A source-aligned public API summary is drafted in `docs/SAD_IMPLEMENTATION_ADDENDUM.md`; incorporate and review it in the SAD DOCX.
+6. **Error handling:** Error/overflow behavior is mentioned within workflows, but there is no clear dedicated error-handling design section in the SAD DOCX. The implementation-aligned addendum now documents config parsing failures, invalid values, queue overflow, invalid connections, stop requests and reporting behavior; incorporate it in the SAD DOCX.
 7. **Implementation drift:** The SAD describes a small initial module set and `std::queue`-based interface; the final code has a larger SimulationEngine/Intersection/TrafficSignalController architecture and other implementation details. Reconcile the SAD against final source and document deliberate deviations.
 
 ## 4. Repository evidence cross-check
@@ -78,8 +78,8 @@ This tree check does not prove whether images are embedded inside DOCX files. Th
 ## 5. Recommended order to close the Part 1 gaps
 
 1. Confirm with the instructor whether robustness/data-integrity satisfies the requested security objectives, security requirements and security validation for this offline simulation.
-2. Add/verify the SRS UML use-case diagram; add two actual UML sequence diagrams to the SAD.
-3. Add SAD security architecture, full requirement traceability, complete API design and error-handling design.
+2. Render and embed the new UML use-case diagram in the SRS and the two UML sequence diagrams in the SAD.
+3. Review and incorporate the SAD implementation addendum (security boundary, requirement mapping, API summary and error handling) into the DOCX, then obtain instructor/team review.
 4. Reconcile SRS PRJ-SR-002 and Test Plan fallback/rejection behavior.
 5. Correct `TC-Gen-003-N`, complete the full RTM, and update Test Plan instructions to match the actual test harness.
 6. Add the five referenced test config fixtures or revise the document to use existing reproducible test data.
