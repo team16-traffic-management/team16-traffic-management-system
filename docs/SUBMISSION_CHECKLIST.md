@@ -58,7 +58,7 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] RTM updated after PR #94 merge; implementation, automated verification and manual acceptance are separate.
 - [ ] Update the earlier test cases and Test Case Document to reflect changes made during the sprints.
 - [x] Create `docs/TEST_EXECUTION_REGISTER.md` with all 66 Test Plan case IDs, owners and initial NOT RUN status.
-- [x] Create `docs/TEST_CASE_AUTOMATION_CROSSWALK.md`: 33 cases have direct automated checks, 18 have partial evidence, and 15 have no direct automated check identified.
+- [x] Refresh `docs/TEST_CASE_AUTOMATION_CROSSWALK.md` after PRs #115–#118: 41 cases have direct automated checks, 18 have partial evidence, and 7 have no direct automated check identified. This remains a mapping, not execution of all 66 Test Plan cases.
 - [ ] Execute and record the 66 Test Plan cases individually; do not infer their results from 436 automated assertions.
 - [ ] Perform manual Ctrl+C stop and verify the partial-run summary (TMS-F-061).
 - [ ] Test geometric movement conflicts (TMS-F-022); current automated invariant only checks at most one GREEN lane.
@@ -83,6 +83,10 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [ ] Verify final repository/submission links and obtain required sign-offs.
 
 ## Latest QA regression evidence
+- PR #115 sibling-lane isolation and zero-emergency-probability checks: https://github.com/team16-traffic-management/team16-traffic-management-system/pull/115 (CI run #43377370669 passed Ubuntu and Windows).
+- PR #116 emergency-probability-one boundary check: https://github.com/team16-traffic-management/team16-traffic-management-system/pull/116 (CI run #43377755772 passed Ubuntu, Windows and Linux ASan/UBSan).
+- PR #117 queue-boundary, zero-throughput reporting and simultaneous-overflow checks: https://github.com/team16-traffic-management/team16-traffic-management-system/pull/117 (CI run #43378089050 passed Ubuntu, Windows and Linux ASan/UBSan).
+- PR #118 runtime adaptive-mode switch check: https://github.com/team16-traffic-management/team16-traffic-management-system/pull/118 (CI run #43378320849 passed Ubuntu and Windows; Linux ASan/UBSan passed).
 - PR #98 adaptive timing boundaries: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42791702831
 - PR #99 transfer backpressure: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42792945910
 - PR #101 emergency queue priority/order: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42795154445
