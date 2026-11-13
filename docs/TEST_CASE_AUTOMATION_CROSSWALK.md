@@ -62,7 +62,7 @@
 | TC-Stats-003-P | `testStatisticsCalculations` | Direct | Checks throughput total from dequeued vehicles. |
 | TC-Stats-003-N | `testStatisticsCalculations` | Direct | Checks blocked count and throughput remain separate. |
 | TC-Sim-001-P | `testConfigDrivenIntersections; testConfigurationValidationBoundaries` | Partial | Checks configuration is parsed and applied to intersections/capacity; not every setting is asserted. |
-| TC-Sim-001-N | `—` | Not identified / expected-result conflict | No missing-config fallback test was found; current loader throws when a config file cannot be opened. |
+| TC-Sim-001-N | `—` | Not identified | No direct missing-file rejection test was found; the loader throws when a config file cannot be opened, so verify the top-level clear error and non-zero exit manually. |
 | TC-Sim-002-P | `testRepeatedSimulationLifecycle; testTenThousandTickStability` | Partial | Checks normal runs complete and summaries are produced; natural-exit status is not fully asserted. |
 | TC-Sim-002-N | `testManualStopProducesPartialSummary; testSigintStopsOpenEndedRun` | Direct | Checks user-requested stop and summary tick count. |
 | TC-Perf-01-P | `Separate benchmark evidence` | Partial | The repository has benchmark evidence, but the consolidated unit test does not assert the target on evaluator hardware. |
@@ -90,7 +90,7 @@
 
 ## Important specification and test gaps
 
-1. **TC-Gen-003-N mapping:** The implementation-aligned Test Plan revision maps this capacity-overflow case to TMS-F-011 / PRJ-SR-004; use that revision for final submission.
+1. **TC-Gen-003-N mapping:** The implementation-aligned Test Plan revision maps this to TMS-F-003: interleaved emergency insertion must not reorder normal vehicles. Capacity tests remain under TMS-F-011 / PRJ-SR-004.
 2. **Configuration behavior:** The implementation-aligned Test Plan revision changes contradictory fallback expectations to match implementation: invalid values and missing files are rejected with a descriptive error and non-zero exit.
 3. **TC-Multi-001-N:** Add a controlled invalid-intersection fault-isolation test if this requirement remains in scope; current tests cover sibling-lane isolation, not isolation between failing intersections.
 4. **TC-Rob-003-P/N:** Retain quantified memory/leak evidence if required. Repeated lifecycle and ASan/UBSan runs are useful, but they are not a Valgrind leak report or injected-exception cleanup test.
@@ -99,7 +99,7 @@
 
 ## Recommended next execution order
 
-1. Resolve specification conflicts and the TC-Gen-003-N mapping.
+1. Replace the repository DOCX files with the supplied implementation-aligned revisions, then obtain team/instructor approval.
 2. Execute the existing direct/partial cases using the Test Plan's own steps and record each outcome in `docs/TEST_EXECUTION_REGISTER.md`.
-3. Add targeted automated tests for the remaining cases classified as having no direct automated check, prioritizing valid adaptive-mode config loading and invalid-intersection isolation; keep the missing-config behavior conflict explicit until the specification is reconciled.
+3. Add targeted automated tests for the remaining cases classified as having no direct automated check, prioritizing invalid-intersection isolation; retain the missing-config case for manual acceptance because the current loader throws on unreadable files.
 4. Keep memory/leak, usability, performance and portability evidence distinct from ordinary unit-test assertions.
