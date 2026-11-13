@@ -5,6 +5,9 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 ## Part 1 — Requirements and design
 - [x] SRS, SAD and Test Plan are present in `Documents/`.
 - [x] Component diagram is present in `Documents/diagrams/`.
+- [ ] Verify SRS IEEE format, descriptive sections, clear/measurable FRs and NFRs, at least one UML use-case diagram, and at least two security objectives plus two security requirements.
+- [ ] Verify Test Plan IEEE format, required Sections 3/4/5, Section 5.1 security validation, SRS traceability, and sufficient functional/non-functional test cases (at least 7–10).
+- [ ] Verify SAD IEEE format, component diagram and description, architecture pattern, requirement traceability, security architecture, at least two UML sequence diagrams, API design and error handling.
 - [ ] Reconcile SRS, SAD and Test Plan against the final implementation; the DOCX contents and embedded diagrams still need a detailed review.
 - [ ] Resolve the PRJ-SR-002 conflict: the SRS requires invalid configuration rejection with a clear error, while some Test Plan cases expect safe defaults.
 - [ ] Correct the Test Plan mapping for `TC-Gen-003-N` (queue capacity belongs to queue-capacity/robustness requirements, not FIFO enqueue).
@@ -18,10 +21,13 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] PR #94 CI run #132 passed Ubuntu and Windows build, automated tests and smoke tests; Ubuntu ASan/UBSan passed: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42785408865.
 - [x] Capture fresh push-to-main CI after QA regression merges: run #163 passed Ubuntu/Windows build, tests and smoke tests; Ubuntu ASan/UBSan passed.
 - [x] PR #110 repository documentation/maintenance cleanup merged to main as `03b8c7f9ca4f168ec86c122a9cbc3c887d309cb7`.
-- [ ] Confirm backlog, sprint dates, story points and issue statuses in the team's tracker (Tarun).
-- [ ] Confirm team roles/contributions with all members.
-- [ ] Capture required PR/review evidence and final team approvals.
-- [ ] Record the final working demo and presentation walkthrough if required.
+- [ ] Verify a GitHub Project is linked to the repository and the backlog covers SRS FRs/NFRs, story points, team assignments and the two planned sprints (Tarun).
+- [ ] Verify Sprint 1 (19–23 Oct 2026) completion, PR/review evidence and documented deviations from SRS/SAD/Test Plan.
+- [ ] Upload the required one-minute working-product Sprint 1 video to the repository; no video file is present in the current repository tree.
+- [ ] Verify Sprint 2 (26–30 Oct 2026) completion and development freeze.
+- [ ] Upload the required two-minute working-product Sprint 2 video to the repository; no video file is present in the current repository tree.
+- [ ] Confirm team roles/contributions with all members and obtain final approvals.
+- [ ] Record the final presentation walkthrough if required.
 - [ ] Verify README build/run instructions from a clean checkout.
 
 ## Part 3 — Testing and final documentation
