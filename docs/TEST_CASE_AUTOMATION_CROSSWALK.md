@@ -1,6 +1,6 @@
 # Test Plan to Automated Test Crosswalk
 
-**Repository baseline:** `main` after PR #120 merge, commit `1fea1a18f7cc6dc33d717072a9f8c3f03d6023a1`; this branch adds the config-mode assertion below.  
+**Repository baseline:** `main` after PR #121 merge, commit `1b4804a331247a3ae2f6c2704dd1a31957334e7a`; this branch adds the config-mode assertion below.  
 **Test source reviewed:** `tests/test_traffic_management.cpp`.  
 **Purpose:** Identify which of the 66 planned Test Plan cases have related automated assertions in the consolidated test executable or CI. This is a coverage map, not a test-execution report.
 
