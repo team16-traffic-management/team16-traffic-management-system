@@ -35,6 +35,20 @@ jobs:
       - name: Verify toolchain
         shell: bash
         run: g++ --version && make --version
+      - name: Verify missing compiler diagnostic
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set +e
+          output="$(make check-deps CXX=missing-tms-compiler 2>&1)"
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -eq 0 ]; then
+            echo "Expected missing compiler dependency to fail" >&2
+            exit 1
+          fi
+          grep -Fq "Error: C++ compiler 'missing-tms-compiler' was not found" <<< "$output"
       - name: Build application and tests
         shell: bash
         run: make clean all build/test-traffic-management
@@ -63,6 +77,19 @@ jobs:
             echo "Expected invalid_values.cfg to be rejected"
             exit 1
           fi
+      - name: Verify missing config file is rejected with a clear error
+        shell: bash
+        run: |
+          set +e
+          output="$(./build/traffic-management tests/data/does_not_exist.cfg 2>&1)"
+          status=$?
+          set -e
+          printf '%s\n' "$output"
+          if [ "$status" -eq 0 ]; then
+            echo "Expected missing config file to be rejected" >&2
+            exit 1
+          fi
+          grep -Fq "Could not open configuration file: tests/data/does_not_exist.cfg" <<< "$output"
       - name: Verify corrupted fixture is rejected
         shell: bash
         run: |

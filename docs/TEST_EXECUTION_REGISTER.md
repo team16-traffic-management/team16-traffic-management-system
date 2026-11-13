@@ -15,6 +15,7 @@ Related coverage analysis: [`docs/TEST_CASE_AUTOMATION_CROSSWALK.md`](TEST_CASE_
 - `TC-Gen-003-N` is a FIFO boundary case: interleaved emergency insertion must not reorder normal vehicles. Queue capacity cases remain mapped to TMS-F-011 / PRJ-SR-004.
 - Invalid/missing configuration is rejected with a descriptive error and non-zero exit; the parser does not substitute safe defaults.
 - Zero queue capacity is rejected at construction/config validation; exercise the zero-capacity constructor boundary separately from valid config fixtures.
+- TC-Sim-001-N has a direct automated missing-file error assertion, and TC-Port-01-N has a Makefile/CI missing-compiler diagnostic check; both acceptance cases remain NOT RUN until individually executed and recorded.
 
 ## Case register
 
