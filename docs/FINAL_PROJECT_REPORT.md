@@ -96,7 +96,7 @@ The build uses GCC with the C++17 language standard and warning flags. The proje
 
 ## 5. Testing and results
 
-The repository contains four QA reports:
+The repository contains four QA reports and a 66-case execution register (`docs/TEST_EXECUTION_REGISTER.md`). All 66 cases are initialized as NOT RUN, matching the current Test Plan; the register is ready for execution records but is not evidence of completed testing.
 - `docs/QA_Reports/Unit_Test_Report.md`
 - `docs/QA_Reports/System_Validation_Report.md`
 - `docs/QA_Reports/Code_Coverage_Report.md`
