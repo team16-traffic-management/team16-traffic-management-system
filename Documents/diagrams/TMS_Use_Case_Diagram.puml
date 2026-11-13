@@ -1,0 +1,20 @@
+@startuml
+left to right direction
+actor "Simulation Operator" as Operator
+rectangle "Traffic Management System" {
+  usecase "Configure simulation" as UC1
+  usecase "Load configuration file" as UC2
+  usecase "Start simulation" as UC3
+  usecase "Observe traffic and signals" as UC4
+  usecase "Stop simulation safely" as UC5
+  usecase "Review end-of-run statistics" as UC6
+  usecase "Coordinate connected intersections" as UC7
+}
+Operator --> UC1
+UC1 .> UC2 : <<extend>>
+Operator --> UC3
+Operator --> UC4
+Operator --> UC5
+Operator --> UC6
+UC3 .> UC7 : <<include when configured>>
+@enduml
