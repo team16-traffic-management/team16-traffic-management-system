@@ -6,8 +6,8 @@ This folder contains the four testing deliverables. Reports distinguish committe
 |---|---|---|
 | Unit_Test_Report.md | Unit cases executed against individual units | 436 checks verified on Ubuntu and Windows in main-branch workflow #99 |
 | System_Validation_Report.md | End-to-end / system-level validation | Main CI evidence and local Windows benchmark recorded; full SRS-based validation remains incomplete |
-| Code_Coverage_Report.md | Line coverage and included source files | GitHub Actions coverage job generates final production-source report artifact; exact percentages copied after successful run |
-| Branch_Coverage_Report.md | Branch execution and outcomes | GitHub Actions coverage job generates production-source branch report artifact; exact percentages copied after successful run |
+| Code_Coverage_Report.md | Line coverage and included source files | PR #121 CI run #230 generated 88.0% line coverage (667/758); final main rerun pending |
+| Branch_Coverage_Report.md | Branch execution and outcomes | PR #121 CI run #230 generated 54.6% branch coverage (683/1,252); final main rerun pending |
 
 ## Evidence metadata
 
@@ -43,4 +43,4 @@ A standalone benchmark was run on a local Windows machine using `-std=c++17 -O2 
 
 The exact CPU, RAM, Windows build and compiler version were not recorded. The intersections were not connected, and this is not evaluator-hardware or full end-to-end performance evidence. See System_Validation_Report.md for the complete run table and limitations.
 
-Never describe the historical two-file GCOV subset as whole-project coverage. The new CI job instruments all production .cpp files under src/ and vehicle/ and uploads HTML/XML reports. Preserve the artifact and record the exact tested commit. Do not claim unexecuted system scenarios as PASS.
+Never describe the historical two-file GCOV subset as whole-project coverage. The CI job instruments production sources under src/ and vehicle/ (including main.cpp and instrumented VehicleGenerator.h inline code) and uploads HTML/XML reports. PR #121 run #230: 88.0% lines, 54.6% branches; rerun after merge to main. Preserve the artifact and record the exact tested commit. Do not claim unexecuted system scenarios as PASS.
