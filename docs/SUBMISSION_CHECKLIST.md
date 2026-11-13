@@ -21,10 +21,13 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] PR #94 CI run #132 passed Ubuntu and Windows build, automated tests and smoke tests; Ubuntu ASan/UBSan passed: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42785408865.
 - [x] Capture fresh push-to-main CI after QA regression merges: run #163 passed Ubuntu/Windows build, tests and smoke tests; Ubuntu ASan/UBSan passed.
 - [x] PR #110 repository documentation/maintenance cleanup merged to main as `03b8c7f9ca4f168ec86c122a9cbc3c887d309cb7`.
-- [ ] Verify a GitHub Project is linked to the repository and the backlog covers SRS FRs/NFRs, story points, team assignments and the two planned sprints (Tarun).
-- [ ] Verify Sprint 1 (19–23 Oct 2026) completion, PR/review evidence and documented deviations from SRS/SAD/Test Plan.
+- [ ] Verify the required GitHub Project is linked to the repository; a separate Jira TMS board (board ID 67) exists, but that does not by itself prove the GitHub Project requirement.
+- [x] Jira TMS board contains 33 SRS-related story issues; all 33 have story-point estimates (108 points total).
+- [ ] Review Jira story assignment: all 33 story issues are currently assigned to Khushi Gupta; confirm whether this matches the team's agreed allocation and the requirement to assign stories to team members.
+- [ ] Reconcile Jira Sprint 1 dates: the board's closed `Sprint 1 — Core Simulation` (ID 101) ran 1–3 Nov 2026, not the required 19–23 Oct 2026; confirm whether the date discrepancy is a Jira setup error or requires an explanation.
 - [ ] Upload the required one-minute working-product Sprint 1 video to the repository; no video file is present in the current repository tree.
-- [ ] Verify Sprint 2 (26–30 Oct 2026) completion and development freeze.
+- [ ] Reconcile Jira Sprint 2 dates: the closed `Sprint 2 — Advanced Features` (ID 134) ran 2–4 Nov 2026, not the required 26–30 Oct 2026; it overlaps Sprint 1. An additional empty future sprint `Sprint 2 — Advanced Features 2` (ID 135) also exists; confirm and clean up the planning record.
+- [ ] Verify Sprint 2 completion and development freeze.
 - [ ] Upload the required two-minute working-product Sprint 2 video to the repository; no video file is present in the current repository tree.
 - [ ] Confirm team roles/contributions with all members and obtain final approvals.
 - [ ] Record the final presentation walkthrough if required.
