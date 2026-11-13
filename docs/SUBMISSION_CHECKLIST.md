@@ -75,7 +75,7 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] Verify vehicle ID uniqueness across multiple lanes/intersections (PR #104; CI run #153 passed).
 - [x] Verify engine dequeues vehicles only on green (PR #105; CI run #154 passed).
 - [x] Local Windows benchmark met 500 ticks/sec for its fixture (median 88,344.30 ticks/sec); connected-topology and evaluator-hardware evidence remain outstanding.
-- [ ] Regenerate line/branch coverage on final main and state the exact source scope.
+- [ ] Regenerate line/branch coverage on final main and state the exact source scope (PR #121 run #230 has 88.0% line / 54.6% branch coverage; post-merge rerun pending).
 - [x] Place the four QA reports in `docs/QA_Reports/`, satisfying Part 3's requirement to upload the reports to the `docs` folder. A PR #121 coverage job now generates whole-production-source line/branch reports; final main-branch coverage evidence is pending merge and post-merge run.
 - [x] Draft `docs/FINAL_PROJECT_REPORT.md` from repository, CI, QA and Jira evidence.
 - [ ] Review and approve `docs/FINAL_PROJECT_REPORT.md` with the full team.
