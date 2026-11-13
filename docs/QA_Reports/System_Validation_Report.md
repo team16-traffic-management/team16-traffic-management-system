@@ -93,9 +93,12 @@ The repository has successful cross-platform CI evidence, Linux sanitizer eviden
 - PR #117 max-queue-one, zero-throughput report and simultaneous-overflow cases: [CI #43378089050](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43378089050), Ubuntu/Windows and Linux ASan/UBSan passed.
 - PR #118 runtime adaptive mode switch: [CI #43378320849](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43378320849), Ubuntu/Windows and Linux ASan/UBSan passed.
 - PR #120 adaptive mode config loading: [CI #43379351361](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43379351361), Ubuntu/Windows and Linux ASan/UBSan passed.
-- PR #121 merged to main. Post-merge main run #241: [CI #43381117586](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43381117586). Ubuntu and Windows builds, 985 automated checks on Ubuntu and smoke tests passed; Linux ASan/UBSan passed. Main-branch coverage: 88.0% line (667/758), 86.2% function (81/94), 54.8% branch (686/1,252). Artifact: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43381117586/artifacts/14016947229.
+- PR #121 merged to main. Post-merge main run #241: [CI #43382188203](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43381117586). Ubuntu and Windows builds, 985 automated checks on Ubuntu and smoke tests passed; Linux ASan/UBSan passed. Main-branch coverage: 88.0% line (667/758), 86.2% function (81/94), 54.8% branch (686/1,252). Artifact: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43381117586/artifacts/14016947229.
 
 The automation crosswalk now classifies 42 of 66 cases as direct, 18 partial and 6 without direct automated checks. This is mapping evidence only; the 66-case acceptance register remains NOT RUN.
 
 
 - PR #123 missing-config and missing-compiler diagnostics: [main CI run #241](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382188203) passed. The Ubuntu workflow verified the compiler preflight diagnostic and missing-config application error/non-zero exit; Windows passed build, tests and smoke tests.
+
+
+- PR #123 missing-config and missing-compiler diagnostics: [main CI run #241](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382188203) passed. Ubuntu verified the compiler preflight diagnostic and missing-config application error/non-zero exit; Windows passed build, tests and smoke tests.
