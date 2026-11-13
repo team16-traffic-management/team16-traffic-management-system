@@ -182,6 +182,7 @@ The available evidence supports substantial implementation and automated verific
 - Main CI evidence: [workflow run #163](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42797884604)
 - Baseline automated test evidence: [workflow run #99](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42450330604)
 - Manual-stop implementation CI evidence: [PR #94 workflow run #132](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42785408865)
-- Demo recording: **Team to add the final approved recording link.**
-- Presentation walkthrough: **Team to add the final approved recording/link if required.**
+- Sprint 1 working-product video (one minute): **Team to add the repository path/link; no video file is present in the current repository tree.**
+- Sprint 2 working-product video (two minutes): **Team to add the repository path/link; no video file is present in the current repository tree.**
+- Final presentation walkthrough: **Team to add the final approved recording/link if required.**
 - Team review/sign-off: **Pending confirmation from all members.**
