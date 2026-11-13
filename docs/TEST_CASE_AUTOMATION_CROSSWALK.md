@@ -1,6 +1,6 @@
 # Test Plan to Automated Test Crosswalk
 
-**Repository baseline:** `main` after PR #122 merge, commit `a9c0c6055cc2a96ec290af46b7a63330028f1c59`; this branch adds the config-mode assertion below.  
+**Repository baseline:** `main` after PR #122 merge, commit `a9c0c6055cc2a96ec290af46b7a63330028f1c59`; source includes adaptive-mode config and missing-file assertions; CI also checks missing-compiler diagnostics.  
 **Test source reviewed:** `tests/test_traffic_management.cpp`.  
 **Purpose:** Identify which of the 66 planned Test Plan cases have related automated assertions in the consolidated test executable or CI. This is a coverage map, not a test-execution report.
 
@@ -13,7 +13,7 @@
 | No direct automated check identified | 4 | No corresponding check was found in the reviewed test source/CI workflow. |
 | **Total** | **66** | |
 
-**Important:** All 66 Test Plan cases remain `NOT RUN` in `docs/TEST_EXECUTION_REGISTER.md`. Even a direct unit-test mapping does not automatically count as a complete Test Plan case execution. Each case still needs its specified test data, steps, expected-vs-actual result, environment and evidence recorded. The 436 historical CI assertions are not 66 separately executed acceptance cases.
+**Important:** All 66 Test Plan cases remain `NOT RUN` in `docs/TEST_EXECUTION_REGISTER.md`. Even a direct unit-test mapping does not automatically count as a complete Test Plan case execution. Each case still needs its specified test data, steps, expected-vs-actual result, environment and evidence recorded. The 984 automated checks in main CI run #235 are not 66 separately executed acceptance cases.
 
 ## Case-by-case crosswalk
 
@@ -42,7 +42,7 @@
 | TC-Sig-004-P | `testSignalPhaseTransitions` | Direct | Checks the Yellow phase occurs between Green and Red. |
 | TC-Sig-004-N | `testSignalPhaseTransitions; testConsoleStatusFields` | Partial | A one-tick Yellow duration is exercised, but the exact one-tick Yellow console rendering is not asserted. |
 | TC-Sig-005-P | `testAdaptiveModeLoadedFromConfiguration` | Direct | Loads `adaptive_mode=true` from a config file and asserts the configured intersection's controller is in adaptive mode. |
-| TC-Sig-005-N | `testConfigurationValidationBoundaries` | Partial / expected-result conflict | Invalid adaptive_mode is rejected; Test Plan currently expects safe fallback. |
+| TC-Sig-005-N | `testConfigurationValidationBoundaries` | Partial / expected-result conflict | Invalid adaptive_mode is rejected; the unit test checks the exception but not the exact top-level CLI message. |
 | TC-Emg-001-P | `testEmergencyProbabilityOneAlwaysGeneratesEmergencyVehicles` | Direct | With emergency probability 1.0, 100 generated vehicles are asserted to be emergency vehicles. |
 | TC-Emg-001-N | `testZeroEmergencyProbabilityProducesNormalVehicles` | Direct | With arrival probability 1 and emergency probability 0, 100 generated vehicles are asserted to be normal. |
 | TC-Emg-002-P | `testEmergencyQueuePriorityAndStableOrdering` | Direct | Checks emergency vehicles are dequeued before normal vehicles. |
@@ -62,7 +62,7 @@
 | TC-Stats-003-P | `testStatisticsCalculations` | Direct | Checks throughput total from dequeued vehicles. |
 | TC-Stats-003-N | `testStatisticsCalculations` | Direct | Checks blocked count and throughput remain separate. |
 | TC-Sim-001-P | `testConfigDrivenIntersections; testConfigurationValidationBoundaries` | Partial | Checks configuration is parsed and applied to intersections/capacity; not every setting is asserted. |
-| TC-Sim-001-N | `testMissingConfigurationFileRejected` | Direct | Verifies a missing config path throws a descriptive `Could not open configuration file` error. |
+| TC-Sim-001-N | `testMissingConfigurationFileRejected` + missing-config CI smoke test | Direct | Verifies the missing config path produces the clear loader message and non-zero application exit. |
 | TC-Sim-002-P | `testRepeatedSimulationLifecycle; testTenThousandTickStability` | Partial | Checks normal runs complete and summaries are produced; natural-exit status is not fully asserted. |
 | TC-Sim-002-N | `testManualStopProducesPartialSummary; testSigintStopsOpenEndedRun` | Direct | Checks user-requested stop and summary tick count. |
 | TC-Perf-01-P | `Separate benchmark evidence` | Partial | The repository has benchmark evidence, but the consolidated unit test does not assert the target on evaluator hardware. |
