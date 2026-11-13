@@ -12,7 +12,7 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [ ] Replace the SRS DOCX with the supplied v0.5 revision, which includes the complete 33-requirement RTM; statuses remain Not Run until acceptance execution.
 - [ ] Update SRS draft status and obtain approval/sign-off.
 - [x] Review Test Plan v1.0 content: Sections 1–13, required Sections 3/4/5, Section 5.1, and 66 detailed cases (two per SRS requirement) are present.
-- [ ] The supplied Test Plan v1.1 clarifies the local configuration-file trust boundary and limits of security validation; instructor confirmation is still required.
+- [x] Supplied Test Plan v1.1 clarifies the local configuration-file trust boundary and limits of security validation; instructor confirmation is still required.
 - [ ] The supplied Test Plan v1.1 changes invalid/missing configuration expectations to clear rejection, matching SRS PRJ-SR-002 and the parser.
 - [ ] Use the implementation-aligned Test Plan revision: `TC-Gen-003-N` tests FIFO stability when an emergency vehicle is interleaved; queue-capacity tests remain under TMS-F-011 / PRJ-SR-004.
 - [x] Add five current-parser-compatible config fixtures under `tests/data/` (baseline, zero-values, invalid-values, high-load, corrupted) with reproducibility notes.
@@ -28,8 +28,8 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] Document current implementation architecture and module/interface differences in `docs/SAD_IMPLEMENTATION_ADDENDUM.md`.
 - [ ] Use the supplied SAD v3.1 revision with the implementation-aligned architecture supplement; obtain team approval.
 - [ ] Reconcile all three DOCX documents against final implementation and obtain team review. See `docs/DOCUMENT_COMPLIANCE_AUDIT.md`.
-- [ ] Resolve the PRJ-SR-002 conflict: the SRS requires invalid configuration rejection with a clear error, while some Test Plan cases expect safe defaults.
-- [ ] Correct the Test Plan mapping for `TC-Gen-003-N` (queue capacity belongs to queue-capacity/robustness requirements, not FIFO enqueue).
+- [x] Resolved in the supplied Test Plan v1.1: invalid and missing configuration inputs are rejected with clear errors, matching parser behavior.
+- [x] Corrected `TC-Gen-003-N` in the supplied Test Plan v1.1: it checks FIFO stability when an emergency vehicle is interleaved; queue-capacity tests remain under TMS-F-011 / PRJ-SR-004.
 - [ ] Reconcile requirement IDs and all 66 Test Plan cases with the SRS RTM.
 - [ ] Record design deviations and obtain team review.
 
@@ -58,7 +58,7 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] RTM updated after PR #94 merge; implementation, automated verification and manual acceptance are separate.
 - [ ] Update the earlier test cases and Test Case Document to reflect changes made during the sprints.
 - [x] Create `docs/TEST_EXECUTION_REGISTER.md` with all 66 Test Plan case IDs, owners and initial NOT RUN status.
-- [x] Refresh `docs/TEST_CASE_AUTOMATION_CROSSWALK.md` after PRs #115–#118: 42 cases have direct automated checks, 18 have partial evidence, and 6 have no direct automated check identified (pending PR #120 CI and merge). This remains a mapping, not execution of all 66 Test Plan cases.
+- [x] Refresh `docs/TEST_CASE_AUTOMATION_CROSSWALK.md` after PRs #115–#120: 42 cases have direct automated checks, 18 have partial evidence, and 6 have no direct automated check identified (PR #120 merged; CI run #225 passed). This remains a mapping, not execution of all 66 Test Plan cases.
 - [ ] Execute and record the 66 Test Plan cases individually; do not infer their results from 436 automated assertions.
 - [ ] Perform manual Ctrl+C stop and verify the partial-run summary (TMS-F-061).
 - [ ] Test geometric movement conflicts (TMS-F-022); current automated invariant only checks at most one GREEN lane.
@@ -76,7 +76,7 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] Verify engine dequeues vehicles only on green (PR #105; CI run #154 passed).
 - [x] Local Windows benchmark met 500 ticks/sec for its fixture (median 88,344.30 ticks/sec); connected-topology and evaluator-hardware evidence remain outstanding.
 - [ ] Regenerate line/branch coverage on final main and state the exact source scope.
-- [x] Place the four QA reports in `docs/QA_Reports/`, satisfying Part 3's requirement to upload the reports to the `docs` folder. Coverage values remain initial/limited and must still be regenerated on final main.
+- [x] Place the four QA reports in `docs/QA_Reports/`, satisfying Part 3's requirement to upload the reports to the `docs` folder. A PR #121 coverage job now generates whole-production-source line/branch reports; final main-branch coverage evidence is pending merge and post-merge run.
 - [x] Draft `docs/FINAL_PROJECT_REPORT.md` from repository, CI, QA and Jira evidence.
 - [ ] Review and approve `docs/FINAL_PROJECT_REPORT.md` with the full team.
 - [ ] Review the final academic report, demo guide and presentation.
