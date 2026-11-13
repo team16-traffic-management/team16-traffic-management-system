@@ -15,7 +15,9 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [ ] Confirm/add security validation to Test Plan Section 5.1; current content is robustness/data-integrity validation.
 - [ ] Reconcile the SRS PRJ-SR-002 rejection requirement with Test Plan cases that expect safe defaults/fallback.
 - [ ] Correct `TC-Gen-003-N`: it tests capacity/overflow but maps to FIFO requirement TMS-F-003 instead of TMS-F-011 / PRJ-SR-004.
-- [ ] Add the five config fixtures promised under `tests/data/` (none are present in the current repository tree) or revise the Test Plan to match actual fixtures.
+- [x] Add five current-parser-compatible config fixtures under `tests/data/` (baseline, zero-values, invalid-values, high-load, corrupted) with reproducibility notes.
+- [x] Extend CI to run the three valid fixtures and verify the two invalid fixtures are rejected on Ubuntu and Windows.
+- [ ] Update Test Plan Section 6.1 and Appendix B to match the current parser syntax; zero-capacity behavior must be tested through LaneQueue, not config.
 - [ ] Update Test Plan method/interfaces to match the current consolidated C++ test harness; its mock interfaces and execution assumptions differ from the final repo.
 - [ ] Update Test Plan from Draft and obtain approval/sign-off.
 - [x] Review SAD v1.0 content: component responsibilities/descriptions, synchronous tick-driven modular architecture pattern, two textual workflows and partial C++ class interface outlines are present.
