@@ -61,7 +61,7 @@ The configuration supports intersection lane definitions, lane-matched connectio
 
 ## 3. Requirements and design
 
-The approved project documents are stored in `Documents/`:
+The project documents under review are stored in `Documents/` (the SRS and Test Plan remain marked Draft; the SAD is marked Submitted):
 - Software Requirements Specification: `Documents/SRS_Traffic_Management_System.docx`
 - Software Architecture and Design: `Documents/SAD_Traffic_Management_System_v3.docx`
 - Test Plan: `Documents/Test_Plan_Traffic_Management_System.docx`
@@ -73,7 +73,7 @@ The repository's implementation and verification mapping is maintained in:
 
 The source tree separates the application entry point, simulation engine, intersection and lane behavior, signal control, statistics, console output, and vehicle generation. The Makefile compiles these modules into the application and the consolidated test executable.
 
-**Design-document review required:** The SRS, SAD and Test Plan must be reconciled against the final implementation and reviewed internally before submission. In particular, the current documentation records a conflict between SRS requirement PRJ-SR-002 (reject invalid configuration with a clear error) and Test Plan cases that expect safe-default substitution. The Test Plan mapping for `TC-Gen-003-N` also needs correction. Do not mark these document checks complete until the approved DOCX files and embedded diagrams have been reviewed.
+**Document-compliance findings:** A detailed audit is recorded in `docs/DOCUMENT_COMPLIANCE_AUDIT.md`. The SRS contains 23 functional and 5 non-functional requirements, but its RTM has only five sample rows; Section 7 describes use cases in prose, with no clearly evidenced UML use-case diagram in the extracted content. Its 3 objectives and 5 requirements are explicitly robustness/data-integrity rather than a clearly labeled security section. The Test Plan contains 66 detailed positive/negative cases, but explicitly marks all 66 Not Run; it also has a PRJ-SR-002 safe-default/rejection conflict, a mis-mapped `TC-Gen-003-N`, and references five `tests/data/` fixtures that are absent from the current tree. The SAD has component descriptions, an architecture pattern, two textual workflows and partial class interfaces, but no clearly evidenced UML sequence diagrams, full requirement traceability, dedicated security architecture or dedicated error-handling section. The documents also need reconciliation with the final implementation and team/instructor approval. Do not treat Part 1 as fully complete until these items are resolved.
 
 ## 4. Implementation
 
