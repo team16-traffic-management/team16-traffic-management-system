@@ -1,6 +1,6 @@
 # System Validation Report
 
-Status: Partial system validation. Baseline main CI run #99 passed; manual-stop PR #94 was subsequently merged after cross-platform CI run #132 passed. Full SRS/Test Plan acceptance is not signed off.
+Status: Partial system validation. The latest application-changing main CI run (#163) passed Ubuntu and Windows build, automated tests and smoke tests; Ubuntu ASan/UBSan passed. PR #109 subsequently refreshed QA evidence documentation. Full SRS/Test Plan acceptance is not signed off.
 
 ## Objective
 Record automated CI evidence, local performance evidence and outstanding system-level acceptance checks. Automated CI evidence and manual Test Plan execution are separate.
@@ -15,6 +15,8 @@ Record automated CI evidence, local performance evidence and outstanding system-
 | Manual-stop PR workflow | [Run #132](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42785408865) |
 | Manual-stop PR head | `9b8730c4cb0fdb5f8e0a172e40b16912fff49c53` |
 | Manual-stop merge commit | `339dfed320036ed1c42a375f70bc1189fb5b4244` |
+| Latest application-changing main commit | `4ccfc24ee7ef477454041aa5f7c3954e4ce31020` |
+| Latest application-changing main CI | [Run #163](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42797884604) |
 | PR #94 CI result | Ubuntu and Windows build, automated tests, default-app and multi-intersection smoke tests passed; Ubuntu ASan/UBSan passed |
 | Benchmark | Local Windows; `-std=c++17 -O2 -DNDEBUG`; exact OS build/compiler/hardware metadata not recorded |
 
@@ -33,9 +35,9 @@ Record automated CI evidence, local performance evidence and outstanding system-
 | SYS-10 | Performance | Five local 10,000-tick runs; average 84,371.19 and median 88,344.30 ticks/sec vs 500 target | PASS — local fixture only |
 | SYS-11 | Graceful manual stop | PR #94 merged; automated direct-stop and SIGINT tests passed on Ubuntu/Windows CI; Linux sanitizer passed | PASS — automated verification; manual interactive acceptance still NOT RUN/documented |
 | SYS-12 | Adaptive green timing boundaries | PR #98 verifies capped extension, low-queue base-duration reset and negative extension rejection; CI run #141 passed Ubuntu/Windows | PASS — tested boundaries only; not full timing policy validation |
-| SYS-13 | Destination queue transfer backpressure | PR #99 verifies pending transfer waits while destination lane is full and is delivered after capacity frees; CI run #142 passed Ubuntu/Windows | PASS — tested scenario; exact one-tick latency and invalid-intersection isolation remain unverified |
+| SYS-13 | Destination queue transfer backpressure | PR #99 verifies pending transfer waits while destination lane is full and is delivered after capacity frees; CI run #142 passed Ubuntu/Windows | PASS — tested scenario |
 | SYS-14 | Emergency queue ordering | PR #101 verifies emergency-first ordering and FIFO stability within emergency and normal vehicles; CI run #143 passed Ubuntu/Windows | PASS — queue ordering cases only; maximum emergency wait remains unverified |
-| SYS-15 | Console long-lane/high-queue output | PR #102 verifies full long lane name, queue count and visual bar; PR run #144 and main run #149 passed Ubuntu/Windows | PASS — output assertions; manual visual/usability inspection remains outstanding |
+| SYS-15 | Console long-lane/high-queue output | PR #102 verifies full long lane name, queue count and visual bar; PR run #144 and main run #163 passed Ubuntu/Windows | PASS — output assertions; manual visual/usability inspection remains outstanding |
 | SYS-16 | Vehicle ID uniqueness | PR #104 checks 200 generated vehicles across four lanes in two intersections for duplicate IDs; CI run #153 passed Ubuntu/Windows | PASS — tested generation fixture |
 | SYS-17 | Engine-level green-only dequeue | PR #105 verifies a red-lane vehicle remains queued until its lane turns green; CI run #154 passed Ubuntu/Windows | PASS — tested signal cycle and engine behavior |
 | SYS-18 | Exact one-tick connected transfer latency | PR #107 verifies a vehicle scheduled from the source in tick one is delivered and processed by the destination in tick two; CI run #159 passed Ubuntu/Windows | PASS — tested topology and timing path |
@@ -61,7 +63,7 @@ The median is approximately 176.7 times the target. This is evidence for the loc
 - Execute and record all 66 Test Plan cases individually; 436 automated assertions are not equivalent to the 66 planned cases.
 - Perform a manual interactive Ctrl+C run and verify the printed completed-tick count and partial summary.
 - Test geometric movement conflicts between turning movements; current invariant checks only at most one GREEN lane.
-- Test exact one-tick transfer latency and invalid-intersection isolation. Destination full-queue backpressure is covered by PR #99.
+- Test invalid-intersection isolation. Destination full-queue backpressure and exact one-tick transfer latency are covered by PRs #99 and #107.
 - Test emergency maximum-wait/preemption delay. Adaptive timing boundary cases are covered by PR #98.
 - PR #108 now runs 20 create/run/destroy cycles under the sanitizer-enabled suite; retain a quantified memory-growth/leak report if required, since repeated lifecycle assertions are not a leak report.
 - Perform manual visual/usability inspection of console formatting; long lane names and high queue lengths are now covered by PR #102 assertions.

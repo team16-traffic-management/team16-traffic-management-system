@@ -47,3 +47,14 @@ make sanitize
 ```
 
 CI builds and runs the automated suite on Ubuntu and Windows (MinGW-w64); AddressSanitizer and UndefinedBehaviorSanitizer run on Linux.
+
+## Project documentation
+
+- [Demo guide](docs/DEMO_GUIDE.md)
+- [Team roles](docs/TEAM_ROLES.md)
+- [Requirements traceability](docs/TRACEABILITY.md)
+- [Release and verification status](docs/RELEASE_STATUS.md)
+- [Submission checklist](docs/SUBMISSION_CHECKLIST.md)
+- [QA reports](reports/README.md)
+
+The QA reports distinguish automated CI checks from the 66-case Test Plan. A passing build does not imply that every requirement has been manually accepted.
