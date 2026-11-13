@@ -4,7 +4,7 @@ This folder contains the four testing deliverables. Reports distinguish committe
 
 | Report | Purpose | Current status |
 |---|---|---|
-| Unit_Test_Report.md | Unit cases executed against individual units | 436 checks verified on Ubuntu and Windows in main-branch workflow #99 |
+| Unit_Test_Report.md | Unit cases executed against individual units | 984 checks passed on Ubuntu and Windows in final main-branch workflow #235; Linux ASan/UBSan passed |
 | System_Validation_Report.md | End-to-end / system-level validation | Main CI evidence and local Windows benchmark recorded; full SRS-based validation remains incomplete |
 | Code_Coverage_Report.md | Line coverage and included source files | Main CI run #235 generated 88.0% line coverage (667/758) on commit 1b4804a |
 | Branch_Coverage_Report.md | Branch execution and outcomes | Main CI run #235 generated 54.6% branch coverage (683/1,252) on commit 1b4804a |
