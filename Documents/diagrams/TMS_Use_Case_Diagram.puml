@@ -11,10 +11,10 @@ rectangle "Traffic Management System" {
   usecase "Coordinate connected intersections" as UC7
 }
 Operator --> UC1
-UC1 .> UC2 : <<extend>>
+UC2 ..> UC1 : <<extend>>
 Operator --> UC3
 Operator --> UC4
 Operator --> UC5
 Operator --> UC6
-UC3 .> UC7 : <<include when configured>>
+UC7 ..> UC3 : <<extend>>
 @enduml
