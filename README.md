@@ -54,10 +54,11 @@ CI builds and runs the automated suite on Ubuntu and Windows (MinGW-w64); Addres
 - [Team roles](docs/TEAM_ROLES.md)
 - [Requirements traceability](docs/TRACEABILITY.md)
 - [Release and verification status](docs/RELEASE_STATUS.md)
-- [Submission checklist](docs/SUBMISSION_CHECKLIST.md)
 - [QA reports](docs/QA_Reports/README.md)
 - [Submission checklist](docs/SUBMISSION_CHECKLIST.md)
 - [Document compliance audit](docs/DOCUMENT_COMPLIANCE_AUDIT.md)
+- [SAD implementation addendum](docs/SAD_IMPLEMENTATION_ADDENDUM.md)
+- [UML diagram sources](Documents/diagrams/)
 - [66-case test execution register](docs/TEST_EXECUTION_REGISTER.md)
 - [Final project report](docs/FINAL_PROJECT_REPORT.md)
 
