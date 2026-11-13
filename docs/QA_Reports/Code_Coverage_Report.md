@@ -3,8 +3,8 @@
 <badge color="success">Final main-branch coverage generated</badge>
 
 ## Measurement scope
-- Main-branch workflow: [Run #241](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382188203).
-- Tested main commit: `10873b6686019ff4643463888be0050f491de032`.
+- Main-branch workflow: [Run #243](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382805876).
+- Tested main commit: `43681916f3f18da3b29d19c4bc79ae10c46ae13e`.
 - Runner/compiler: Ubuntu GitHub Actions runner with GCC (version recorded in workflow log).
 - Instrumentation: GCC `--coverage`, `-O0 -g`.
 - Executed: consolidated automated test executable; baseline, zero-value and high-load application fixtures; invalid and corrupted fixtures (expected non-zero exits).
@@ -39,7 +39,7 @@
 | **TOTAL** | **758** | **667** | **88.0%** |
 
 ## Artifact
-[Download HTML and Cobertura XML coverage artifact](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382188203/artifacts/14016947229).
+[Download HTML and Cobertura XML coverage artifact](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382188203/artifacts/14016733343).
 
 ## Limitations
 This is final main-branch coverage for the tested commit above. Coverage is execution evidence, not requirements acceptance. It does not mean all 66 Test Plan cases passed; the acceptance register remains 66/66 NOT RUN. Review uncovered lines/branches and add tests only where they serve requirements, not just to inflate the percentage.
