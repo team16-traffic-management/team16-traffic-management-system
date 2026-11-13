@@ -1,0 +1,32 @@
+@startuml
+actor "Simulation Operator" as Operator
+participant "SimulationEngine" as Engine
+participant "VehicleGenerator" as Generator
+participant "Intersection" as Junction
+participant "LaneQueue" as Queue
+participant "StatisticsCollector" as Stats
+participant "ConsoleView" as View
+
+Operator -> Engine : run(maxTicks, silent)
+loop each simulation tick
+  Engine -> Engine : tick(silent)
+  Engine -> Engine : deliverPendingTransfers()
+  loop each intersection and lane
+    Engine -> Generator : shouldGenerate(intersectionId, laneName)
+    alt vehicle arrival selected
+      Engine -> Generator : generateVehicle(intersectionId, laneName, tick)
+      Generator --> Engine : Vehicle
+      Engine -> Queue : enqueue(vehicle)
+      alt queue has capacity
+        Queue --> Engine : true
+      else queue full
+        Queue --> Engine : false
+        Engine -> Stats : recordBlocked(intersectionId, laneName, tick)
+      end
+    end
+    Engine -> Stats : updateMaxQueueLength(...)
+  end
+  Engine -> View : renderTick(tick, intersectionId, lanes, signals, silent)
+end
+Engine -> Stats : printEndOfRunReport(ticksExecuted)
+@enduml
