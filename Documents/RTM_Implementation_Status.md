@@ -87,7 +87,7 @@ The SRS RTM and Test Plan RTM must be reconciled case-by-case. Do not mark all 6
 | TMS-F-002 | Vehicle / VehicleGenerator | TC-Gen-002-P/N | testVehicleIdsAreUniqueAcrossLanesAndIntersections | NOT RUN |
 | TMS-F-003 | LaneQueue | TC-Gen-003-P | testQueueCapacityAndEmptyDequeue covers FIFO; capacity-negative case is reassigned to TMS-F-011 | NOT RUN |
 | TMS-F-010 | Intersection / LaneQueue | TC-Queue-001-P/N | testSiblingLaneQueueIsolation | NOT RUN |
-| TMS-F-011 | LaneQueue / StatisticsCollector | TC-Gen-003-N; TC-Queue-002-P/N | testQueueCapacityAndEmptyDequeue; testSimultaneousOverflowAcrossEveryLane | NOT RUN |
+| TMS-F-011 | LaneQueue / StatisticsCollector | TC-Queue-002-P/N | testQueueCapacityAndEmptyDequeue; testSimultaneousOverflowAcrossEveryLane | NOT RUN |
 | TMS-F-012 | SimulationEngine / SignalController | TC-Queue-003-P/N | testEngineDequeuesVehiclesOnlyOnGreen | NOT RUN |
 | TMS-F-013 | StatisticsCollector | TC-Queue-004-P/N | testStatisticsCalculations (immediate-dequeue edge remains partial) | NOT RUN |
 | TMS-F-020 | SignalController | TC-Sig-001-P/N | testSignalPhaseTransitions (zero-duration config expectation remains a spec edge) | NOT RUN |
