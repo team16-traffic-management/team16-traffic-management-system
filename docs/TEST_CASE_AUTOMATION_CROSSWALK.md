@@ -1,6 +1,6 @@
 # Test Plan to Automated Test Crosswalk
 
-**Repository baseline:** `main` after PR #121 merge, commit `1b4804a331247a3ae2f6c2704dd1a31957334e7a`; this branch adds the config-mode assertion below.  
+**Repository baseline:** `main` after PR #122 merge, commit `a9c0c6055cc2a96ec290af46b7a63330028f1c59`; this branch adds the config-mode assertion below.  
 **Test source reviewed:** `tests/test_traffic_management.cpp`.  
 **Purpose:** Identify which of the 66 planned Test Plan cases have related automated assertions in the consolidated test executable or CI. This is a coverage map, not a test-execution report.
 
@@ -8,9 +8,9 @@
 
 | Classification | Cases | Meaning |
 |---|---:|---|
-| Direct automated check | 42 | A named automated test checks the core behavior described by the case. |
+| Direct automated check | 44 | A named automated test checks the core behavior described by the case. |
 | Partial / related evidence | 18 | Related behavior is checked, but one or more explicit preconditions, outputs or acceptance criteria are not asserted. |
-| No direct automated check identified | 6 | No corresponding check was found in the reviewed test source/CI workflow. |
+| No direct automated check identified | 4 | No corresponding check was found in the reviewed test source/CI workflow. |
 | **Total** | **66** | |
 
 **Important:** All 66 Test Plan cases remain `NOT RUN` in `docs/TEST_EXECUTION_REGISTER.md`. Even a direct unit-test mapping does not automatically count as a complete Test Plan case execution. Each case still needs its specified test data, steps, expected-vs-actual result, environment and evidence recorded. The 436 historical CI assertions are not 66 separately executed acceptance cases.
@@ -62,7 +62,7 @@
 | TC-Stats-003-P | `testStatisticsCalculations` | Direct | Checks throughput total from dequeued vehicles. |
 | TC-Stats-003-N | `testStatisticsCalculations` | Direct | Checks blocked count and throughput remain separate. |
 | TC-Sim-001-P | `testConfigDrivenIntersections; testConfigurationValidationBoundaries` | Partial | Checks configuration is parsed and applied to intersections/capacity; not every setting is asserted. |
-| TC-Sim-001-N | `—` | Not identified | No direct missing-file rejection test was found; the loader throws when a config file cannot be opened, so verify the top-level clear error and non-zero exit manually. |
+| TC-Sim-001-N | `testMissingConfigurationFileRejected` | Direct | Verifies a missing config path throws a descriptive `Could not open configuration file` error. |
 | TC-Sim-002-P | `testRepeatedSimulationLifecycle; testTenThousandTickStability` | Partial | Checks normal runs complete and summaries are produced; natural-exit status is not fully asserted. |
 | TC-Sim-002-N | `testManualStopProducesPartialSummary; testSigintStopsOpenEndedRun` | Direct | Checks user-requested stop and summary tick count. |
 | TC-Perf-01-P | `Separate benchmark evidence` | Partial | The repository has benchmark evidence, but the consolidated unit test does not assert the target on evaluator hardware. |
@@ -74,7 +74,7 @@
 | TC-UX-01-P | `testConsoleStatusFields` | Direct | Checks intersection, tick, signal and queue labels are present. |
 | TC-UX-01-N | `testConsoleLongLaneAndHighQueueDisplay` | Direct | Checks long lane name, high queue value and full visual bar are present. |
 | TC-Port-01-P | `GitHub Actions build-test matrix` | Direct | Builds and runs tests on Ubuntu and Windows. |
-| TC-Port-01-N | `—` | Not identified | No test that removes a compiler/Make dependency and asserts a clear setup error was found. |
+| TC-Port-01-N | `Makefile check-deps` + Ubuntu CI negative dependency check | Direct | Simulates a missing compiler and asserts the Makefile emits a clear installation/CXX diagnostic. |
 | TC-Rob-001-P | `—` | Not identified | No direct container bounds-check acceptance case was found. |
 | TC-Rob-001-N | `testInvalidConfiguration` | Partial | Checks invalid lane index rejection; this is not the same as deliberately invalid container access. |
 | TC-Rob-002-P | `testConfigurationValidationBoundaries; config fixture CI` | Direct | Checks invalid values are rejected by parser; CI also runs invalid_values.cfg and checks non-zero termination. |
@@ -95,7 +95,7 @@
 3. **TC-Multi-001-N:** Add a controlled invalid-intersection fault-isolation test if this requirement remains in scope; current tests cover sibling-lane isolation, not isolation between failing intersections.
 4. **TC-Rob-003-P/N:** Retain quantified memory/leak evidence if required. Repeated lifecycle and ASan/UBSan runs are useful, but they are not a Valgrind leak report or injected-exception cleanup test.
 5. **TC-Rob-005-N:** Add a controlled module-fault injection test demonstrating that a failure in one module does not terminate unrelated intersections/modules, if that is the intended requirement.
-6. **TC-Port-01-N:** Add a documented/manual check for missing compiler or Make dependency messaging if this remains a required case.
+6. **TC-Port-01-N:** The Makefile check-deps target and Ubuntu CI negative dependency check now verify a clear missing-compiler diagnostic.
 
 ## Recommended next execution order
 
