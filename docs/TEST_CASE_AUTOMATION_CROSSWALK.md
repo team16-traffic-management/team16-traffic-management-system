@@ -8,9 +8,9 @@
 
 | Classification | Cases | Meaning |
 |---|---:|---|
-| Direct automated check | 33 | A named automated test checks the core behavior described by the case. |
+| Direct automated check | 36 | A named automated test checks the core behavior described by the case. |
 | Partial / related evidence | 18 | Related behavior is checked, but one or more explicit preconditions, outputs or acceptance criteria are not asserted. |
-| No direct automated check identified | 15 | No corresponding check was found in the reviewed test source/CI workflow. |
+| No direct automated check identified | 12 | No corresponding check was found in the reviewed test source/CI workflow. |
 | **Total** | **66** | |
 
 **Important:** All 66 Test Plan cases remain `NOT RUN` in `docs/TEST_EXECUTION_REGISTER.md`. Even a direct unit-test mapping does not automatically count as a complete Test Plan case execution. Each case still needs its specified test data, steps, expected-vs-actual result, environment and evidence recorded. The 436 historical CI assertions are not 66 separately executed acceptance cases.
@@ -25,8 +25,8 @@
 | TC-Gen-002-N | `testVehicleIdsAreUniqueAcrossLanesAndIntersections` | Direct | Checks unique IDs for same-tick generation across lanes and intersections. |
 | TC-Gen-003-P | `testQueueCapacityAndEmptyDequeue; testEmergencyQueuePriorityAndStableOrdering` | Direct | Checks FIFO order for normal vehicles and stable FIFO within emergency/normal groups. |
 | TC-Gen-003-N | `testQueueCapacityAndEmptyDequeue` | Direct, but mis-mapped | Capacity overflow is rejected; Test Plan currently maps this case to TMS-F-003 instead of the capacity/robustness requirement. |
-| TC-Queue-001-P | `—` | Not identified | No direct check of independent queue state across sibling lanes was found. |
-| TC-Queue-001-N | `—` | Not identified | No direct sibling-lane corruption/isolation test was found. |
+| TC-Queue-001-P | `testSiblingLaneQueueIsolation` | Direct | Checks that sibling lane queues retain independent contents during enqueue/dequeue operations. |
+| TC-Queue-001-N | `testSiblingLaneQueueIsolation` | Direct | Checks that operations on North do not change or corrupt South queue state. |
 | TC-Queue-002-P | `testQueueCapacityAndEmptyDequeue` | Direct | Checks accepted enqueue at capacity and rejection after the queue is full. |
 | TC-Queue-002-N | `testIntersectionValidationAndSignalRegistration; testConfigurationValidationBoundaries` | Direct | Checks zero lane/configured queue capacity is rejected; note the configuration parser rejects zero capacity before simulation. |
 | TC-Queue-003-P | `testEngineDequeuesVehiclesOnlyOnGreen` | Direct | Checks throughput increases only when the lane is green. |
@@ -44,7 +44,7 @@
 | TC-Sig-005-P | `—` | Not identified | No direct valid config-mode-switch test was found. |
 | TC-Sig-005-N | `testConfigurationValidationBoundaries` | Partial / expected-result conflict | Invalid adaptive_mode is rejected; Test Plan currently expects safe fallback. |
 | TC-Emg-001-P | `—` | Not identified | No direct assertion of configured emergency-vehicle generation probability was found. |
-| TC-Emg-001-N | `—` | Not identified | No direct assertion that zero emergency probability produces zero emergency vehicles was found. |
+| TC-Emg-001-N | `testZeroEmergencyProbabilityProducesNormalVehicles` | Direct | With arrival probability 1 and emergency probability 0, 100 generated vehicles are asserted to be normal. |
 | TC-Emg-002-P | `testEmergencyQueuePriorityAndStableOrdering` | Direct | Checks emergency vehicles are dequeued before normal vehicles. |
 | TC-Emg-002-N | `testEmergencyQueuePriorityAndStableOrdering` | Direct | Checks FIFO ordering among emergency vehicles. |
 | TC-Emg-003-P | `testEmergencyPreemption` | Direct | Checks a valid emergency lane receives green after the current signal cycle. |
@@ -90,7 +90,7 @@
 
 1. **TC-Gen-003-N mapping:** The Test Plan case tests queue capacity, but its requirement field says TMS-F-003 (FIFO). Confirm and correct to the appropriate queue-capacity/robustness requirement before sign-off.
 2. **Configuration behavior conflict:** Test Plan cases expect safe fallback for invalid signal mode and missing config in some places, while the current parser rejects invalid values and throws if the config file cannot be opened. Reconcile SRS, Test Plan and implementation rather than silently changing expected results.
-3. **TC-Queue-001-P/N:** Add direct tests proving that operations on one lane do not alter a sibling lane's state.
+3. **TC-Emg-001-P:** Add a deterministic assertion that a positive configured emergency probability can generate emergency vehicles.
 4. **TC-Multi-001-N and TC-Multi-003-N:** Add explicit fault-isolation and zero-throughput aggregate-statistics tests if these requirements remain in scope.
 5. **TC-Rob-003-P/N:** Add quantified memory/leak evidence; repeated lifecycle and ASan/UBSan runs alone are not a documented Valgrind leak report or injected-exception cleanup test.
 6. **TC-Rob-004-N:** Add a simultaneous-overflow test across every lane.
