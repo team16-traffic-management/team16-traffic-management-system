@@ -62,6 +62,7 @@ CI builds and runs the automated suite on Ubuntu and Windows (MinGW-w64); Addres
 - [Reproducible config fixtures](tests/data/README.md)
 - [UML diagram sources](Documents/diagrams/)
 - [66-case test execution register](docs/TEST_EXECUTION_REGISTER.md)
+- [Test Plan to automated test crosswalk](docs/TEST_CASE_AUTOMATION_CROSSWALK.md)
 - [Final project report](docs/FINAL_PROJECT_REPORT.md)
 
 The QA reports distinguish automated CI checks from the 66-case Test Plan. A passing build does not imply that every requirement has been manually accepted.
