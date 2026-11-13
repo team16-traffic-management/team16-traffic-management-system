@@ -1,0 +1,40 @@
+@startuml
+participant "SimulationEngine" as Engine
+participant "Intersection" as Junction
+participant "LaneQueue" as Queue
+participant "SignalController" as Signal
+participant "StatisticsCollector" as Stats
+participant "Pending Transfer Queue" as Transfers
+participant "Destination Intersection" as Destination
+
+loop each intersection in a tick
+  Engine -> Queue : hasEmergency()
+  opt emergency vehicle waiting and request accepted
+    Engine -> Signal : preempt(laneName)
+    Signal --> Engine : accepted
+    Engine -> Stats : recordPreemption(...)
+  end
+  Engine -> Junction : update(tick)
+  Junction -> Signal : updateSignalState(1)
+  opt adaptive mode enabled
+    Engine -> Signal : updateAdaptiveTimers(queueSizes)
+  end
+  loop each lane
+    Engine -> Signal : getCurrentPhase(laneName)
+    alt lane is GREEN and queue not empty
+      Engine -> Queue : dequeue()
+      Queue --> Engine : Vehicle
+      alt outgoing connection exists
+        Engine -> Transfers : enqueue pending transfer
+        note right of Transfers
+          Delivered at the start of a later tick.
+          A full or unavailable destination leaves
+          the transfer pending for retry.
+        end note
+      else no outgoing connection
+        Engine -> Stats : recordDequeue(...)
+      end
+    end
+  end
+end
+@enduml
