@@ -7,26 +7,26 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] Component diagram is present in `Documents/diagrams/`.
 - [x] Review SRS v0.4 content: sections 1–8, 23 functional requirements, 5 non-functional requirements, acceptance criteria, 3 robustness objectives and 5 robustness requirements are present. See `docs/DOCUMENT_COMPLIANCE_AUDIT.md`.
 - [x] Add PlantUML use-case diagram source at `Documents/diagrams/TMS_Use_Case_Diagram.puml`.
-- [ ] Render and embed the use-case diagram in the SRS DOCX and verify its figure caption/placement; Section 7 currently provides textual use-case descriptions.
+- [ ] Use the supplied SRS v0.5 revision with the use-case diagram rendered and embedded; visually review figure placement before sign-off.
 - [ ] Confirm whether the SRS robustness/data-integrity objectives and requirements satisfy the assignment's security objectives/requirements requirement; Section 5.1 is explicitly scoped as robustness, not a conventional security section.
-- [ ] Complete the SRS RTM: Section 8 currently contains only five sample rows for 33 requirements.
+- [ ] Replace the SRS DOCX with the supplied v0.5 revision, which includes the complete 33-requirement RTM; statuses remain Not Run until acceptance execution.
 - [ ] Update SRS draft status and obtain approval/sign-off.
 - [x] Review Test Plan v1.0 content: Sections 1–13, required Sections 3/4/5, Section 5.1, and 66 detailed cases (two per SRS requirement) are present.
-- [ ] Confirm/add security validation to Test Plan Section 5.1; current content is robustness/data-integrity validation.
-- [ ] Reconcile the SRS PRJ-SR-002 rejection requirement with Test Plan cases that expect safe defaults/fallback.
-- [ ] Correct `TC-Gen-003-N`: it tests capacity/overflow but maps to FIFO requirement TMS-F-003 instead of TMS-F-011 / PRJ-SR-004.
+- [ ] The supplied Test Plan v1.1 clarifies the local configuration-file trust boundary and limits of security validation; instructor confirmation is still required.
+- [ ] The supplied Test Plan v1.1 changes invalid/missing configuration expectations to clear rejection, matching SRS PRJ-SR-002 and the parser.
+- [ ] Use the implementation-aligned Test Plan revision: `TC-Gen-003-N` maps to TMS-F-011 / PRJ-SR-004, not FIFO TMS-F-003.
 - [x] Add five current-parser-compatible config fixtures under `tests/data/` (baseline, zero-values, invalid-values, high-load, corrupted) with reproducibility notes.
 - [x] Extend CI to run the three valid fixtures and verify the two invalid fixtures are rejected on Ubuntu and Windows.
-- [ ] Update Test Plan Section 6.1 and Appendix B to match the current parser syntax; zero-capacity behavior must be tested through LaneQueue, not config.
-- [ ] Update Test Plan method/interfaces to match the current consolidated C++ test harness; its mock interfaces and execution assumptions differ from the final repo.
+- [ ] Replace the repository Test Plan DOCX with the supplied implementation-aligned v1.1 revision: Section 6.1 and Appendix B use current parser syntax; zero-capacity validation is separated from valid config fixtures.
+- [ ] Use the implementation-aligned Test Plan v1.1 revision: it documents the consolidated real-class C++ test harness and separates automated CI checks from the 66 acceptance cases.
 - [ ] Update Test Plan from Draft and obtain approval/sign-off.
 - [x] Review SAD v1.0 content: component responsibilities/descriptions, synchronous tick-driven modular architecture pattern, two textual workflows and partial C++ class interface outlines are present.
 - [x] Add two implementation-aligned PlantUML sequence diagram sources under `Documents/diagrams/` (`TMS_Vehicle_Admission_Sequence.puml` and `TMS_Signal_And_Dispatch_Sequence.puml`).
-- [ ] Render and embed both sequence diagrams in the SAD DOCX and verify figure captions/placement.
+- [ ] Use the supplied SAD v3.1 revision with both implementation-aligned sequence diagrams embedded; visually review figure placement.
 - [x] Draft implementation-aligned SAD addendum with requirement-to-design traceability, local-process security boundary, actual public API summary, ownership/return contracts and error-handling design (`docs/SAD_IMPLEMENTATION_ADDENDUM.md`).
 - [ ] Review and incorporate the addendum into the SAD DOCX; confirm the security section meets the instructor's interpretation.
 - [x] Document current implementation architecture and module/interface differences in `docs/SAD_IMPLEMENTATION_ADDENDUM.md`.
-- [ ] Incorporate the documented implementation changes into the SAD DOCX and obtain team approval.
+- [ ] Use the supplied SAD v3.1 revision with the implementation-aligned architecture supplement; obtain team approval.
 - [ ] Reconcile all three DOCX documents against final implementation and obtain team review. See `docs/DOCUMENT_COMPLIANCE_AUDIT.md`.
 - [ ] Resolve the PRJ-SR-002 conflict: the SRS requires invalid configuration rejection with a clear error, while some Test Plan cases expect safe defaults.
 - [ ] Correct the Test Plan mapping for `TC-Gen-003-N` (queue capacity belongs to queue-capacity/robustness requirements, not FIFO enqueue).
