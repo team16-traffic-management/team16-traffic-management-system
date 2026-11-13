@@ -124,6 +124,22 @@ void testQueueCapacityAndEmptyDequeue() {
     check(queue.dequeue().getId() == 1, "FIFO dequeue returns first vehicle");
     checkThrows<std::runtime_error>([&] { queue.dequeue(); }, "empty dequeue rejected");
 }
+void testMissingConfigurationFileRejected() {
+    const char* path = "test_missing_configuration_does_not_exist.tmp";
+    std::remove(path);
+
+    SimulationEngine engine;
+    bool clearError = false;
+    try {
+        engine.loadConfigFromFile(path);
+    } catch (const std::runtime_error& error) {
+        const std::string message = error.what();
+        clearError = message.find("Could not open configuration file: ") == 0;
+    }
+    check(clearError,
+          "missing configuration file is rejected with a descriptive error");
+}
+
 void testMalformedConfiguration() {
     const char* path = "test_invalid_config.tmp";
     { std::ofstream file(path); file << "this is not key value" << std::endl; }
@@ -759,6 +775,7 @@ int main() {
     testEmergencyQueuePriorityAndStableOrdering();
     testQueueCapacityAndEmptyDequeue();
     testMalformedConfiguration();
+    testMissingConfigurationFileRejected();
     testConfigurationValidationBoundaries();
     testEngineDequeuesVehiclesOnlyOnGreen();
     testConfigDrivenIntersections();
