@@ -8,9 +8,9 @@
 
 | Classification | Cases | Meaning |
 |---|---:|---|
-| Direct automated check | 37 | A named automated test checks the core behavior described by the case. |
+| Direct automated check | 40 | A named automated test checks the core behavior described by the case. |
 | Partial / related evidence | 18 | Related behavior is checked, but one or more explicit preconditions, outputs or acceptance criteria are not asserted. |
-| No direct automated check identified | 11 | No corresponding check was found in the reviewed test source/CI workflow. |
+| No direct automated check identified | 8 | No corresponding check was found in the reviewed test source/CI workflow. |
 | **Total** | **66** | |
 
 **Important:** All 66 Test Plan cases remain `NOT RUN` in `docs/TEST_EXECUTION_REGISTER.md`. Even a direct unit-test mapping does not automatically count as a complete Test Plan case execution. Each case still needs its specified test data, steps, expected-vs-actual result, environment and evidence recorded. The 436 historical CI assertions are not 66 separately executed acceptance cases.
@@ -54,11 +54,11 @@
 | TC-Multi-002-P | `testConnectedVehicleTransferTakesOneTick` | Direct | Checks a connected vehicle is delivered at the start of the following tick. |
 | TC-Multi-002-N | `testPendingTransferWaitsForDestinationCapacity` | Direct | Checks pending transfer remains queued until destination capacity becomes available. |
 | TC-Multi-003-P | `testStatisticsCalculations` | Partial | Checks events across two intersection IDs and aggregate totals, but not the full per-intersection report contract. |
-| TC-Multi-003-N | `—` | Not identified | No direct zero-throughput-intersection aggregate test was found. |
+| TC-Multi-003-N | `testZeroThroughputIntersectionAppearsInAggregateReport` | Direct | Checks zero aggregate throughput and confirms a zero-throughput intersection/lane remains in the report breakdown. |
 | TC-Stats-001-P | `testStatisticsCalculations` | Direct | Checks average wait-time arithmetic. |
 | TC-Stats-001-N | `testStatisticsCalculations` | Partial | Checks empty statistics average is zero; report distinction between zero and no data is not fully asserted. |
 | TC-Stats-002-P | `testStatisticsCalculations` | Direct | Checks maximum queue length retains the highest observed value. |
-| TC-Stats-002-N | `—` | Not identified | No explicit max-queue-at-most-one boundary test was found. |
+| TC-Stats-002-N | `testMaxQueueLengthOneBoundary` | Direct | Checks the maximum queue remains one after a later zero-length observation. |
 | TC-Stats-003-P | `testStatisticsCalculations` | Direct | Checks throughput total from dequeued vehicles. |
 | TC-Stats-003-N | `testStatisticsCalculations` | Direct | Checks blocked count and throughput remain separate. |
 | TC-Sim-001-P | `testConfigDrivenIntersections; testConfigurationValidationBoundaries` | Partial | Checks configuration is parsed and applied to intersections/capacity; not every setting is asserted. |
@@ -82,7 +82,7 @@
 | TC-Rob-003-P | `testTenThousandTickStability; Linux ASan/UBSan CI` | Partial | No dedicated zero-leak measurement or Valgrind evidence is present. |
 | TC-Rob-003-N | `—` | Not identified | No injected mid-run exception/resource-release test was found. |
 | TC-Rob-004-P | `testQueueCapacityAndEmptyDequeue; testPendingTransferWaitsForDestinationCapacity` | Direct | Checks queue overflow rejection and downstream capacity backpressure. |
-| TC-Rob-004-N | `—` | Not identified | No simultaneous-overflow-on-every-lane stress assertion was found. |
+| TC-Rob-004-N | `testSimultaneousOverflowAcrossEveryLane` | Direct | Fills four independent lanes to capacity, attempts overflow on all lanes and checks every queue remains within capacity. |
 | TC-Rob-005-P | `testMalformedConfiguration; config fixture CI` | Direct | Checks malformed config is rejected; CI verifies corrupted fixture exits unsuccessfully. |
 | TC-Rob-005-N | `—` | Not identified | No direct test injecting a fault into one module and asserting the rest of the simulation continues was found. |
 
