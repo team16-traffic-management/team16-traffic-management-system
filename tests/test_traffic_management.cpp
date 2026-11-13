@@ -618,6 +618,65 @@ void testSiblingLaneQueueIsolation() {
           "North operations do not corrupt South queue");
 }
 
+void testMaxQueueLengthOneBoundary() {
+    StatisticsCollector stats;
+    stats.updateMaxQueueLength("BoundaryJunction", "North", 1);
+    stats.updateMaxQueueLength("BoundaryJunction", "North", 0);
+
+    std::ostringstream report;
+    std::streambuf* previous = std::cout.rdbuf(report.rdbuf());
+    stats.printEndOfRunReport(1);
+    std::cout.rdbuf(previous);
+
+    const std::string output = report.str();
+    const std::size_t laneRow = output.find("BoundaryJunction");
+    check(laneRow != std::string::npos,
+          "single-entry queue appears in the statistics breakdown");
+    check(output.find("1", laneRow) != std::string::npos,
+          "maximum queue length remains one after a later zero observation");
+}
+
+void testZeroThroughputIntersectionAppearsInAggregateReport() {
+    StatisticsCollector stats;
+    stats.updateMaxQueueLength("EmptyJunction", "North", 0);
+
+    std::ostringstream report;
+    std::streambuf* previous = std::cout.rdbuf(report.rdbuf());
+    stats.printEndOfRunReport(0);
+    std::cout.rdbuf(previous);
+
+    const std::string output = report.str();
+    check(stats.totalThroughput() == 0,
+          "an intersection with no dequeues contributes zero aggregate throughput");
+    check(output.find("EmptyJunction") != std::string::npos,
+          "zero-throughput intersection is retained in the lane breakdown");
+    check(output.find("EmptyJunction") != std::string::npos &&
+          output.find("North") != std::string::npos,
+          "zero-throughput lane is identified in the report");
+}
+
+void testSimultaneousOverflowAcrossEveryLane() {
+    Intersection intersection("All-Lanes-Full");
+    const std::vector<std::string> laneNames = {"North", "South", "East", "West"};
+    for (const std::string& laneName : laneNames) {
+        intersection.addLane(laneName, 1);
+    }
+
+    for (std::size_t i = 0; i < laneNames.size(); ++i) {
+        LaneQueue& lane = intersection.getLanes()[i];
+        check(lane.enqueue(Vehicle(2000 + i, 0, VehicleType::NORMAL)),
+              "each lane accepts its first vehicle up to capacity");
+    }
+
+    for (std::size_t i = 0; i < laneNames.size(); ++i) {
+        LaneQueue& lane = intersection.getLanes()[i];
+        check(!lane.enqueue(Vehicle(3000 + i, 1, VehicleType::NORMAL)),
+              "overflow is rejected independently on every full lane");
+        check(lane.size() == 1 && lane.isFull(),
+              "simultaneous overflow leaves every lane at its capacity");
+    }
+}
+
 void testZeroEmergencyProbabilityProducesNormalVehicles() {
     VehicleGenerator generator(1.0, 0.0, 123);
     for (int tick = 0; tick < 100; ++tick) {
@@ -666,6 +725,9 @@ int main() {
     testAdaptiveGreenExtensionBounds();
     testEmergencyPreemption();
     testStatisticsCalculations();
+    testMaxQueueLengthOneBoundary();
+    testZeroThroughputIntersectionAppearsInAggregateReport();
+    testSimultaneousOverflowAcrossEveryLane();
     testIntersectionValidationAndSignalRegistration();
     testSiblingLaneQueueIsolation();
     testZeroEmergencyProbabilityProducesNormalVehicles();
