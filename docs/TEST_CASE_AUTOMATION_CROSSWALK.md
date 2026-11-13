@@ -1,6 +1,6 @@
 # Test Plan to Automated Test Crosswalk
 
-**Repository baseline:** `main` after PR #118 merge, commit `dab99071b11f5a70000b18088871003b2380a7e7`.  
+**Repository baseline:** `main` after PR #119 merge, commit `897e0a174085ef4d62b68267d0c378074ca2ccb9`; this branch adds the config-mode assertion below.  
 **Test source reviewed:** `tests/test_traffic_management.cpp`.  
 **Purpose:** Identify which of the 66 planned Test Plan cases have related automated assertions in the consolidated test executable or CI. This is a coverage map, not a test-execution report.
 
@@ -8,9 +8,9 @@
 
 | Classification | Cases | Meaning |
 |---|---:|---|
-| Direct automated check | 41 | A named automated test checks the core behavior described by the case. |
+| Direct automated check | 42 | A named automated test checks the core behavior described by the case. |
 | Partial / related evidence | 18 | Related behavior is checked, but one or more explicit preconditions, outputs or acceptance criteria are not asserted. |
-| No direct automated check identified | 7 | No corresponding check was found in the reviewed test source/CI workflow. |
+| No direct automated check identified | 6 | No corresponding check was found in the reviewed test source/CI workflow. |
 | **Total** | **66** | |
 
 **Important:** All 66 Test Plan cases remain `NOT RUN` in `docs/TEST_EXECUTION_REGISTER.md`. Even a direct unit-test mapping does not automatically count as a complete Test Plan case execution. Each case still needs its specified test data, steps, expected-vs-actual result, environment and evidence recorded. The 436 historical CI assertions are not 66 separately executed acceptance cases.
@@ -41,7 +41,7 @@
 | TC-Sig-003-N | `testAdaptiveModeCanBeChangedDuringSignalOperation` | Direct | Toggles adaptive mode during signal operation and checks the active green phase follows the enabled/disabled setting. |
 | TC-Sig-004-P | `testSignalPhaseTransitions` | Direct | Checks the Yellow phase occurs between Green and Red. |
 | TC-Sig-004-N | `testSignalPhaseTransitions; testConsoleStatusFields` | Partial | A one-tick Yellow duration is exercised, but the exact one-tick Yellow console rendering is not asserted. |
-| TC-Sig-005-P | `—` | Not identified | No direct valid config-mode-switch test was found. |
+| TC-Sig-005-P | `testAdaptiveModeLoadedFromConfiguration` | Direct | Loads `adaptive_mode=true` from a config file and asserts the configured intersection's controller is in adaptive mode. |
 | TC-Sig-005-N | `testConfigurationValidationBoundaries` | Partial / expected-result conflict | Invalid adaptive_mode is rejected; Test Plan currently expects safe fallback. |
 | TC-Emg-001-P | `testEmergencyProbabilityOneAlwaysGeneratesEmergencyVehicles` | Direct | With emergency probability 1.0, 100 generated vehicles are asserted to be emergency vehicles. |
 | TC-Emg-001-N | `testZeroEmergencyProbabilityProducesNormalVehicles` | Direct | With arrival probability 1 and emergency probability 0, 100 generated vehicles are asserted to be normal. |
