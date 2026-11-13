@@ -1,6 +1,6 @@
 # Unit Test Report
 
-Status: Baseline main CI run #99 passed; subsequent manual-stop PR #94 also passed cross-platform CI before merge.
+Status: Baseline and subsequent QA regression CI runs passed; PR #121 adds a final-source coverage job. Full 66-case acceptance execution remains separate.
 
 ## Test environment
 | Field | Value |
@@ -90,3 +90,16 @@ Post-merge main CI [run #163](https://github.com/team16-traffic-management/team1
 
 ## Conclusion
 Baseline main CI reported 436 checks passed on Ubuntu and Windows. PR #94's manual-stop implementation also passed its Ubuntu and Windows CI jobs, with Ubuntu ASan/UBSan passing, and was merged to main. These are verified automated results for the tested commits, not full system acceptance.
+
+
+## Latest QA regression additions — PRs #115–#120
+
+| PR | Added regression coverage | CI run | Result |
+|---|---|---|---|
+| #115 | Sibling-lane queue isolation; zero emergency probability | [#43377370669](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43377370669) | Ubuntu/Windows passed |
+| #116 | Emergency probability 1.0 always generates emergency vehicles | [#43377755772](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43377755772) | Ubuntu/Windows and Linux ASan/UBSan passed |
+| #117 | Queue-length-one boundary; zero-throughput intersection report; simultaneous overflow across lanes | [#43378089050](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43378089050) | Ubuntu/Windows and Linux ASan/UBSan passed |
+| #118 | Runtime adaptive signal mode switch | [#43378320849](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43378320849) | Ubuntu/Windows and Linux ASan/UBSan passed |
+| #120 | Adaptive mode loaded from configuration | [#43379351361](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43379351361) | Ubuntu/Windows and Linux ASan/UBSan passed |
+
+PR #121 adds a production-source gcovr coverage job. On its PR head, CI run #230 executed the test suite and reported 88.0% line coverage (667/758), 86.2% function coverage (81/94) and 54.6% branch coverage (683/1,252). See the separate coverage reports and artifact link. These metrics do not convert the 66 Test Plan cases from NOT RUN to PASS.
