@@ -97,10 +97,10 @@ The build uses GCC with the C++17 language standard and warning flags. The proje
 ## 5. Testing and results
 
 The repository contains four QA reports:
-- `reports/Unit_Test_Report.md`
-- `reports/System_Validation_Report.md`
-- `reports/Code_Coverage_Report.md`
-- `reports/Branch_Coverage_Report.md`
+- `docs/QA_Reports/Unit_Test_Report.md`
+- `docs/QA_Reports/System_Validation_Report.md`
+- `docs/QA_Reports/Code_Coverage_Report.md`
+- `docs/QA_Reports/Branch_Coverage_Report.md`
 
 ### Automated tests and CI evidence
 - Baseline main workflow [#99](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42450330604) reported 436 automated checks passed on Ubuntu and Windows. Default-application and multi-intersection startup smoke tests passed; Ubuntu ASan/UBSan passed.
