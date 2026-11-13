@@ -524,6 +524,32 @@ void testAdaptiveGreenExtensionBounds() {
         "negative adaptive maximum extension rejected");
 }
 
+void testAdaptiveModeCanBeChangedDuringSignalOperation() {
+    SignalController signals(2, 1, 1);
+    signals.addLane("North");
+    signals.addLane("South");
+
+    check(!signals.isAdaptiveMode(),
+          "adaptive mode starts disabled");
+    signals.updateAdaptiveTimers({{"North", 8}});
+    signals.updateSignalState(2);
+    check(signals.getCurrentPhase("North") == SignalPhase::YELLOW,
+          "disabled adaptive mode does not extend the active green phase");
+
+    signals.updateSignalState(1); // North YELLOW -> RED
+    signals.updateSignalState(1); // South GREEN
+    signals.setAdaptiveMode(true, 3);
+    check(signals.isAdaptiveMode(),
+          "adaptive mode can be enabled while the controller is running");
+    signals.updateAdaptiveTimers({{"South", 8}});
+    signals.updateSignalState(2);
+    check(signals.getCurrentPhase("South") == SignalPhase::GREEN,
+          "runtime adaptive mode extends the active lane green phase");
+    signals.updateSignalState(2);
+    check(signals.getCurrentPhase("South") == SignalPhase::YELLOW,
+          "runtime adaptive extension ends at its configured duration");
+}
+
 void testEmergencyPreemption() {
     SignalController signals(2, 1, 1);
     signals.addLane("North");
@@ -723,6 +749,7 @@ int main() {
     testSignalPhaseTransitions();
     testNoSimultaneousGreenSignals();
     testAdaptiveGreenExtensionBounds();
+    testAdaptiveModeCanBeChangedDuringSignalOperation();
     testEmergencyPreemption();
     testStatisticsCalculations();
     testMaxQueueLengthOneBoundary();
