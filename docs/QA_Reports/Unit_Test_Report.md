@@ -110,10 +110,13 @@ PR #121 merged the production-source gcovr coverage job; PR #123 added missing-c
 - Workflow: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382188203
 - Tested commit: `10873b6686019ff4643463888be0050f491de032`
 - Ubuntu: build, all 985 automated checks, default/config-fixture smoke tests and Linux ASan/UBSan passed.
-- Windows: build, all 984 automated checks and default/config-fixture smoke tests passed. Sanitizer and Linux executable upload steps are Linux-only and correctly skipped on Windows.
+- Windows: build, all 985 automated checks and default/config-fixture smoke tests passed. Sanitizer and Linux executable upload steps are Linux-only and correctly skipped on Windows.
 - The workflow's coverage job generated 88.0% line coverage, 86.2% function coverage and 54.8% branch coverage. See the Code Coverage and Branch Coverage reports for scope and artifact.
 
 PRs #115–#123 are merged and their regression additions are described above. Automated checks remain distinct from the 66 acceptance cases, all of which remain NOT RUN in the execution register.
+
+
+PR #123 added the missing-config CLI rejection smoke test and a Makefile check-deps diagnostic test. Main run #241 passed the new Ubuntu checks; Windows build/tests/smoke tests also passed (the missing-compiler negative check is intentionally Linux-only).
 
 
 PR #123 added the missing-config CLI rejection smoke test and a Makefile check-deps diagnostic test. Main run #241 passed the new Ubuntu checks; Windows build/tests/smoke tests also passed (the missing-compiler negative check is intentionally Linux-only).
