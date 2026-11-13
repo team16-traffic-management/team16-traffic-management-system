@@ -1,6 +1,6 @@
 # SRS / SAD / Test Plan implementation status
 
-This matrix summarizes implementation and verification evidence currently available in the repository. Implementation presence, automated test evidence, manual Test Plan execution and final acceptance are separate statuses. The 985 automated checks in main CI run #241 are not equivalent to the 66 planned Test Plan cases.
+This matrix summarizes implementation and verification evidence currently available in the repository. Implementation presence, automated test evidence, manual Test Plan execution and final acceptance are separate statuses. The 985 automated checks in main CI run #243 are not equivalent to the 66 planned Test Plan cases.
 
 ## Requirement traceability
 
@@ -29,7 +29,7 @@ This matrix summarizes implementation and verification evidence currently availa
 
 ### CI evidence
 
-- Latest main CI after QA regression merges: run #241, commit `10873b6686019ff4643463888be0050f491de032`: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382188203 — Ubuntu and Windows build/tests/smoke tests passed; Ubuntu passed 985 checks, ASan/UBSan and coverage job passed. Coverage: 88.0% line and 54.8% branch. Windows sanitizer is skipped by the workflow.
+- Latest main CI after QA regression merges: run #241, commit `43681916f3f18da3b29d19c4bc79ae10c46ae13e`: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382805876 — Ubuntu and Windows build/tests/smoke tests passed; Ubuntu passed 985 checks, ASan/UBSan and coverage job passed. Coverage: 88.0% line and 54.8% branch. Windows sanitizer is skipped by the workflow.
 - PR #98 adaptive timing boundary tests: run #141 passed Ubuntu and Windows: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42791702831. Merged as `32f53971bc6ab77f035d00eb1fe7ba2ffb34c1fd`.
 - PR #99 transfer backpressure test: run #142 passed Ubuntu and Windows: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42792945910. Merged as `0ab0ff995249e7cd0eb26d9debfa618938540d69`.
 - PR #101 emergency queue ordering test: run #143 passed Ubuntu and Windows: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42795154445. Merged as `093a7c5ec684156d44affa2a3c84da6503d76e30`.
