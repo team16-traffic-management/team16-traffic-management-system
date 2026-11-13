@@ -104,13 +104,13 @@ The SRS RTM and Test Plan RTM must be reconciled case-by-case. Do not mark all 6
 | TMS-F-050 | StatisticsCollector | TC-Stats-001-P/N | testStatisticsCalculations | NOT RUN |
 | TMS-F-051 | StatisticsCollector | TC-Stats-002-P/N | testStatisticsCalculations; testMaxQueueLengthOneBoundary | NOT RUN |
 | TMS-F-052 | StatisticsCollector | TC-Stats-003-P/N | testStatisticsCalculations | NOT RUN |
-| TMS-F-060 | SimulationEngine::loadConfigFromFile | TC-Sim-001-P/N | testConfigDrivenIntersections; testConfigurationValidationBoundaries; config-fixture CI smoke tests | NOT RUN |
+| TMS-F-060 | SimulationEngine::loadConfigFromFile | TC-Sim-001-P/N | testConfigDrivenIntersections; testConfigurationValidationBoundaries; testMissingConfigurationFileRejected; config-fixture CI smoke tests | NOT RUN |
 | TMS-F-061 | main / SimulationEngine | TC-Sim-002-P/N | testManualStopProducesPartialSummary; testSigintStopsOpenEndedRun | NOT RUN |
 | TMS-NF-001 | SimulationEngine / ConsoleView | TC-Perf-01-P/N | Local benchmark and testTenThousandTickStability; connected topology/evaluator hardware not covered | NOT RUN |
 | TMS-NF-002 | SimulationEngine / RAII containers | TC-Rel-01-P/N | testTenThousandTickStability; testRepeatedSimulationLifecycle; Linux ASan/UBSan CI (no quantified leak report) | NOT RUN |
 | TMS-NF-003 | SimulationEngine and domain modules | TC-Maint-01-P/N | testConfigDrivenIntersections and invalid topology checks | NOT RUN |
 | TMS-NF-004 | ConsoleView | TC-UX-01-P/N | testConsoleStatusFields; testConsoleLongLaneAndHighQueueDisplay (manual visual inspection outstanding) | NOT RUN |
-| TMS-NF-005 | Makefile / GitHub Actions | TC-Port-01-P/N | Ubuntu/Windows CI build and smoke tests; missing-tool diagnostic case not tested | NOT RUN |
+| TMS-NF-005 | Makefile / GitHub Actions | TC-Port-01-P/N | Ubuntu/Windows CI build and smoke tests; Makefile check-deps and CI negative compiler diagnostic test | NOT RUN |
 | PRJ-SR-001 | LaneQueue / Intersection / SimulationEngine | TC-Rob-001-P/N | testInvalidConfiguration; testIntersectionValidationAndSignalRegistration; direct container-bounds acceptance case absent | NOT RUN |
 | PRJ-SR-002 | SimulationEngine::loadConfigFromFile | TC-Rob-002-P/N | testConfigurationValidationBoundaries; testMalformedConfiguration; invalid/corrupted fixture CI | NOT RUN |
 | PRJ-SR-003 | RAII / standard containers | TC-Rob-003-P/N | Linux ASan/UBSan, 10,000-tick and repeated lifecycle checks; leak/exception-injection evidence absent | NOT RUN |
