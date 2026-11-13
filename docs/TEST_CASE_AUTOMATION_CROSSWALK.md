@@ -24,7 +24,7 @@
 | TC-Gen-002-P | `testVehicleIdsAreUniqueAcrossLanesAndIntersections; testProbabilityBoundaries` | Direct | Checks generated vehicle IDs, lane identity and arrival ticks. |
 | TC-Gen-002-N | `testVehicleIdsAreUniqueAcrossLanesAndIntersections` | Direct | Checks unique IDs for same-tick generation across lanes and intersections. |
 | TC-Gen-003-P | `testQueueCapacityAndEmptyDequeue; testEmergencyQueuePriorityAndStableOrdering` | Direct | Checks FIFO order for normal vehicles and stable FIFO within emergency/normal groups. |
-| TC-Gen-003-N | `testQueueCapacityAndEmptyDequeue` | Direct | Capacity overflow is rejected; the implementation-aligned Test Plan maps this case to TMS-F-011 / PRJ-SR-004. |
+| TC-Gen-003-N | `testEmergencyQueuePriorityAndStableOrdering` | Direct | Confirms emergency vehicles receive priority while normal vehicles retain their original FIFO order. |
 | TC-Queue-001-P | `testSiblingLaneQueueIsolation` | Direct | Checks that sibling lane queues retain independent contents during enqueue/dequeue operations. |
 | TC-Queue-001-N | `testSiblingLaneQueueIsolation` | Direct | Checks that operations on North do not change or corrupt South queue state. |
 | TC-Queue-002-P | `testQueueCapacityAndEmptyDequeue` | Direct | Checks accepted enqueue at capacity and rejection after the queue is full. |
