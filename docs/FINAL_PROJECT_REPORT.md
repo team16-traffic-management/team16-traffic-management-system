@@ -194,7 +194,7 @@ The available evidence supports substantial implementation and automated verific
 
 PRs #115–#120 extended the automated suite with sibling-lane isolation, emergency-probability boundaries, queue/statistics boundaries, runtime adaptive-mode changes and adaptive-mode configuration loading. The automation crosswalk now identifies 42 direct automated checks, 18 partial mappings and 6 cases without direct automated checks.
 
-PR #121 adds a reproducible Ubuntu gcovr job and HTML/XML artifacts. On PR head `7e8b6c58666abfea2fdcc4161217346deed76068`, workflow run #230 reported 88.0% line coverage (667/758), 86.2% function coverage (81/94) and 54.6% branch coverage (683/1,252). This is PR-branch evidence; repeat after merge to record final-main coverage. The 66 acceptance cases remain NOT RUN.
+PR #121 merged a reproducible Ubuntu gcovr job and HTML/XML artifacts. After PR #121 merged, main workflow run #235 on commit `1b4804a331247a3ae2f6c2704dd1a31957334e7a` reported 88.0% line coverage (667/758), 86.2% function coverage (81/94) and 54.6% branch coverage (683/1,252). Ubuntu and Windows each passed all 984 automated checks; Linux ASan/UBSan passed. Artifact: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43381117586/artifacts/14016975299. The 66 acceptance cases remain NOT RUN.
 
 Implementation-aligned document revisions have been prepared separately:
 - SRS v0.5: full 33-requirement RTM with Not Run statuses and an embedded operator use-case diagram.
