@@ -15,8 +15,8 @@ Record automated CI evidence, local performance evidence and outstanding system-
 | Manual-stop PR workflow | [Run #132](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42785408865) |
 | Manual-stop PR head | `9b8730c4cb0fdb5f8e0a172e40b16912fff49c53` |
 | Manual-stop merge commit | `339dfed320036ed1c42a375f70bc1189fb5b4244` |
-| Latest application-changing main commit | `4ccfc24ee7ef477454041aa5f7c3954e4ce31020` |
-| Latest application-changing main CI | [Run #163](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42797884604) |
+| Latest main commit | `1b4804a331247a3ae2f6c2704dd1a31957334e7a` |
+| Latest main CI | [Run #235](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43381117586) |
 | PR #94 CI result | Ubuntu and Windows build, automated tests, default-app and multi-intersection smoke tests passed; Ubuntu ASan/UBSan passed |
 | Benchmark | Local Windows; `-std=c++17 -O2 -DNDEBUG`; exact OS build/compiler/hardware metadata not recorded |
 
