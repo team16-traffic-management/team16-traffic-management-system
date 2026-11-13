@@ -58,3 +58,20 @@ CI builds and runs the automated suite on Ubuntu and Windows (MinGW-w64); Addres
 - [QA reports](reports/README.md)
 
 The QA reports distinguish automated CI checks from the 66-case Test Plan. A passing build does not imply that every requirement has been manually accepted.
+
+
+## Web dashboard (local)
+
+This browser dashboard calls the **existing C++17 simulation engine**; it does not replace it with a second traffic model.
+
+Requirements: Python 3, GNU Make and a C++17 compiler.
+
+\`\`\`bash
+python3 web/server.py
+\`\`\`
+
+Open http://127.0.0.1:8000. The server builds the C++ executable if needed. Configure ticks, arrival/emergency probabilities, queue capacity, adaptive mode, intersections, lanes and connections. The dashboard displays real engine throughput, wait time, blocked arrivals, preemptions, transfers, per-lane metrics and the raw run report.
+
+The server binds to 127.0.0.1 only. It is a local development dashboard, not an authenticated public service. Web runs are finite (1–10,000 ticks); use the console executable for the open-ended Ctrl+C stop workflow.
+
+Dashboard coverage is not proof of requirement acceptance. See \`docs/TRACEABILITY.md\` and \`Documents/RTM_Implementation_Status.md\` for manual Test Plan and verification gaps.
