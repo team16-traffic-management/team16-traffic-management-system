@@ -1,46 +1,66 @@
 # Traffic Management System — Demo Guide
 
-Purpose: provide a repeatable walkthrough. Confirm commands against a clean checkout before recording.
+Use this guide to build, run and demonstrate the current C++17 application from the repository root.
 
-## 1. Before the demo
-- Use the latest reviewed project commit.
-- Confirm a C++14-compatible GCC compiler and GNU Make are installed.
-- Open a terminal at the repository root.
-- Run build and tests before presenting.
-- Keep the terminal visible so actual output can be seen.
+## 1. Prerequisites
+- A C++17-compatible GCC compiler.
+- GNU Make.
+- Git, to clone the repository.
 
-## 2. Build and run
+On Windows, use the MinGW-w64 UCRT64 toolchain used by the GitHub Actions workflow.
+
+## 2. Clean build
 ```bash
 make clean
 make all
+```
+
+The executable is created at `build/traffic-management`.
+
+## 3. Run the application
+Run the default simulation:
+
+```bash
 ./build/traffic-management
 ```
 
-If GNU Make is unavailable, use the repository's Windows build script if compatible with the current source, or compile using the documented compiler command. Do not claim a platform build passed unless it was executed.
+Run the supplied multi-intersection example:
 
-## 3. Test demonstration
+```bash
+./build/traffic-management examples/multi_intersection.cfg
+```
+
+The example configuration defines two intersections and a lane-matched connection. See `README.md` for the supported configuration keys and limits.
+
+## 4. Run automated checks
+Build and execute the test suite:
+
 ```bash
 make test
+```
+
+Run the Linux AddressSanitizer and UndefinedBehaviorSanitizer target where the compiler/runtime supports them:
+
+```bash
 make sanitize
 ```
 
-Explain which modules the current automated tests cover. The current unit-test suite is focused on vehicle generation/configuration; do not present it as exhaustive testing of every traffic-management requirement.
+The consolidated test executable in `tests/test_traffic_management.cpp` covers vehicle generation, queue behavior, configuration validation, signal transitions, adaptive timing, emergency queue ordering/preemption requests, statistics, console output, multi-intersection transfers, graceful stop and repeated simulation lifecycles. These checks do not represent execution of every case in the 66-case Test Plan.
 
-## 4. Suggested presentation sequence
-1. State the problem and objectives from the approved SRS.
-2. Explain the high-level architecture using the component diagram.
-3. Walk through the simulation entry point and vehicle-generation module.
-4. Run the application and explain the visible simulation output.
-5. Run automated tests and explain their scope.
-6. Show GitHub Actions and a real successful run, if available.
-7. Close with known limitations and future work.
+## 5. CI demonstration
+Open the repository's GitHub Actions tab and select a completed run. Show the tested commit and the Ubuntu and Windows job results. Linux ASan/UBSan runs as a separate Linux-only workflow step; do not imply that the Windows job runs sanitizers.
 
-## 5. Evidence to capture
-- Application running with visible output.
-- Test command and actual test result.
-- CI run showing commit and completed jobs.
-- Coverage report with included source files clearly named.
-- Each team member's contribution / speaking section, as agreed by the team.
+## 6. Suggested presentation sequence
+1. Explain the problem and objectives using the approved SRS.
+2. Present the component diagram and module responsibilities.
+3. Show the configuration-driven intersection setup.
+4. Run the default simulation and the multi-intersection example.
+5. Demonstrate the automated test command and explain its actual scope.
+6. Show a successful GitHub Actions run.
+7. State known limitations accurately and distinguish them from verified behavior.
 
-## 6. Demo integrity
-Do not fabricate test results, screenshots, CI runs, coverage percentages or teammate approvals. If a step fails, record the failure and explain it accurately.
+## 7. Demo integrity
+- Run the commands on the machine used for the demonstration before presenting.
+- Capture actual application output and test results.
+- Do not invent test counts, coverage percentages, CI outcomes or teammate approvals.
+- Do not describe unexecuted Test Plan cases as PASS.
