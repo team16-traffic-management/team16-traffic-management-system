@@ -1,6 +1,6 @@
 # Test Plan to Automated Test Crosswalk
 
-**Repository baseline:** `main` after PR #119 merge, commit `897e0a174085ef4d62b68267d0c378074ca2ccb9`; this branch adds the config-mode assertion below.  
+**Repository baseline:** `main` after PR #120 merge, commit `1fea1a18f7cc6dc33d717072a9f8c3f03d6023a1`; this branch adds the config-mode assertion below.  
 **Test source reviewed:** `tests/test_traffic_management.cpp`.  
 **Purpose:** Identify which of the 66 planned Test Plan cases have related automated assertions in the consolidated test executable or CI. This is a coverage map, not a test-execution report.
 
@@ -24,7 +24,7 @@
 | TC-Gen-002-P | `testVehicleIdsAreUniqueAcrossLanesAndIntersections; testProbabilityBoundaries` | Direct | Checks generated vehicle IDs, lane identity and arrival ticks. |
 | TC-Gen-002-N | `testVehicleIdsAreUniqueAcrossLanesAndIntersections` | Direct | Checks unique IDs for same-tick generation across lanes and intersections. |
 | TC-Gen-003-P | `testQueueCapacityAndEmptyDequeue; testEmergencyQueuePriorityAndStableOrdering` | Direct | Checks FIFO order for normal vehicles and stable FIFO within emergency/normal groups. |
-| TC-Gen-003-N | `testQueueCapacityAndEmptyDequeue` | Direct, but mis-mapped | Capacity overflow is rejected; Test Plan currently maps this case to TMS-F-003 instead of the capacity/robustness requirement. |
+| TC-Gen-003-N | `testQueueCapacityAndEmptyDequeue` | Direct | Capacity overflow is rejected; the implementation-aligned Test Plan maps this case to TMS-F-011 / PRJ-SR-004. |
 | TC-Queue-001-P | `testSiblingLaneQueueIsolation` | Direct | Checks that sibling lane queues retain independent contents during enqueue/dequeue operations. |
 | TC-Queue-001-N | `testSiblingLaneQueueIsolation` | Direct | Checks that operations on North do not change or corrupt South queue state. |
 | TC-Queue-002-P | `testQueueCapacityAndEmptyDequeue` | Direct | Checks accepted enqueue at capacity and rejection after the queue is full. |
@@ -86,10 +86,12 @@
 | TC-Rob-005-P | `testMalformedConfiguration; config fixture CI` | Direct | Checks malformed config is rejected; CI verifies corrupted fixture exits unsuccessfully. |
 | TC-Rob-005-N | `—` | Not identified | No direct test injecting a fault into one module and asserting the rest of the simulation continues was found. |
 
+- PR #120 runtime adaptive-mode config loading: https://github.com/team16-traffic-management/team16-traffic-management-system/pull/120 (CI run #225 passed Ubuntu and Windows; Ubuntu ASan/UBSan passed).
+
 ## Important specification and test gaps
 
-1. **TC-Gen-003-N mapping:** The Test Plan case tests queue capacity, but its requirement field says TMS-F-003 (FIFO). Confirm and correct to the appropriate queue-capacity/robustness requirement before sign-off.
-2. **Configuration behavior conflict:** Test Plan cases expect safe fallback for invalid signal mode and missing config in some places, while the current parser rejects invalid values and throws if the config file cannot be opened. Reconcile SRS, Test Plan and implementation rather than silently changing expected results.
+1. **TC-Gen-003-N mapping:** The implementation-aligned Test Plan revision maps this capacity-overflow case to TMS-F-011 / PRJ-SR-004; use that revision for final submission.
+2. **Configuration behavior:** The implementation-aligned Test Plan revision changes contradictory fallback expectations to match implementation: invalid values and missing files are rejected with a descriptive error and non-zero exit.
 3. **TC-Multi-001-N:** Add a controlled invalid-intersection fault-isolation test if this requirement remains in scope; current tests cover sibling-lane isolation, not isolation between failing intersections.
 4. **TC-Rob-003-P/N:** Retain quantified memory/leak evidence if required. Repeated lifecycle and ASan/UBSan runs are useful, but they are not a Valgrind leak report or injected-exception cleanup test.
 5. **TC-Rob-005-N:** Add a controlled module-fault injection test demonstrating that a failure in one module does not terminate unrelated intersections/modules, if that is the intended requirement.
