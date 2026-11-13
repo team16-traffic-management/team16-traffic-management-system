@@ -66,14 +66,17 @@ The documents are present and contain substantial requirements, design and test-
 
 ## 4. Repository evidence cross-check
 
-Current `main` tree confirms:
-- Three DOCX documents are present in `Documents/`.
-- Only one separate diagram file is present: `Documents/diagrams/TMS_Component_Diagram.png`.
-- Only one test source file is present: `tests/test_traffic_management.cpp`.
-- No `tests/data/` config fixture files are present.
-- The four QA reports and index are present in `docs/QA_Reports/`.
+The current `main` tree contains the three DOCX documents, one separate component diagram image, one consolidated C++ test source file, and no `tests/data/` configuration fixtures.
 
-This tree check does not prove whether images are embedded inside DOCX files. The use-case/sequence diagram observations above are based on the extracted document content and the separate diagram directory; visually inspect the DOCX pages before treating embedded-image absence as conclusive.
+The PR #113 documentation branch additionally contains:
+- `Documents/diagrams/TMS_Use_Case_Diagram.puml`
+- `Documents/diagrams/TMS_Vehicle_Admission_Sequence.puml`
+- `Documents/diagrams/TMS_Signal_And_Dispatch_Sequence.puml`
+- `docs/SAD_IMPLEMENTATION_ADDENDUM.md`
+
+These PlantUML files are editable UML source, not rendered images or embedded DOCX figures. The addendum is an implementation-aligned Markdown supplement, not yet an approved replacement for the SAD DOCX. The SRS/SAD/Test Plan DOCX files still need their corresponding diagrams and revised sections embedded and reviewed.
+
+The repository tree alone cannot prove whether the original DOCX files contain embedded images. The diagram sources were added to close the source-artifact gap, but final DOCX page layout and figure placement still require visual review.
 
 ## 5. Recommended order to close the Part 1 gaps
 
