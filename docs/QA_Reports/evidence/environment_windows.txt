@@ -1,0 +1,6 @@
+Date (UTC): 2026-11-16 16:35:16
+Platform: windows (MINGW64_NT-10.0-26300 3.6.7-fb42d713.x86_64 x86_64)
+Compiler: g++.exe (Rev4, Built by MSYS2 project) 16.2.0
+Flags: -std=c++17 -Wall -Wextra -Wpedantic -pthread (-O2 for app/acceptance/benchmark)
+Commit: (not a git checkout)
+Recorded results: 70 PASS, 0 FAIL, 0 BLOCKED (see docs/QA_Reports/evidence/acceptance_results_windows.txt)

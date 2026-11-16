@@ -168,6 +168,32 @@ int SimulationEngine::loadConfigFromFile(const std::string& filename) {
     const double arrivalRate = parseProbability("arrival_rate", 0.4);
     const double emergencyProbability = parseProbability("emergency_probability", 0.05);
 
+    // Optional signal timing keys (ticks). Defaults match SignalController.
+    const auto parseOptionalTicks = [&settings](const std::string& key, int fallback, int minimum = 1) -> int {
+        const auto it = settings.find(key);
+        if (it == settings.end()) return fallback;
+        const std::string value = it->second;
+        std::size_t parsedChars = 0;
+        int result = 0;
+        try { result = std::stoi(value, &parsedChars); }
+        catch (...) { throw std::runtime_error("Invalid integer for: " + key); }
+        if (parsedChars != value.size() || result < minimum || result > 10000)
+            throw std::runtime_error(key + " must be an integer between " + std::to_string(minimum) +
+                                     " and 10000");
+        return result;
+    };
+    const int greenDuration = parseOptionalTicks("green_duration", 10);
+    const int yellowDuration = parseOptionalTicks("yellow_duration", 3);
+    const int redDuration = parseOptionalTicks("red_duration", 10);
+    const int maxGreenExtension = parseOptionalTicks("max_green_extension", 15, 0);
+    const int minimumPreemptionDelay = yellowDuration + SignalController::kPreemptionAllRedTicks;
+    const int maxPreemptionDelay = parseOptionalTicks("max_preemption_delay", minimumPreemptionDelay);
+    if (maxPreemptionDelay < minimumPreemptionDelay)
+        throw std::runtime_error("max_preemption_delay must be at least yellow_duration + " +
+                                 std::to_string(SignalController::kPreemptionAllRedTicks) + " (" +
+                                 std::to_string(minimumPreemptionDelay) +
+                                 ") so the Yellow clearance phase is never skipped");
+
     std::map<std::string, std::vector<std::string>> configuredIntersections;
     std::vector<std::pair<std::string, std::string>> configuredConnections;
     const std::string prefix = "intersection.";
@@ -201,7 +227,8 @@ int SimulationEngine::loadConfigFromFile(const std::string& filename) {
             configuredConnections.push_back({source, entry.second});
         } else {
             const std::string allowed[] = {"total_ticks", "arrival_rate", "emergency_probability",
-                "adaptive_mode", "queue_capacity", "North_Bound", "South_Bound", "East_Bound", "West_Bound"};
+                "adaptive_mode", "queue_capacity", "green_duration", "yellow_duration", "red_duration",
+                "max_preemption_delay", "max_green_extension", "North_Bound", "South_Bound", "East_Bound", "West_Bound"};
             bool known = false;
             for (const auto& key : allowed) if (entry.first == key) { known = true; break; }
             if (!known) throw std::runtime_error("Unknown configuration key: " + entry.first);
@@ -221,6 +248,12 @@ int SimulationEngine::loadConfigFromFile(const std::string& filename) {
 
     configuredQueueCapacity_ = queueCapacity;
     loadConfig(arrivalRate, emergencyProbability, adaptiveMode);
+    for (auto& intersection : intersections_) {
+        SignalController& signals = intersection.getSignalController();
+        signals.setDurations(greenDuration, yellowDuration, redDuration);
+        signals.setMaxPreemptionDelay(maxPreemptionDelay);
+        signals.setAdaptiveMode(adaptiveMode, maxGreenExtension);
+    }
 
     // Legacy four-lane rate keys remain supported for existing configuration files.
     const char* legacyLanes[] = {"North_Bound", "South_Bound", "East_Bound", "West_Bound"};
@@ -265,6 +298,21 @@ void SimulationEngine::deliverPendingTransfers() {
     pendingTransfers_.swap(remaining);
 }
 
+bool SimulationEngine::hasDownstreamCapacity(const IntersectionConnection& connection) const {
+    std::size_t inFlight = 0;
+    for (const auto& transfer : pendingTransfers_) {
+        if (transfer.destinationIntersectionId == connection.destinationIntersectionId &&
+            transfer.laneName == connection.laneName) ++inFlight;
+    }
+    for (const auto& destination : intersections_) {
+        if (destination.getId() != connection.destinationIntersectionId) continue;
+        for (const auto& lane : destination.getLanes()) {
+            if (lane.name() == connection.laneName) return lane.size() + inFlight < lane.capacity();
+        }
+    }
+    return false;
+}
+
 void SimulationEngine::tick(bool silent) {
     if (currentTick_ == std::numeric_limits<int>::max())
         throw std::overflow_error("Simulation tick limit reached");
@@ -297,16 +345,19 @@ void SimulationEngine::tick(bool silent) {
             const std::string laneName = lane.name();
             if (intersection.getSignalController().getCurrentPhase(laneName) == SignalPhase::GREEN &&
                 !lane.isEmpty()) {
-                const Vehicle vehicle = lane.dequeue();
-                bool scheduled = false;
+                const IntersectionConnection* link = nullptr;
                 for (const auto& connection : connections_) {
                     if (connection.sourceIntersectionId == intersectionId && connection.laneName == laneName) {
-                        pendingTransfers_.push_back({connection.destinationIntersectionId, connection.laneName, vehicle});
-                        scheduled = true;
+                        link = &connection;
                         break;
                     }
                 }
-                if (!scheduled) stats_.recordDequeue(intersectionId, laneName, vehicle, currentTick_);
+                // Spillback: a linked vehicle leaves only when the downstream lane
+                // can hold it, so in-flight transfers never exceed lane capacity.
+                if (link && !hasDownstreamCapacity(*link)) continue;
+                const Vehicle vehicle = lane.dequeue();
+                if (link) pendingTransfers_.push_back({link->destinationIntersectionId, link->laneName, vehicle});
+                else stats_.recordDequeue(intersectionId, laneName, vehicle, currentTick_);
             }
         }
         view_.renderTick(currentTick_, intersectionId, intersection.getLanes(),
@@ -340,6 +391,8 @@ void SimulationEngine::run(int maxTicks, bool silent) {
 }
 
 const StatisticsCollector& SimulationEngine::getStats() const { return stats_; }
+const std::vector<Intersection>& SimulationEngine::getIntersections() const { return intersections_; }
+std::size_t SimulationEngine::getPendingTransferCount() const { return pendingTransfers_.size(); }
 int SimulationEngine::getConfiguredQueueCapacity() const { return configuredQueueCapacity_; }
 std::size_t SimulationEngine::getIntersectionCount() const { return intersections_.size(); }
 bool SimulationEngine::isAdaptiveMode(const std::string& intersectionId) const {

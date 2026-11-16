@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html class="theme-green">
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>src/ConsoleView.cpp - GCC Code Coverage Report</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="index.css"/>
+    <script src="index.js" charset="UTF-8"></script>
+  </head>
+
+  <body>
+    <div class="Layout-main">
+      <div class="Layout-main-centered-lg" style="max-width: 1280px;">
+        <div class="d-flex flex-justify-center">
+          <h1>
+            <a href="index.html" style="cursor: default; text-decoration: none">
+              GCC Code Coverage Report</a>
+          </h1>
+        </div>
+        <hr class="block-separator"/>
+        <header>
+<div id="summary-index.ConsoleView.cpp.b367d13758a15cf8a55055056f8e3ee8.html">
+  <div class="containter-xl clearfix">
+    <div class="col-sm-12 col-lg-9 float-left d-flex flex-column pl-3">
+      <div class="d-flex">
+        <div class="mr-2 color-fg-accent transy-2">
+          <svg aria-label="Directory" aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-file-directory-fill hx_color-icon-directory">
+            <path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25v-8.5A1.75 1.75 0 0 0 14.25 3H7.5a.25.25 0 0 1-.2-.1l-.9-1.2C6.07 1.26 5.55 1 5 1H1.75Z"></path>
+          </svg>
+        </div>
+        <span>./</span>
+      </div>
+      <div class="d-flex flex-wrap" style="margin-bottom: 2px;">
+        <div class="mr-2" style="min-width: 70px;">Coverage:</div>
+        <div class="IssueLabel coverage-low color-fg-on-emphasis mr-1">low: &ge; 0%</div>
+        <div class="IssueLabel coverage-medium color-fg-on-emphasis mr-1">medium: &ge; 75.0%</div>
+        <div class="IssueLabel coverage-high color-fg-on-emphasis mr-1">high: &ge; 90.0%</div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-lg-3 float-left d-flex flex-column text-right flex-justify-end pr-3">
+      <div class="d-flex">
+        <div class="mr-2">Lines:</div>
+        <div class="mr-2" style="margin: auto;">22 / 22</div>
+        <div class="Label--minw"><span class="coverage-high IssueLabel color-fg-on-emphasis mr-1">100.0%</span></div>
+      </div>
+      <div class="d-flex">
+        <div class="mr-2">Branches:</div>
+        <div class="mr-2" style="margin: auto;">47 / 86</div>
+        <div class="Label--minw"><span class="coverage-low IssueLabel color-fg-on-emphasis mr-1">54.7%</span></div>
+      </div>
+      <div class="d-flex">
+        <div class="mr-2">Functions:</div>
+        <div class="mr-2" style="margin: auto;">1 / 1</div>
+        <div class="Label--minw"><span class="coverage-high IssueLabel color-fg-on-emphasis mr-1">100.0%</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+        </header>
+        <hr/>
+        <nav>
+<div class="m-3">
+  <details>
+    <summary>List of functions</summary>
+<div class="Box m-3 functionslist">
+  <div class="Box-header py-2 d-flex sticky">
+    <div role="rowheader" class="color-fg-muted flex-auto min-width-0 col-md-2">Function (File:Line)</div>
+    <div role="rowheader" class="color-fg-muted flex-auto min-width-0 d-flex flex-justify-end flex-wrap flex-items-baseline">Calls</div>
+    <div role="rowheader" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">Lines</div>
+    <div role="rowheader" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">Branches</div>
+    <div role="rowheader" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">Blocks</div>
+  </div>
+  <div class="Box-row Box-row--focus-gray py-2 d-flex">
+    <div role="gridcell" class="color-fg-muted flex-auto min-width-0 col-md-2"><a href="#L7">ConsoleView::renderTick(int, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;, std::vector&lt;LaneQueue, std::allocator&lt;LaneQueue&gt; &gt; const&amp;, SignalController const&amp;, bool) const (src/ConsoleView.cpp:7)</a>    </div>
+    <div role="gridcell" class="color-fg-muted flex-auto min-width-0 d-flex flex-justify-end flex-wrap flex-items-baseline" data-sort="118007">called 118007 times</div>
+    <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">100.0%</div>
+    <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">54.7%</div>
+    <div role="gridcell" class="color-fg-muted d-flex flex-justify-end flex-wrap col-2">85.6%</div>
+  </div>
+</div>  </details>
+</div>
+
+        </nav>
+        <main>
+<div class="Box m-3">
+  <div class="Box-header d-flex flex-space-between sticky">
+    src/ConsoleView.cpp
+    <div class="toggle-buttons">
+      <button type="button" class="button_toggle_coveredLine show_coveredLine" value="coveredLine" title="Toggle covered lines">7 covered</button>
+      <button type="button" class="button_toggle_partialCoveredLine show_partialCoveredLine" value="partialCoveredLine" title="Toggle partial covered lines">15 partial covered</button>
+    </div>
+    <div class="nav">
+      <a class="nav prev disabled" href="#"></a>
+      <a class="nav index" href="index.src.25d902c24283ab8cfbac54dfa101ad31.html"></a>
+      <a class="nav next" href="index.Intersection.cpp.e700f53fd10488489996f70aac07906b.html"></a>
+    </div>
+  </div>
+  <div class="source-table-container">
+    <table class="text-mono text-small" style="width:100%;">
+      <tr>
+        <th class="p-2">Line</th>
+        <th class="p-2">Branch</th>
+        <th class="p-2">Exec</th>
+        <th class="p-2 text-left" style="width: 100%;">Source</th>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L1" href="#L1">1</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount pr-2 pl-2 color-fg-muted text-right"></td>
+        <td class="src"><span class="cp">#include</span><span class="w"> </span><span class="cpf">"../include/ConsoleView.h"</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L2" href="#L2">2</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount pr-2 pl-2 color-fg-muted text-right"></td>
+        <td class="src"><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;algorithm&gt;</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L3" href="#L3">3</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount pr-2 pl-2 color-fg-muted text-right"></td>
+        <td class="src"><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L4" href="#L4">4</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount pr-2 pl-2 color-fg-muted text-right"></td>
+        <td class="src"><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iomanip&gt;</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L5" href="#L5">5</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount pr-2 pl-2 color-fg-muted text-right"></td>
+        <td class="src"><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L6" href="#L6">6</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount pr-2 pl-2 color-fg-muted text-right"></td>
+        <td class="src"></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L7" href="#L7">7</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount coveredLine show_coveredLine pr-2 pl-2 color-fg-muted text-right">118007</td>
+        <td class="src coveredLine show_coveredLine"><span class="kt">void</span><span class="w"> </span><span class="nf">ConsoleView::renderTick</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">tick</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">intersectionId</span><span class="p">,</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L8" href="#L8">8</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount pr-2 pl-2 color-fg-muted text-right"></td>
+        <td class="src"><span class="w">                             </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">LaneQueue</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">lanes</span><span class="p">,</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L9" href="#L9">9</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount pr-2 pl-2 color-fg-muted text-right"></td>
+        <td class="src"><span class="w">                             </span><span class="k">const</span><span class="w"> </span><span class="n">SignalController</span><span class="o">&amp;</span><span class="w"> </span><span class="n">signals</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">silent</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L10" href="#L10">10</a></td>
+        <td class="text-right src linenos ws-unset">
+          <details class="normal details-overlay">
+            <summary>2/2</summary>
+            <div class="text-left position-absolute color-bg-subtle p-3 mt-2" style="z-index: 1;">
+              <div class="color-taken-branch">&check; Branch  2 &rightarrow; 3 taken 117522 times.</div>
+              <div class="color-taken-branch">&check; Branch  2 &rightarrow; 4 taken 485 times.</div>
+            </div>
+          </details>
+        </td>
+        <td class="linecount coveredLine show_coveredLine pr-2 pl-2 color-fg-muted text-right">118007</td>
+        <td class="src coveredLine show_coveredLine"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">silent</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L11" href="#L11">11</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount pr-2 pl-2 color-fg-muted text-right"></td>
+        <td class="src"></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L12" href="#L12">12</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount pr-2 pl-2 color-fg-muted text-right"></td>
+        <td class="src"><span class="w">    </span><span class="c1">// Size the lane column to the longest lane name so long names never push</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L13" href="#L13">13</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount pr-2 pl-2 color-fg-muted text-right"></td>
+        <td class="src"><span class="w">    </span><span class="c1">// the Signal/Queue columns out of alignment (TMS-NF-004).</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L14" href="#L14">14</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount coveredLine show_coveredLine pr-2 pl-2 color-fg-muted text-right">485</td>
+        <td class="src coveredLine show_coveredLine"><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">laneWidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">14</span><span class="p">;</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L15" href="#L15">15</a></td>
+        <td class="text-right src linenos ws-unset">
+          <details class="normal details-overlay">
+            <summary>3/4</summary>
+            <div class="text-left position-absolute color-bg-subtle p-3 mt-2" style="z-index: 1;">
+              <div class="color-taken-branch">&check; Branch  8 &rightarrow; 9 taken 1931 times.</div>
+              <div class="color-fg-danger">&cross; Branch  8 &rightarrow; 102 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  20 &rightarrow; 6 taken 1931 times.</div>
+              <div class="color-taken-branch">&check; Branch  20 &rightarrow; 21 taken 485 times.</div>
+            </div>
+          </details>
+        </td>
+        <td class="linecount partialCoveredLine show_partialCoveredLine pr-2 pl-2 color-fg-muted text-right">4832</td>
+        <td class="src partialCoveredLine show_partialCoveredLine"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">lane</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">lanes</span><span class="p">)</span><span class="w"> </span><span class="n">laneWidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">laneWidth</span><span class="p">,</span><span class="w"> </span><span class="n">lane</span><span class="p">.</span><span class="n">name</span><span class="p">().</span><span class="n">size</span><span class="p">());</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L16" href="#L16">16</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount coveredLine show_coveredLine pr-2 pl-2 color-fg-muted text-right">485</td>
+        <td class="src coveredLine show_coveredLine"><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">laneColumn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">laneWidth</span><span class="p">);</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L17" href="#L17">17</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount pr-2 pl-2 color-fg-muted text-right"></td>
+        <td class="src"></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L18" href="#L18">18</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount pr-2 pl-2 color-fg-muted text-right"></td>
+        <td class="src"><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n</span><span class="s">[Intersection "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">intersectionId</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" | Tick "</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L19" href="#L19">19</a></td>
+        <td class="text-right src linenos ws-unset">
+          <details class="normal details-overlay">
+            <summary>5/10</summary>
+            <div class="text-left position-absolute color-bg-subtle p-3 mt-2" style="z-index: 1;">
+              <div class="color-taken-branch">&check; Branch  21 &rightarrow; 22 taken 485 times.</div>
+              <div class="color-fg-danger">&cross; Branch  21 &rightarrow; 119 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  22 &rightarrow; 23 taken 485 times.</div>
+              <div class="color-fg-danger">&cross; Branch  22 &rightarrow; 119 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  23 &rightarrow; 24 taken 485 times.</div>
+              <div class="color-fg-danger">&cross; Branch  23 &rightarrow; 119 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  26 &rightarrow; 27 taken 485 times.</div>
+              <div class="color-fg-danger">&cross; Branch  26 &rightarrow; 119 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  27 &rightarrow; 28 taken 485 times.</div>
+              <div class="color-fg-danger">&cross; Branch  27 &rightarrow; 119 not taken.</div>
+            </div>
+          </details>
+        </td>
+        <td class="linecount partialCoveredLine show_partialCoveredLine pr-2 pl-2 color-fg-muted text-right">485</td>
+        <td class="src partialCoveredLine show_partialCoveredLine"><span class="w">              </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">tick</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"]</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L20" href="#L20">20</a></td>
+        <td class="text-right src linenos ws-unset">
+          <details class="normal details-overlay">
+            <summary>2/4</summary>
+            <div class="text-left position-absolute color-bg-subtle p-3 mt-2" style="z-index: 1;">
+              <div class="color-taken-branch">&check; Branch  28 &rightarrow; 29 taken 485 times.</div>
+              <div class="color-fg-danger">&cross; Branch  28 &rightarrow; 119 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  29 &rightarrow; 30 taken 485 times.</div>
+              <div class="color-fg-danger">&cross; Branch  29 &rightarrow; 119 not taken.</div>
+            </div>
+          </details>
+        </td>
+        <td class="linecount partialCoveredLine show_partialCoveredLine pr-2 pl-2 color-fg-muted text-right">485</td>
+        <td class="src partialCoveredLine show_partialCoveredLine"><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="n">laneColumn</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Lane"</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L21" href="#L21">21</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount pr-2 pl-2 color-fg-muted text-right"></td>
+        <td class="src"><span class="w">              </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" | "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Signal"</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L22" href="#L22">22</a></td>
+        <td class="text-right src linenos ws-unset">
+          <details class="normal details-overlay">
+            <summary>6/12</summary>
+            <div class="text-left position-absolute color-bg-subtle p-3 mt-2" style="z-index: 1;">
+              <div class="color-taken-branch">&check; Branch  32 &rightarrow; 33 taken 485 times.</div>
+              <div class="color-fg-danger">&cross; Branch  32 &rightarrow; 119 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  33 &rightarrow; 34 taken 485 times.</div>
+              <div class="color-fg-danger">&cross; Branch  33 &rightarrow; 119 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  36 &rightarrow; 37 taken 485 times.</div>
+              <div class="color-fg-danger">&cross; Branch  36 &rightarrow; 119 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  37 &rightarrow; 38 taken 485 times.</div>
+              <div class="color-fg-danger">&cross; Branch  37 &rightarrow; 119 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  40 &rightarrow; 41 taken 485 times.</div>
+              <div class="color-fg-danger">&cross; Branch  40 &rightarrow; 119 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  41 &rightarrow; 42 taken 485 times.</div>
+              <div class="color-fg-danger">&cross; Branch  41 &rightarrow; 119 not taken.</div>
+            </div>
+          </details>
+        </td>
+        <td class="linecount partialCoveredLine show_partialCoveredLine pr-2 pl-2 color-fg-muted text-right">485</td>
+        <td class="src partialCoveredLine show_partialCoveredLine"><span class="w">              </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" | "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Queue"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" | Vehicles</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L23" href="#L23">23</a></td>
+        <td class="text-right src linenos ws-unset">
+          <details class="normal details-overlay">
+            <summary>4/8</summary>
+            <div class="text-left position-absolute color-bg-subtle p-3 mt-2" style="z-index: 1;">
+              <div class="color-taken-branch">&check; Branch  42 &rightarrow; 43 taken 485 times.</div>
+              <div class="color-fg-danger">&cross; Branch  42 &rightarrow; 119 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  45 &rightarrow; 46 taken 485 times.</div>
+              <div class="color-fg-danger">&cross; Branch  45 &rightarrow; 106 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  46 &rightarrow; 47 taken 485 times.</div>
+              <div class="color-fg-danger">&cross; Branch  46 &rightarrow; 104 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  47 &rightarrow; 48 taken 485 times.</div>
+              <div class="color-fg-danger">&cross; Branch  47 &rightarrow; 104 not taken.</div>
+            </div>
+          </details>
+        </td>
+        <td class="linecount partialCoveredLine show_partialCoveredLine pr-2 pl-2 color-fg-muted text-right">970</td>
+        <td class="src partialCoveredLine show_partialCoveredLine"><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">laneWidth</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">44</span><span class="p">,</span><span class="w"> </span><span class="sc">'-'</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L24" href="#L24">24</a></td>
+        <td class="text-right src linenos ws-unset">
+          <details class="normal details-overlay">
+            <summary>2/2</summary>
+            <div class="text-left position-absolute color-bg-subtle p-3 mt-2" style="z-index: 1;">
+              <div class="color-taken-branch">&check; Branch  98 &rightarrow; 52 taken 1931 times.</div>
+              <div class="color-taken-branch">&check; Branch  98 &rightarrow; 99 taken 485 times.</div>
+            </div>
+          </details>
+        </td>
+        <td class="linecount coveredLine show_coveredLine pr-2 pl-2 color-fg-muted text-right">2901</td>
+        <td class="src coveredLine show_coveredLine"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">lane</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">lanes</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L25" href="#L25">25</a></td>
+        <td class="text-right src linenos ws-unset">
+          <details class="normal details-overlay">
+            <summary>2/4</summary>
+            <div class="text-left position-absolute color-bg-subtle p-3 mt-2" style="z-index: 1;">
+              <div class="color-taken-branch">&check; Branch  54 &rightarrow; 55 taken 1931 times.</div>
+              <div class="color-fg-danger">&cross; Branch  54 &rightarrow; 117 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  55 &rightarrow; 56 taken 1931 times.</div>
+              <div class="color-fg-danger">&cross; Branch  55 &rightarrow; 117 not taken.</div>
+            </div>
+          </details>
+        </td>
+        <td class="linecount partialCoveredLine show_partialCoveredLine pr-2 pl-2 color-fg-muted text-right">1931</td>
+        <td class="src partialCoveredLine show_partialCoveredLine"><span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">SignalPhase</span><span class="w"> </span><span class="n">phase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signals</span><span class="p">.</span><span class="n">getCurrentPhase</span><span class="p">(</span><span class="n">lane</span><span class="p">.</span><span class="n">name</span><span class="p">());</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L26" href="#L26">26</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount coveredLine show_coveredLine pr-2 pl-2 color-fg-muted text-right">1931</td>
+        <td class="src coveredLine show_coveredLine"><span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">phaseStr</span><span class="p">;</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L27" href="#L27">27</a></td>
+        <td class="text-right src linenos ws-unset">
+          <details class="normal details-overlay">
+            <summary>3/4</summary>
+            <div class="text-left position-absolute color-bg-subtle p-3 mt-2" style="z-index: 1;">
+              <div class="color-taken-branch">&check; Branch  57 &rightarrow; 58 taken 240 times.</div>
+              <div class="color-taken-branch">&check; Branch  57 &rightarrow; 60 taken 107 times.</div>
+              <div class="color-taken-branch">&check; Branch  57 &rightarrow; 62 taken 1584 times.</div>
+              <div class="color-fg-danger">&cross; Branch  57 &rightarrow; 64 not taken.</div>
+            </div>
+          </details>
+        </td>
+        <td class="linecount partialCoveredLine show_partialCoveredLine pr-2 pl-2 color-fg-muted text-right">1931</td>
+        <td class="src partialCoveredLine show_partialCoveredLine"><span class="w">        </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">phase</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L28" href="#L28">28</a></td>
+        <td class="text-right src linenos ws-unset">
+          <details class="normal details-overlay">
+            <summary>1/2</summary>
+            <div class="text-left position-absolute color-bg-subtle p-3 mt-2" style="z-index: 1;">
+              <div class="color-taken-branch">&check; Branch  58 &rightarrow; 59 taken 240 times.</div>
+              <div class="color-fg-danger">&cross; Branch  58 &rightarrow; 115 not taken.</div>
+            </div>
+          </details>
+        </td>
+        <td class="linecount partialCoveredLine show_partialCoveredLine pr-2 pl-2 color-fg-muted text-right">240</td>
+        <td class="src partialCoveredLine show_partialCoveredLine"><span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="no">SignalPhase</span><span class="o">::</span><span class="no">GREEN</span><span class="p">:</span><span class="w"> </span><span class="n">phaseStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"GREEN"</span><span class="p">;</span><span class="w"> </span><span class="k">break</span><span class="p">;</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L29" href="#L29">29</a></td>
+        <td class="text-right src linenos ws-unset">
+          <details class="normal details-overlay">
+            <summary>1/2</summary>
+            <div class="text-left position-absolute color-bg-subtle p-3 mt-2" style="z-index: 1;">
+              <div class="color-taken-branch">&check; Branch  60 &rightarrow; 61 taken 107 times.</div>
+              <div class="color-fg-danger">&cross; Branch  60 &rightarrow; 115 not taken.</div>
+            </div>
+          </details>
+        </td>
+        <td class="linecount partialCoveredLine show_partialCoveredLine pr-2 pl-2 color-fg-muted text-right">107</td>
+        <td class="src partialCoveredLine show_partialCoveredLine"><span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="no">SignalPhase</span><span class="o">::</span><span class="no">YELLOW</span><span class="p">:</span><span class="w"> </span><span class="n">phaseStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"YELLOW"</span><span class="p">;</span><span class="w"> </span><span class="k">break</span><span class="p">;</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L30" href="#L30">30</a></td>
+        <td class="text-right src linenos ws-unset">
+          <details class="normal details-overlay">
+            <summary>1/2</summary>
+            <div class="text-left position-absolute color-bg-subtle p-3 mt-2" style="z-index: 1;">
+              <div class="color-taken-branch">&check; Branch  62 &rightarrow; 63 taken 1584 times.</div>
+              <div class="color-fg-danger">&cross; Branch  62 &rightarrow; 115 not taken.</div>
+            </div>
+          </details>
+        </td>
+        <td class="linecount partialCoveredLine show_partialCoveredLine pr-2 pl-2 color-fg-muted text-right">1584</td>
+        <td class="src partialCoveredLine show_partialCoveredLine"><span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="no">SignalPhase</span><span class="o">::</span><span class="no">RED</span><span class="p">:</span><span class="w"> </span><span class="n">phaseStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"RED"</span><span class="p">;</span><span class="w"> </span><span class="k">break</span><span class="p">;</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L31" href="#L31">31</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount pr-2 pl-2 color-fg-muted text-right"></td>
+        <td class="src"><span class="w">        </span><span class="p">}</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L32" href="#L32">32</a></td>
+        <td class="text-right src linenos ws-unset">
+          <details class="normal details-overlay">
+            <summary>2/4</summary>
+            <div class="text-left position-absolute color-bg-subtle p-3 mt-2" style="z-index: 1;">
+              <div class="color-taken-branch">&check; Branch  66 &rightarrow; 67 taken 1931 times.</div>
+              <div class="color-fg-danger">&cross; Branch  66 &rightarrow; 110 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  67 &rightarrow; 68 taken 1931 times.</div>
+              <div class="color-fg-danger">&cross; Branch  67 &rightarrow; 110 not taken.</div>
+            </div>
+          </details>
+        </td>
+        <td class="linecount partialCoveredLine show_partialCoveredLine pr-2 pl-2 color-fg-muted text-right">5793</td>
+        <td class="src partialCoveredLine show_partialCoveredLine"><span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">visualBar</span><span class="p">(</span><span class="n">lane</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="w"> </span><span class="sc">'#'</span><span class="p">);</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L33" href="#L33">33</a></td>
+        <td class="text-right src linenos ws-unset">
+          <details class="normal details-overlay">
+            <summary>3/6</summary>
+            <div class="text-left position-absolute color-bg-subtle p-3 mt-2" style="z-index: 1;">
+              <div class="color-taken-branch">&check; Branch  69 &rightarrow; 70 taken 1931 times.</div>
+              <div class="color-fg-danger">&cross; Branch  69 &rightarrow; 113 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  70 &rightarrow; 71 taken 1931 times.</div>
+              <div class="color-fg-danger">&cross; Branch  70 &rightarrow; 113 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  73 &rightarrow; 74 taken 1931 times.</div>
+              <div class="color-fg-danger">&cross; Branch  73 &rightarrow; 113 not taken.</div>
+            </div>
+          </details>
+        </td>
+        <td class="linecount partialCoveredLine show_partialCoveredLine pr-2 pl-2 color-fg-muted text-right">3862</td>
+        <td class="src partialCoveredLine show_partialCoveredLine"><span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="n">laneColumn</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">lane</span><span class="p">.</span><span class="n">name</span><span class="p">()</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L34" href="#L34">34</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount pr-2 pl-2 color-fg-muted text-right"></td>
+        <td class="src"><span class="w">                  </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" | "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">phaseStr</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L35" href="#L35">35</a></td>
+        <td class="text-right src linenos ws-unset">
+          <details class="normal details-overlay">
+            <summary>6/12</summary>
+            <div class="text-left position-absolute color-bg-subtle p-3 mt-2" style="z-index: 1;">
+              <div class="color-taken-branch">&check; Branch  74 &rightarrow; 75 taken 1931 times.</div>
+              <div class="color-fg-danger">&cross; Branch  74 &rightarrow; 113 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  75 &rightarrow; 76 taken 1931 times.</div>
+              <div class="color-fg-danger">&cross; Branch  75 &rightarrow; 113 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  78 &rightarrow; 79 taken 1931 times.</div>
+              <div class="color-fg-danger">&cross; Branch  78 &rightarrow; 113 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  79 &rightarrow; 80 taken 1931 times.</div>
+              <div class="color-fg-danger">&cross; Branch  79 &rightarrow; 113 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  82 &rightarrow; 83 taken 1931 times.</div>
+              <div class="color-fg-danger">&cross; Branch  82 &rightarrow; 113 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  83 &rightarrow; 84 taken 1931 times.</div>
+              <div class="color-fg-danger">&cross; Branch  83 &rightarrow; 113 not taken.</div>
+            </div>
+          </details>
+        </td>
+        <td class="linecount partialCoveredLine show_partialCoveredLine pr-2 pl-2 color-fg-muted text-right">3862</td>
+        <td class="src partialCoveredLine show_partialCoveredLine"><span class="w">                  </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" | "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">lane</span><span class="p">.</span><span class="n">size</span><span class="p">()</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L36" href="#L36">36</a></td>
+        <td class="text-right src linenos ws-unset">
+          <details class="normal details-overlay">
+            <summary>3/6</summary>
+            <div class="text-left position-absolute color-bg-subtle p-3 mt-2" style="z-index: 1;">
+              <div class="color-taken-branch">&check; Branch  84 &rightarrow; 85 taken 1931 times.</div>
+              <div class="color-fg-danger">&cross; Branch  84 &rightarrow; 113 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  85 &rightarrow; 86 taken 1931 times.</div>
+              <div class="color-fg-danger">&cross; Branch  85 &rightarrow; 113 not taken.</div>
+              <div class="color-taken-branch">&check; Branch  86 &rightarrow; 87 taken 1931 times.</div>
+              <div class="color-fg-danger">&cross; Branch  86 &rightarrow; 113 not taken.</div>
+            </div>
+          </details>
+        </td>
+        <td class="linecount partialCoveredLine show_partialCoveredLine pr-2 pl-2 color-fg-muted text-right">1931</td>
+        <td class="src partialCoveredLine show_partialCoveredLine"><span class="w">                  </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" | "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">visualBar</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L37" href="#L37">37</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount coveredLine show_coveredLine pr-2 pl-2 color-fg-muted text-right">1931</td>
+        <td class="src coveredLine show_coveredLine"><span class="w">    </span><span class="p">}</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L38" href="#L38">38</a></td>
+        <td class="text-right src linenos ws-unset">
+          <details class="normal details-overlay">
+            <summary>1/2</summary>
+            <div class="text-left position-absolute color-bg-subtle p-3 mt-2" style="z-index: 1;">
+              <div class="color-taken-branch">&check; Branch  99 &rightarrow; 100 taken 485 times.</div>
+              <div class="color-fg-danger">&cross; Branch  99 &rightarrow; 119 not taken.</div>
+            </div>
+          </details>
+        </td>
+        <td class="linecount partialCoveredLine show_partialCoveredLine pr-2 pl-2 color-fg-muted text-right">485</td>
+        <td class="src partialCoveredLine show_partialCoveredLine"><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">.</span><span class="n">flush</span><span class="p">();</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L39" href="#L39">39</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount pr-2 pl-2 color-fg-muted text-right"></td>
+        <td class="src"><span class="p">}</span></td>
+      </tr>
+      <tr>
+        <td class="text-right src linenos"><a class="normal" id="L40" href="#L40">40</a></td>
+        <td class="text-right src linenos ws-unset">
+        </td>
+        <td class="linecount pr-2 pl-2 color-fg-muted text-right"></td>
+        <td class="src"></td>
+      </tr>
+    </table>
+  </div>
+</div>
+        </main>
+        <hr class="block-separator"/>
+        <footer class="text-center">
+          Created using <a href="http://gcovr.com/en/8.8">GCOVR (Version 8.8)</a>
+          at 2026-11-16 15:45:17+00:00
+        </footer>
+      </div>
+    </div>
+  </body>
+
+</html>

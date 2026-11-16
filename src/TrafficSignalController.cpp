@@ -2,16 +2,10 @@
 
 #include <algorithm>
 #include <stdexcept>
+#include <string>
 
-SignalController::SignalController(
-    int greenDuration,
-    int yellowDuration,
-    int redDuration
-)
-    : greenDuration_(greenDuration),
-      yellowDuration_(yellowDuration),
-      redDuration_(redDuration) {
-
+namespace {
+void validateDurations(int greenDuration, int yellowDuration, int redDuration) {
     if (greenDuration <= 0 ||
         yellowDuration <= 0 ||
         redDuration <= 0) {
@@ -20,6 +14,21 @@ SignalController::SignalController(
             "Signal durations must be positive"
         );
     }
+}
+}
+
+SignalController::SignalController(
+    int greenDuration,
+    int yellowDuration,
+    int redDuration
+)
+    : baseGreenDuration_(greenDuration),
+      greenDuration_(greenDuration),
+      yellowDuration_(yellowDuration),
+      redDuration_(redDuration),
+      maxPreemptionDelay_(yellowDuration + kPreemptionAllRedTicks) {
+
+    validateDurations(greenDuration, yellowDuration, redDuration);
 }
 
 void SignalController::addLane(
@@ -45,6 +54,22 @@ void SignalController::addLane(
     lanes_.push_back(laneName);
 }
 
+void SignalController::setDurations(
+    int greenDuration,
+    int yellowDuration,
+    int redDuration
+) {
+    validateDurations(greenDuration, yellowDuration, redDuration);
+
+    baseGreenDuration_ = greenDuration;
+    greenDuration_ = greenDuration;
+    yellowDuration_ = yellowDuration;
+    redDuration_ = redDuration;
+
+    // Keep the preemption bound consistent with the new Yellow duration.
+    maxPreemptionDelay_ = std::max(maxPreemptionDelay_, worstCasePreemptionDelay());
+}
+
 void SignalController::updateSignalState(
     int tickDelta
 ) {
@@ -53,6 +78,11 @@ void SignalController::updateSignalState(
     }
 
     phaseTimer_ += tickDelta;
+
+    if (preemptionPending_) {
+        advancePreemption();
+        return;
+    }
 
     switch (currentPhase_) {
 
@@ -77,43 +107,53 @@ void SignalController::updateSignalState(
         case SignalPhase::RED:
 
             if (phaseTimer_ >= redDuration_) {
-
-                if (preemptionPending_) {
-
-                    auto it = std::find(
-                        lanes_.begin(),
-                        lanes_.end(),
-                        pendingEmergencyLane_
-                    );
-
-                    if (it != lanes_.end()) {
-                        activeLaneIndex_ =
-                            static_cast<size_t>(
-                                std::distance(
-                                    lanes_.begin(),
-                                    it
-                                )
-                            );
-                    } else {
-                        activeLaneIndex_ =
-                            (activeLaneIndex_ + 1) %
-                            lanes_.size();
-                    }
-
-                    preemptionPending_ = false;
-                    pendingEmergencyLane_.clear();
-
-                } else {
-
-                    activeLaneIndex_ =
-                        (activeLaneIndex_ + 1) %
-                        lanes_.size();
-                }
+                activeLaneIndex_ =
+                    (activeLaneIndex_ + 1) %
+                    lanes_.size();
 
                 currentPhase_ = SignalPhase::GREEN;
                 phaseTimer_ = 0;
             }
 
+            break;
+    }
+}
+
+// Preemption sequence: end the current Green immediately, keep the full
+// Yellow clearance, hold all-red for kPreemptionAllRedTicks, then grant
+// Green to the emergency lane. At most one lane is ever Green.
+void SignalController::advancePreemption() {
+    switch (currentPhase_) {
+
+        case SignalPhase::GREEN:
+            currentPhase_ = SignalPhase::YELLOW;
+            phaseTimer_ = 0;
+            break;
+
+        case SignalPhase::YELLOW:
+            if (phaseTimer_ >= yellowDuration_) {
+                currentPhase_ = SignalPhase::RED;
+                phaseTimer_ = 0;
+            }
+            break;
+
+        case SignalPhase::RED:
+            if (phaseTimer_ >= kPreemptionAllRedTicks) {
+                const auto it = std::find(
+                    lanes_.begin(),
+                    lanes_.end(),
+                    pendingEmergencyLane_
+                );
+
+                activeLaneIndex_ = it != lanes_.end()
+                    ? static_cast<size_t>(std::distance(lanes_.begin(), it))
+                    : (activeLaneIndex_ + 1) % lanes_.size();
+
+                preemptionPending_ = false;
+                pendingEmergencyLane_.clear();
+                currentPhase_ = SignalPhase::GREEN;
+                phaseTimer_ = 0;
+            }
             break;
     }
 }
@@ -152,8 +192,9 @@ bool SignalController::preempt(
         return false;
     }
 
-    // The active lane already has the signal priority.
-    if (lanes_[activeLaneIndex_] == laneName) {
+    // A lane that is already Green is being served; nothing to preempt.
+    if (lanes_[activeLaneIndex_] == laneName &&
+        currentPhase_ == SignalPhase::GREEN) {
         return false;
     }
 
@@ -162,6 +203,30 @@ bool SignalController::preempt(
     pendingEmergencyLane_ = laneName;
 
     return true;
+}
+
+bool SignalController::isPreemptionPending() const {
+    return preemptionPending_;
+}
+
+void SignalController::setMaxPreemptionDelay(int ticks) {
+    if (ticks < worstCasePreemptionDelay()) {
+        throw std::invalid_argument(
+            "Maximum preemption delay must be at least yellow duration + " +
+            std::to_string(kPreemptionAllRedTicks) + " tick(s) (" +
+            std::to_string(worstCasePreemptionDelay()) + ")"
+        );
+    }
+
+    maxPreemptionDelay_ = ticks;
+}
+
+int SignalController::getMaxPreemptionDelay() const {
+    return maxPreemptionDelay_;
+}
+
+int SignalController::worstCasePreemptionDelay() const {
+    return yellowDuration_ + kPreemptionAllRedTicks;
 }
 
 void SignalController::setAdaptiveMode(
@@ -176,10 +241,18 @@ void SignalController::setAdaptiveMode(
 
     adaptiveMode_ = enabled;
     maxExtension_ = maxExtension;
+
+    if (!enabled) {
+        greenDuration_ = baseGreenDuration_;
+    }
 }
 
 bool SignalController::isAdaptiveMode() const {
     return adaptiveMode_;
+}
+
+int SignalController::getMaxGreenExtension() const {
+    return maxExtension_;
 }
 
 void SignalController::updateAdaptiveTimers(
@@ -201,15 +274,22 @@ void SignalController::updateAdaptiveTimers(
         return;
     }
 
+    // Extend from the configured base Green duration, capped at
+    // base + maxExtension; light queues restore the configured base.
     if (it->second > 5) {
 
         greenDuration_ = std::min(
             greenDuration_ + 2,
-            10 + maxExtension_
+            baseGreenDuration_ + maxExtension_
         );
 
     } else {
 
-        greenDuration_ = 10;
+        greenDuration_ = baseGreenDuration_;
     }
 }
+
+int SignalController::getGreenDuration() const { return greenDuration_; }
+int SignalController::getBaseGreenDuration() const { return baseGreenDuration_; }
+int SignalController::getYellowDuration() const { return yellowDuration_; }
+int SignalController::getRedDuration() const { return redDuration_; }

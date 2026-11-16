@@ -45,7 +45,16 @@ Run the Linux AddressSanitizer and UndefinedBehaviorSanitizer target where the c
 make sanitize
 ```
 
-The consolidated test executable in `tests/test_traffic_management.cpp` covers vehicle generation, queue behavior, configuration validation, signal transitions, adaptive timing, emergency queue ordering/preemption requests, statistics, console output, multi-intersection transfers, graceful stop and repeated simulation lifecycles. These checks do not represent execution of every case in the 66-case Test Plan.
+The consolidated test executable in `tests/test_traffic_management.cpp` (42 test functions, 1,198 checks) covers vehicle generation, queue behaviour, configuration validation, signal transitions, adaptive timing, bounded emergency preemption, statistics, console output, multi-intersection transfers with spillback, graceful stop and repeated simulation lifecycles.
+
+To show the Test Plan being executed case by case:
+
+```bash
+make acceptance        # prints "TC-xxx | requirement | PASS | observed result" for 62 cases
+bash scripts/run_acceptance.sh   # all 66 cases, including a real Ctrl+C and CLI exit codes
+```
+
+Good demo moments: TC-Emg-003-P (emergency lane Green within 2 ticks), TC-Multi-002-N (spillback when the downstream lane is full), and TC-Sim-002-N (real Ctrl+C prints a summary for exactly the completed ticks).
 
 ## 5. CI demonstration
 Open the repository's GitHub Actions tab and select a completed run. Show the tested commit and the Ubuntu and Windows job results. Linux ASan/UBSan runs as a separate Linux-only workflow step; do not imply that the Windows job runs sanitizers.

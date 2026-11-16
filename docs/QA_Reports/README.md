@@ -1,55 +1,46 @@
-# Test and Quality Reports
+# Test and Quality Reports (Mini-Project Part 3)
 
-This folder contains the four testing deliverables. Reports distinguish committed-main evidence, local benchmark evidence, local coverage measurements and scenarios that have not been run.
+These are the four Part 3 testing deliverables plus their raw evidence. All results are for the Sprint 3 code, executed on 16-11-2026.
 
-| Report | Purpose | Current status |
-|---|---|---|
-| Unit_Test_Report.md | Unit cases executed against individual units | 985 automated checks passed on Ubuntu; Windows build/test/smoke job passed in final main-branch workflow #241; Linux ASan/UBSan passed |
-| System_Validation_Report.md | End-to-end / system-level validation | Main CI evidence and local Windows benchmark recorded; full SRS-based validation remains incomplete |
-| Code_Coverage_Report.md | Line coverage and included source files | Main CI run #243 generated 88.0% line coverage (667/758) on commit 1b4804a |
-| Branch_Coverage_Report.md | Branch execution and outcomes | Main CI run #241 generated 54.8% branch coverage (686/1,252) on commit 1b4804a |
+| Report | Result |
+|---|---|
+| [Unit_Test_Report.md](Unit_Test_Report.md) | 42 test functions, 1,198 checks, 0 failures |
+| [System_Validation_Report.md](System_Validation_Report.md) | 66/66 Test Plan cases executed: 60 PASS, 0 FAIL, 6 PENDING CI (Linux memory tools/portability); 29/33 requirements fully validated |
+| [Code_Coverage_Report.md](Code_Coverage_Report.md) | 92.3% lines (849/920), 90.4% functions (103/114) |
+| [Branch_Coverage_Report.md](Branch_Coverage_Report.md) | 58.9% raw GCC branches (942/1,600); 85.7% excluding compiler-generated exception branches (926/1,081) |
 
-## Evidence metadata
+## Supporting material
 
-Each report should record:
-- Source commit SHA and branch/ref.
-- Date and time of execution.
-- Operating system and compiler version.
-- Exact command used.
-- Test executable and source files included.
-- Actual pass/fail counts and output.
-- Known limitations and cases not run.
+| Item | Location |
+|---|---|
+| Case-by-case results for all 66 cases | [`../TEST_EXECUTION_REGISTER.md`](../TEST_EXECUTION_REGISTER.md) |
+| Updated test case document (Test Plan v1.2) | `../../Documents/Test_Plan_Traffic_Management_System.docx` |
+| Sprint 3 changes and defects | [`../SPRINT_3.md`](../SPRINT_3.md) |
+| HTML coverage report | [`coverage/index.html`](coverage/index.html) |
+| Raw evidence (logs, results, environment) | [`evidence/`](evidence/) |
 
-## Current CI evidence
+### Evidence files (`evidence/`)
 
-Main-branch workflow run #235: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382805876
+| File | Content |
+|---|---|
+| `environment_windows.txt` | Date, platform, compiler, flags, and the result count |
+| `unit_tests_windows.txt` | Per-test unit results |
+| `acceptance_results_windows.txt` | One line per executed Test Plan case: `ID / requirement / result / observed` |
+| `acceptance_in_process_windows.md` | Markdown table of the 62 in-process cases |
+| `sim002n_ctrl_c_windows.txt` | Summary printed after a real Ctrl+C (TC-Sim-002-N) |
+| `sim002p_summary_windows.txt` | Summary of a 500-tick natural completion (TC-Sim-002-P) |
+| `portability_output_windows.txt` | Reference output compared with Linux by CI (TC-Port-01-P) |
+| `benchmark_windows.txt` | Performance benchmark (TMS-NF-001) |
 
-Tested commit: `43681916f3f18da3b29d19c4bc79ae10c46ae13e`
+CI adds the matching `*_linux.txt` files, including `sanitizers_linux.txt` and `valgrind_linux.txt`, to the `acceptance-evidence-Linux` artifact of every run.
 
-- Ubuntu and Windows builds, automated tests and smoke tests passed.
-- Both platforms printed `All 984 checks passed.`
-- Linux ASan/UBSan passed.
-- Coverage job generated 88.0% line coverage (667/758), 86.2% function coverage (81/94), and 54.8% branch coverage (686/1,252); HTML/XML artifact: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382188203/artifacts/14016733343.
+## Reproducing
 
-Main-branch workflow run #99: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42450330604
+```bash
+make test                       # unit suite
+make acceptance                 # 62 in-process Test Plan cases
+bash scripts/run_acceptance.sh  # all cases + evidence files (make acceptance-full)
+bash scripts/run_coverage.sh    # line/branch coverage (needs gcovr: pip install gcovr)
+```
 
-Tested main commit: `f8c6cfda5355f3e2cea2ff2bbd71dae23180c540`
-
-- Ubuntu and Windows builds and automated tests passed.
-- Test executable printed `All 436 checks passed.` on both platforms.
-- Default application and multi-intersection startup smoke tests passed on both platforms.
-- Linux AddressSanitizer and UndefinedBehaviorSanitizer passed.
-- PR #90 adds an 80-tick serialized-green regression test; PR #91 adds configuration validation boundary cases. The serialized-green test does not validate geometric turning-movement conflicts.
-
-## Local performance evidence
-
-A standalone benchmark was run on a local Windows machine using `-std=c++17 -O2 -DNDEBUG`. One warm-up and five measured runs each executed 10,000 ticks with four independent intersections and four lanes per intersection; console rendering was disabled.
-
-- Average: 84,371.19 ticks/second.
-- Median: 88,344.30 ticks/second.
-- SRS target: 500 ticks/second.
-- Result: target met for this local benchmark fixture.
-
-The exact CPU, RAM, Windows build and compiler version were not recorded. The intersections were not connected, and this is not evaluator-hardware or full end-to-end performance evidence. See System_Validation_Report.md for the complete run table and limitations.
-
-Never describe the historical two-file GCOV subset as whole-project coverage. The CI job instruments production sources under src/ and vehicle/ (including main.cpp and instrumented VehicleGenerator.h inline code) and uploads HTML/XML reports. PR #121 run #230: 88.0% lines, 54.6% branches; rerun after merge to main. Preserve the artifact and record the exact tested commit. Do not claim unexecuted system scenarios as PASS.
+On Windows Git Bash, the scripts put the compiler's own `bin` folder first on `PATH`. Without that, Git's older `libstdc++-6.dll` can be loaded instead of MSYS2's and crash `-O2` binaries.

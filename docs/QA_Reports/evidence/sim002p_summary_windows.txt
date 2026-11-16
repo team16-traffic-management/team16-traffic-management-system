@@ -1,0 +1,29 @@
+         TMS SIMULATION REPORT (500 TICKS)
+==================================================
+Total Throughput (Processed)        : 224
+Overall Average Wait Time           : 85.71 ticks
+Total Overflow (Blocked) Vehicles   : 289
+Total Emergency Preemption Events   : 7
+
+Per-Intersection Lane Breakdown:
+--------------------------------------------------------------------------
+Intersection      Lane             Throughput  Avg Wait        Max Queue   
+--------------------------------------------------------------------------
+Main              East             41          129.24          15          
+Main              North            53          83.60           15          
+Main              South            70          74.80           15          
+Main              West             60          70.55           15          
+==========================================================================
+
+Per-Intersection Totals:
+--------------------------------------------------------------------------
+Intersection      Throughput  Avg Wait    Blocked   Preemptions  Max Queue
+--------------------------------------------------------------------------
+Main              224         85.71       289       7            15
+--------------------------------------------------------------------------
+SYSTEM TOTAL      224         85.71       289       7            15
+==========================================================================
+
+Run termination: configured tick limit reached (500 ticks executed)
+Total successful vehicle transfers: 0
+Vehicles still waiting for transfer: 0

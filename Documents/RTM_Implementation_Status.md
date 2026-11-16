@@ -1,126 +1,77 @@
-# SRS / SAD / Test Plan implementation status
+# SRS / SAD / Test Plan Implementation Status (RTM)
 
-This matrix summarizes implementation and verification evidence currently available in the repository. Implementation presence, automated test evidence, manual Test Plan execution and final acceptance are separate statuses. The 985 automated checks in main CI run #243 are not equivalent to the 66 planned Test Plan cases.
+**Updated 16-11-2026 after Part 3 testing and Sprint 3.** Every requirement is implemented and both of its Test Plan v1.2 cases have been executed. 29 of 33 requirements are accepted; the other 4 pass functionally and await the Linux CI memory-tool/portability verdict.
 
-## Requirement traceability
-
-| Requirement IDs | Implementation coverage | Verification evidence | Current QA status / remaining work |
-|---|---|---|---|
-| TMS-F-001–003 | Per-lane vehicle generation, IDs/ticks/types and FIFO queueing | Generator probability/rate tests; PR #104 verifies 200 distinct vehicle IDs across four lanes in two intersections (CI run #153 passed Ubuntu/Windows) | PARTIAL — full detailed positive/negative Test Plan cases remain unexecuted |
-| TMS-F-010–013 | Bounded lane queues, queue operations, green-phase dequeue and wait calculations | Capacity/overflow/FIFO/empty-dequeue checks; PR #105 engine-level test verifies red-lane vehicle remains queued until its signal turns green (CI run #154 passed Ubuntu/Windows) | PARTIAL — complete detailed Test Plan cases and broader wait-time behavior remain unverified |
-| TMS-F-020–024 | Fixed/adaptive signal modes and green-yellow-red phase control | Phase-transition tests; PR #90's 80-tick at-most-one-GREEN-lane invariant; PR #98 adaptive green-extension cap, low-queue reset and negative-extension rejection (CI run #141 passed Ubuntu/Windows) | PARTIAL — geometric movement-conflict matrix remains unverified; adaptive timing bounds are covered only for the tested cases |
-| TMS-F-030–032 | Emergency vehicle priority and signal preemption | Existing preemption acceptance/rejection/deferred activation tests; PR #101 explicitly verifies emergency vehicles precede normal vehicles while preserving FIFO order within both groups (CI run #143 passed Ubuntu/Windows) | PARTIAL — maximum emergency wait/delay boundary remains unverified |
-| TMS-F-040–042 | Multiple intersections, configured lane connections, transfers and statistics | Two-intersection configuration test; PR #99 verifies destination-capacity backpressure (CI #142); PR #107 verifies delivery and processing on the tick immediately after source departure (CI #159) | PARTIAL — invalid-intersection isolation remains unverified |
-| TMS-F-050–052 | Throughput, average wait, maximum queue, blocked and preemption statistics | Statistics calculation and report-format checks | PASS for covered calculations; broader end-to-end report workflow remains manual |
-| TMS-F-060 | Configuration parsing, validation and configured run length | PR #91 configuration boundary matrix; CI application/config startup smoke tests | PARTIAL — manual Test Plan cases and clear error behavior should be reconciled case-by-case |
-| TMS-F-061 | Clean start/termination and final summary for configured or user-requested stop | Merged through PR #94; atomic stop request, SIGINT handling, `total_ticks=0` open-ended mode, actual completed-tick summary, direct-stop and SIGINT regression tests | IMPLEMENTED + AUTOMATED CI VERIFIED — PR #94 workflow run #132 passed Ubuntu and Windows build/tests and smoke tests; Ubuntu ASan/UBSan passed. Manual interactive Ctrl+C acceptance run and full Test Plan case execution remain unrecorded |
-| TMS-NF-001 | Performance target of 500 ticks/second | Local Windows benchmark: five 10,000-tick runs; average 84,371.19 and median 88,344.30 ticks/second | PASS for this fixture only — four independent intersections, console rendering disabled; evaluator hardware and connected topology not tested |
-| TMS-NF-002 | RAII/STL ownership and long-run stability | 10,000-tick run; PR #108 constructs/runs/destroys 20 independent SimulationEngine instances (CI #162 passed Ubuntu/Windows); Linux ASan/UBSan runs | PARTIAL — no quantified memory-growth or standalone Valgrind/leak report |
-| TMS-NF-003 | Modular source/header structure and config-driven topology | Config-driven multi-intersection setup and transfer test | PASS for covered topology; topology extension and full configuration matrix not exhaustively tested |
-| TMS-NF-004 | Console tick/lane/signal status | Console output field assertions; PR #102 verifies long lane names, high queue count and full visual bar (PR CI run #144 and main CI run #163 passed Ubuntu/Windows) | PARTIAL — manual visual/usability inspection remains outstanding |
-| TMS-NF-005 | C++17 and supported-platform builds | Main workflow #99 built/tested Ubuntu and Windows | PASS for CI environments; clean-checkout evaluator environment remains to be confirmed |
-| PRJ-SR-001 | Bounds checking and invalid-index handling | Selected invalid-index and invalid-configuration tests | PARTIAL — full invalid access matrix not demonstrated |
-| PRJ-SR-002 | User-supplied configuration values validated and invalid values rejected clearly | PR #91 covers missing/invalid values, numeric boundaries, malformed probabilities, duplicate/unknown keys and invalid connections | PASS for covered inputs; align Test Plan's contradictory safe-default expectations with the SRS rejection behavior |
-| PRJ-SR-003 | RAII and memory safety | Linux ASan/UBSan workflow passed | PARTIAL — no repeated-run leak report or full resource-failure injection |
-| PRJ-SR-004 | Bounded queues and overflow handling | Queue capacity and overflow rejection checks | PASS for direct queue test; simultaneous all-lane overflow scenario remains untested |
-| PRJ-SR-005 | Malformed input does not cause abnormal termination | Malformed and invalid configuration rejection tests; CI application smoke tests | PARTIAL — full user-facing recovery/termination behavior should be checked manually |
-
-## Verified CI and benchmark evidence
-
-### CI evidence
-
-- Latest main CI after QA regression merges: run #241, commit `43681916f3f18da3b29d19c4bc79ae10c46ae13e`: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382805876 — Ubuntu and Windows build/tests/smoke tests passed; Ubuntu passed 985 checks, ASan/UBSan and coverage job passed. Coverage: 88.0% line and 54.8% branch. Windows sanitizer is skipped by the workflow.
-- PR #98 adaptive timing boundary tests: run #141 passed Ubuntu and Windows: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42791702831. Merged as `32f53971bc6ab77f035d00eb1fe7ba2ffb34c1fd`.
-- PR #99 transfer backpressure test: run #142 passed Ubuntu and Windows: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42792945910. Merged as `0ab0ff995249e7cd0eb26d9debfa618938540d69`.
-- PR #101 emergency queue ordering test: run #143 passed Ubuntu and Windows: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42795154445. Merged as `093a7c5ec684156d44affa2a3c84da6503d76e30`.
-- PR #102 long-lane/high-queue console test: run #144 passed Ubuntu and Windows: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42795769676. Merged as `522da64295b4f5701f7538b6fc1b475f525d9e75`.
-- PR #104 vehicle ID uniqueness across lanes/intersections: run #153 passed Ubuntu and Windows: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796601039. Merged as `45dab9fd0073ca1df7f2c49bb5dc0c22f9b5ed9d`.
-- PR #105 engine-level green-only dequeue: run #154 passed Ubuntu and Windows: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796698371. Merged as `178353b0dc8449e56ed517c0ae1e0c6c89dec827`.
-- PR #107 exact one-tick connected transfer latency: run #159 passed Ubuntu and Windows: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42797325343. Merged as `04c663d984f350ca0ed4ffad2280f3171e0e636d`.
-- PR #108 repeated simulation lifecycle: run #162 passed Ubuntu and Windows: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42797660386. Merged as `4ccfc24ee7ef477454041aa5f7c3954e4ce31020`.
-
-- Baseline main workflow run #99: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42450330604
-- Baseline tested main commit: `f8c6cfda5355f3e2cea2ff2bbd71dae23180c540`; 436 automated checks passed on Ubuntu and Windows, both smoke tests passed, and Ubuntu ASan/UBSan passed. Windows sanitizer was skipped.
-- Manual-stop PR #94 workflow run #132: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42785408865
-- PR #94 head `9b8730c4cb0fdb5f8e0a172e40b16912fff49c53`: Ubuntu and Windows builds, automated tests, default-app smoke tests and config-driven multi-intersection smoke tests passed; Ubuntu ASan/UBSan passed.
-- PR #94 was merged to main as `339dfed320036ed1c42a375f70bc1189fb5b4244`.
-
-### Performance benchmark
-
-- Benchmark source merged through PR #93: `benchmarks/performance_benchmark.cpp`.
-- Evidence documented through PR #95.
-- Five measured runs of 10,000 ticks after one warm-up.
-- Average: 84,371.19 ticks/second; median: 88,344.30 ticks/second; target: 500 ticks/second.
-- Four intersections were independent, rendering was disabled, and exact hardware/compiler metadata was not recorded. Do not claim evaluator-hardware or connected-intersection performance certification.
-
-### Manual-stop implementation
-
-PR #94: https://github.com/team16-traffic-management/team16-traffic-management-system/pull/94 — merged to `main` as `339dfed320036ed1c42a375f70bc1189fb5b4244`.
-
-The merged implementation adds a process-level SIGINT handler, atomic stop request, open-ended `total_ticks=0` mode, actual completed-tick reporting and automated tests for direct stop request and SIGINT. PR #94 workflow run #132 passed on Ubuntu and Windows; Ubuntu ASan/UBSan passed. Automated CI verification is complete for this change. A separate manual interactive Ctrl+C run is still not evidenced in the repository, so do not claim all manual Test Plan cases are complete.
-
-## Test Plan execution and acceptance
-
-The automated suite's 436 checks are not the same as the Test Plan's 66 positive/negative cases. Record each planned case's actual execution result separately; do not infer a PASS solely from related unit assertions.
-
-Priority remaining evidence:
-1. TMS-F-061: implementation and cross-platform CI are complete; perform and record one manual interactive Ctrl+C run and verify the displayed partial summary.
-2. TMS-F-022: geometric movement-conflict validation, not merely a maximum-one-GREEN-lane invariant.
-3. TMS-F-040–042: one-tick transfer latency, full destination queue behavior and invalid-intersection handling.
-4. TMS-F-020 / TMS-F-030: adaptive timing bounds and emergency preemption delay.
-5. TMS-NF-002 / PRJ-SR-003: quantified memory-growth/leak validation. Repeated engine lifecycle execution is now covered by PR #108, but this is not a leak report.
-6. TMS-NF-004: manual visual console usability inspection. Long lane names and high queue rendering are now asserted by PR #102.
-7. TMS-NF-001: connected-intersection benchmark and evaluator-hardware run, if available.
-
-The Test Plan currently contains a conflict with the SRS for invalid configuration behavior: SRS PRJ-SR-002 calls for rejection with a clear error, while some Test Plan cases expect safe-default substitution. Resolve the document conflict before marking those cases passed. The Test Plan also describes automated scripts as out of scope even though the repository now has an automated C++ test suite; update its execution-method description.
-
-The SRS RTM and Test Plan RTM must be reconciled case-by-case. Do not mark all 66 cases complete from the 436 automated assertion count. Overall system acceptance remains PARTIAL pending the outstanding cases and sign-off.
-
+Case-level results: `docs/TEST_EXECUTION_REGISTER.md`. Reports: `docs/QA_Reports/`. Sprint 3 changes: `docs/SPRINT_3.md`.
 
 ## Full requirement-level RTM
 
-**Status convention:** N = planned acceptance case not individually executed. Automated checks listed below are supporting evidence only and do not change the acceptance status.
+**Status convention:** ACCEPTED = both Test Plan cases executed and passed on the final build. PENDING CI = the functional part passed locally and the verdict needs a Linux-only tool that runs in GitHub Actions on push.
 
-| Requirement | Implementation component(s) | Planned Test Plan cases | Current automated evidence | Acceptance status |
+| Requirement | Implementation component(s) | Test Plan cases | Executable checks (acceptance runner / script) | Acceptance status |
 |---|---|---|---|---|
-| TMS-F-001 | VehicleGenerator | TC-Gen-001-P/N | testArrivalRates; testProbabilityBoundaries | NOT RUN |
-| TMS-F-002 | Vehicle / VehicleGenerator | TC-Gen-002-P/N | testVehicleIdsAreUniqueAcrossLanesAndIntersections | NOT RUN |
-| TMS-F-003 | LaneQueue | TC-Gen-003-P/N | testQueueCapacityAndEmptyDequeue; testEmergencyQueuePriorityAndStableOrdering (normal-vehicle FIFO preserved when an emergency vehicle is interleaved) | NOT RUN |
-| TMS-F-010 | Intersection / LaneQueue | TC-Queue-001-P/N | testSiblingLaneQueueIsolation | NOT RUN |
-| TMS-F-011 | LaneQueue / StatisticsCollector | TC-Queue-002-P/N | testQueueCapacityAndEmptyDequeue; testSimultaneousOverflowAcrossEveryLane | NOT RUN |
-| TMS-F-012 | SimulationEngine / SignalController | TC-Queue-003-P/N | testEngineDequeuesVehiclesOnlyOnGreen | NOT RUN |
-| TMS-F-013 | StatisticsCollector | TC-Queue-004-P/N | testStatisticsCalculations (immediate-dequeue edge remains partial) | NOT RUN |
-| TMS-F-020 | SignalController | TC-Sig-001-P/N | testSignalPhaseTransitions (zero-duration config expectation remains a spec edge) | NOT RUN |
-| TMS-F-021 | SignalController | TC-Sig-002-P/N | testAdaptiveGreenExtensionBounds | NOT RUN |
-| TMS-F-022 | SignalController / Intersection | TC-Sig-003-P/N | testNoSimultaneousGreenSignals (does not prove geometric turn-conflict matrix) | NOT RUN |
-| TMS-F-023 | SignalController / ConsoleView | TC-Sig-004-P/N | testSignalPhaseTransitions; testConsoleStatusFields (exact one-tick rendering partial) | NOT RUN |
-| TMS-F-024 | SimulationEngine / SignalController | TC-Sig-005-P/N | testAdaptiveModeLoadedFromConfiguration; testConfigurationValidationBoundaries | NOT RUN |
-| TMS-F-030 | VehicleGenerator / Vehicle | TC-Emg-001-P/N | testEmergencyProbabilityOneAlwaysGeneratesEmergencyVehicles; testZeroEmergencyProbabilityProducesNormalVehicles | NOT RUN |
-| TMS-F-031 | LaneQueue | TC-Emg-002-P/N | testEmergencyQueuePriorityAndStableOrdering | NOT RUN |
-| TMS-F-032 | SignalController / SimulationEngine | TC-Emg-003-P/N | testEmergencyPreemption; testNoSimultaneousGreenSignals (max delay boundary partial) | NOT RUN |
-| TMS-F-040 | SimulationEngine / Intersection | TC-Multi-001-P/N | testConfigDrivenIntersections (fault isolation not implemented/evidenced) | NOT RUN |
-| TMS-F-041 | SimulationEngine / PendingTransfer | TC-Multi-002-P/N | testConnectedVehicleTransferTakesOneTick; testPendingTransferWaitsForDestinationCapacity | NOT RUN |
-| TMS-F-042 | StatisticsCollector / SimulationEngine | TC-Multi-003-P/N | testStatisticsCalculations; testZeroThroughputIntersectionAppearsInAggregateReport | NOT RUN |
-| TMS-F-050 | StatisticsCollector | TC-Stats-001-P/N | testStatisticsCalculations | NOT RUN |
-| TMS-F-051 | StatisticsCollector | TC-Stats-002-P/N | testStatisticsCalculations; testMaxQueueLengthOneBoundary | NOT RUN |
-| TMS-F-052 | StatisticsCollector | TC-Stats-003-P/N | testStatisticsCalculations | NOT RUN |
-| TMS-F-060 | SimulationEngine::loadConfigFromFile | TC-Sim-001-P/N | testConfigDrivenIntersections; testConfigurationValidationBoundaries; testMissingConfigurationFileRejected; config-fixture CI smoke tests | NOT RUN |
-| TMS-F-061 | main / SimulationEngine | TC-Sim-002-P/N | testManualStopProducesPartialSummary; testSigintStopsOpenEndedRun | NOT RUN |
-| TMS-NF-001 | SimulationEngine / ConsoleView | TC-Perf-01-P/N | Local benchmark and testTenThousandTickStability; connected topology/evaluator hardware not covered | NOT RUN |
-| TMS-NF-002 | SimulationEngine / RAII containers | TC-Rel-01-P/N | testTenThousandTickStability; testRepeatedSimulationLifecycle; Linux ASan/UBSan CI (no quantified leak report) | NOT RUN |
-| TMS-NF-003 | SimulationEngine and domain modules | TC-Maint-01-P/N | testConfigDrivenIntersections and invalid topology checks | NOT RUN |
-| TMS-NF-004 | ConsoleView | TC-UX-01-P/N | testConsoleStatusFields; testConsoleLongLaneAndHighQueueDisplay (manual visual inspection outstanding) | NOT RUN |
-| TMS-NF-005 | Makefile / GitHub Actions | TC-Port-01-P/N | Ubuntu/Windows CI build and smoke tests; Makefile check-deps and CI negative compiler diagnostic test | NOT RUN |
-| PRJ-SR-001 | LaneQueue / Intersection / SimulationEngine | TC-Rob-001-P/N | testInvalidConfiguration; testIntersectionValidationAndSignalRegistration; direct container-bounds acceptance case absent | NOT RUN |
-| PRJ-SR-002 | SimulationEngine::loadConfigFromFile | TC-Rob-002-P/N | testConfigurationValidationBoundaries; testMalformedConfiguration; invalid/corrupted fixture CI | NOT RUN |
-| PRJ-SR-003 | RAII / standard containers | TC-Rob-003-P/N | Linux ASan/UBSan, 10,000-tick and repeated lifecycle checks; leak/exception-injection evidence absent | NOT RUN |
-| PRJ-SR-004 | LaneQueue / StatisticsCollector | TC-Rob-004-P/N | testQueueCapacityAndEmptyDequeue; testSimultaneousOverflowAcrossEveryLane | NOT RUN |
-| PRJ-SR-005 | SimulationEngine / main | TC-Rob-005-P/N | Malformed config rejection and top-level controlled error path; runtime module-fault isolation absent | NOT RUN |
+| TMS-F-001 | VehicleGenerator | TC-Gen-001-P/N | `genSpawnRate`; `genZeroRate` | **ACCEPTED (both cases PASS)** |
+| TMS-F-002 | Vehicle / VehicleGenerator | TC-Gen-002-P/N | `genIdTickType`; `genSameTickUnique` | **ACCEPTED (both cases PASS)** |
+| TMS-F-003 | LaneQueue | TC-Gen-003-P/N | `genFifo`; `genFifoWithEmergency` | **ACCEPTED (both cases PASS)** |
+| TMS-F-010 | Intersection / LaneQueue | TC-Queue-001-P/N | `queueIndependent`; `queueSiblingIntact` | **ACCEPTED (both cases PASS)** |
+| TMS-F-011 | LaneQueue / StatisticsCollector | TC-Queue-002-P/N | `queueCapacityEnforced`; `queueZeroCapacity` | **ACCEPTED (both cases PASS)** |
+| TMS-F-012 | SimulationEngine / SignalController | TC-Queue-003-P/N | `queueDequeueOnlyGreen`; `queueEmptyGreen` | **ACCEPTED (both cases PASS)** |
+| TMS-F-013 | StatisticsCollector | TC-Queue-004-P/N | `queueWaitTime`; `queueImmediateWait` | **ACCEPTED (both cases PASS)** |
+| TMS-F-020 | SignalController | TC-Sig-001-P/N | `sigFixedCycle`; `sigZeroDuration` | **ACCEPTED (both cases PASS)** |
+| TMS-F-021 | SignalController | TC-Sig-002-P/N | `sigAdaptiveExtends`; `sigAdaptiveCapped` | **ACCEPTED (both cases PASS)** |
+| TMS-F-022 | SignalController / Intersection | TC-Sig-003-P/N | `sigNoConflictingGreen`; `sigForcedConflict` | **ACCEPTED (both cases PASS)** |
+| TMS-F-023 | SignalController / ConsoleView | TC-Sig-004-P/N | `sigYellowBeforeRed`; `sigOneTickYellow` | **ACCEPTED (both cases PASS)** |
+| TMS-F-024 | SimulationEngine / SignalController | TC-Sig-005-P/N | `sigModeViaConfig`; `sigInvalidMode` | **ACCEPTED (both cases PASS)** |
+| TMS-F-030 | VehicleGenerator / Vehicle | TC-Emg-001-P/N | `emgSpawnProbability`; `emgZeroProbability` | **ACCEPTED (both cases PASS)** |
+| TMS-F-031 | LaneQueue | TC-Emg-002-P/N | `emgPriority`; `emgFifoAmongEmergency` | **ACCEPTED (both cases PASS)** |
+| TMS-F-032 | SignalController / SimulationEngine | TC-Emg-003-P/N | `emgPreemptWithinDelay`; `emgPreemptNoConflict` | **ACCEPTED (both cases PASS)** |
+| TMS-F-040 | SimulationEngine / Intersection | TC-Multi-001-P/N | `multiIndependent`; `multiFaultIsolation` | **ACCEPTED (both cases PASS)** |
+| TMS-F-041 | SimulationEngine / PendingTransfer | TC-Multi-002-P/N | `multiGreenWave`; `multiFullDownstream` | **ACCEPTED (both cases PASS)** |
+| TMS-F-042 | StatisticsCollector / SimulationEngine | TC-Multi-003-P/N | `multiStatsSum`; `multiZeroThroughput` | **ACCEPTED (both cases PASS)** |
+| TMS-F-050 | StatisticsCollector | TC-Stats-001-P/N | `statsAverage`; `statsAverageNoData` | **ACCEPTED (both cases PASS)** |
+| TMS-F-051 | StatisticsCollector | TC-Stats-002-P/N | `statsMaxQueue`; `statsMaxQueueOne` | **ACCEPTED (both cases PASS)** |
+| TMS-F-052 | StatisticsCollector | TC-Stats-003-P/N | `statsThroughputCount`; `statsBlockedNotThroughput` | **ACCEPTED (both cases PASS)** |
+| TMS-F-060 | SimulationEngine::loadConfigFromFile | TC-Sim-001-P/N | `simConfigApplied`; `simMissingConfig` | **ACCEPTED (both cases PASS)** |
+| TMS-F-061 | main / SimulationEngine | TC-Sim-002-P/N | `simNaturalCompletion`; run_acceptance.sh (real Ctrl+C) | **ACCEPTED (both cases PASS)** |
+| TMS-NF-001 | SimulationEngine / ConsoleView | TC-Perf-01-P/N | `perfTarget`; `perfMaxLoad` | **ACCEPTED (both cases PASS)** |
+| TMS-NF-002 | SimulationEngine / RAII containers | TC-Rel-01-P/N | `relLongRun`; `relRepeatedRuns` | Functional PASS; Rel-01-P PENDING CI, Rel-01-N PENDING CI |
+| TMS-NF-003 | SimulationEngine and domain modules | TC-Maint-01-P/N | `maintNewTopology`; `maintInvalidTopology` | **ACCEPTED (both cases PASS)** |
+| TMS-NF-004 | ConsoleView | TC-UX-01-P/N | `uxReadable`; `uxLongName` | **ACCEPTED (both cases PASS)** |
+| TMS-NF-005 | Makefile / GitHub Actions | TC-Port-01-P/N | run_acceptance.sh + CI portability-compare; run_acceptance.sh (missing make) | Functional PASS; Port-01-P PENDING CI |
+| PRJ-SR-001 | LaneQueue / Intersection / SimulationEngine | TC-Rob-001-P/N | ASan/UBSan (Linux CI); `robInvalidIndex` | Functional PASS; Rob-001-P PENDING CI |
+| PRJ-SR-002 | SimulationEngine::loadConfigFromFile | TC-Rob-002-P/N | `robInvalidValues`; `robWrongType` | **ACCEPTED (both cases PASS)** |
+| PRJ-SR-003 | RAII / standard containers | TC-Rob-003-P/N | `robSustainedRun`; `robMidRunException` | Functional PASS; Rob-003-P PENDING CI, Rob-003-N PENDING CI |
+| PRJ-SR-004 | LaneQueue / StatisticsCollector | TC-Rob-004-P/N | `robOverflow`; `robOverflowEveryLane` | **ACCEPTED (both cases PASS)** |
+| PRJ-SR-005 | SimulationEngine / main | TC-Rob-005-P/N | `robMalformedInput`; `robModuleFault` | **ACCEPTED (both cases PASS)** |
 
-**Important:** This RTM maps all 33 requirement IDs to design components and planned cases. It does not mark any requirement accepted. The detailed case register remains 66/66 NOT RUN until the case-specific execution record is completed.
+## Requirement gaps closed in Sprint 3
 
+| Requirement | Gap before Part 3 | Closed by |
+|---|---|---|
+| TMS-F-032 | No maximum preemption delay; worst case 22 ticks | Bounded preemption sequence and `max_preemption_delay` (DEF-01) |
+| TMS-F-020 / TMS-F-060 | Signal durations not configurable from file | `green_duration`, `yellow_duration`, `red_duration` (DEF-02) |
+| TMS-F-021 | Adaptive base hard-coded; maximum not configurable | Configured base and `max_green_extension` (DEF-03) |
+| TMS-NF-004 | Long lane names misaligned columns | Dynamic column widths (DEF-04) |
+| TMS-NF-001 / PRJ-SR-004 | Unbounded in-flight transfers under chained overload | Spillback (DEF-05) |
+| TMS-F-042 / TMS-F-052 | No per-intersection totals | Per-intersection totals and `SYSTEM TOTAL` row (DEF-06) |
 
-### Latest additions (PR #123)
-- Missing config path: direct unit assertion plus Ubuntu/Windows CLI smoke checks verify a descriptive error and non-zero exit.
-- Missing compiler: Makefile check-deps target and Ubuntu CI negative dependency test verify an actionable C++17/CXX message.
-- Crosswalk after PR #123: 44 direct, 18 partial, 4 without direct automated checks. All 66 acceptance cases remain NOT RUN.
+## Items that were open before Part 3 and how they were resolved
+
+| Previously open item | Resolution |
+|---|---|
+| Execute the 66 Test Plan cases individually | Done: 60 PASS, 0 FAIL, 6 PENDING CI |
+| Manual Ctrl+C run (TMS-F-061) | Executed with a genuine console Ctrl+C (TC-Sim-002-N): exit 0, summary ticks = rendered ticks |
+| Geometric movement conflicts (TMS-F-022) | The controller grants Green to one lane at a time, which is stricter than conflict-free sets. TC-Sig-003-P/N verify no simultaneous Greens, including under forced same-tick overrides. Turning-movement modelling is outside the implemented design (documented deviation). |
+| Invalid-intersection isolation (TMS-F-040) | Fail-fast rejection of invalid definitions plus verified runtime isolation (TC-Multi-001-N) |
+| Emergency preemption delay (TMS-F-032) | Implemented and verified (DEF-01; TC-Emg-003-P/N) |
+| Quantified leak evidence (TMS-NF-002 / PRJ-SR-003) | Valgrind and LeakSanitizer stages added to CI; verdict pending the push run |
+| Manual console usability (TMS-NF-004) | Automated alignment checks over 30 rendered ticks and a 29-character lane name, plus DEF-04 fix |
+| Connected-topology benchmark (TMS-NF-001) | TC-Perf-01-N: 8 chained intersections at 0.95 arrival, 10,222 ticks/s |
+| SRS/Test Plan conflict on invalid config | Resolved in Test Plan v1.1/v1.2: rejection with a clear error, matching PRJ-SR-002 |
+
+## Earlier CI evidence (history)
+
+- Baseline main run #99 (`f8c6cfd`): 436 checks on Ubuntu and Windows; ASan/UBSan passed.
+- PR #94 graceful stop (run #132), merged as `339dfed`.
+- PRs #98–#108 (runs #141–#162): adaptive bounds, transfer backpressure, emergency ordering, console output, ID uniqueness, green-only dequeue, one-tick transfer, repeated lifecycle.
+- PRs #115–#123: boundary and diagnostic regressions. Main run #243 reported 985 checks; coverage 88.0% lines and 54.8% branches.

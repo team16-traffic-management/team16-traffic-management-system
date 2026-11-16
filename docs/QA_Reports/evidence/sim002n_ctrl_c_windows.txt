@@ -1,0 +1,31 @@
+Ctrl+C delivered after 1000 ms; exit status 0; rendered tick blocks: 20420
+
+         TMS SIMULATION REPORT (20420 TICKS)
+==================================================
+Total Throughput (Processed)        : 9292
+Overall Average Wait Time           : 76.58 ticks
+Total Overflow (Blocked) Vehicles   : 23206
+Total Emergency Preemption Events   : 286
+
+Per-Intersection Lane Breakdown:
+--------------------------------------------------------------------------
+Intersection      Lane             Throughput  Avg Wait        Max Queue   
+--------------------------------------------------------------------------
+Main              East             2212        80.82           10          
+Main              North            2423        72.82           10          
+Main              South            2240        79.90           10          
+Main              West             2417        73.41           10          
+==========================================================================
+
+Per-Intersection Totals:
+--------------------------------------------------------------------------
+Intersection      Throughput  Avg Wait    Blocked   Preemptions  Max Queue
+--------------------------------------------------------------------------
+Main              9292        76.58       23206     286          10
+--------------------------------------------------------------------------
+SYSTEM TOTAL      9292        76.58       23206     286          10
+==========================================================================
+
+Run termination: user requested stop (20420 ticks executed)
+Total successful vehicle transfers: 0
+Vehicles still waiting for transfer: 0

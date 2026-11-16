@@ -28,12 +28,15 @@ public:
     void run(int maxTicks, bool silent = false);
     void tick(bool silent = false);
     const StatisticsCollector& getStats() const;
+    const std::vector<Intersection>& getIntersections() const;
+    std::size_t getPendingTransferCount() const;
     std::size_t getTotalTransfers() const;
     int getCurrentTick() const;
 private:
     struct IntersectionConnection { std::string sourceIntersectionId; std::string destinationIntersectionId; std::string laneName; };
     struct PendingTransfer { std::string destinationIntersectionId; std::string laneName; Vehicle vehicle; };
     void deliverPendingTransfers();
+    bool hasDownstreamCapacity(const IntersectionConnection& connection) const;
     int configuredQueueCapacity_{15};
     std::vector<Intersection> intersections_;
     std::vector<IntersectionConnection> connections_;

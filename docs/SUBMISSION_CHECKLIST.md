@@ -17,9 +17,9 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] Supplied Test Plan v1.1 maps `TC-Gen-003-N` to FIFO stability when emergency traffic is interleaved; queue-capacity tests remain under TMS-F-011 / PRJ-SR-004.
 - [x] Add five current-parser-compatible config fixtures under `tests/data/` (baseline, zero-values, invalid-values, high-load, corrupted) with reproducibility notes.
 - [x] Extend CI to run the three valid fixtures and verify the two invalid fixtures are rejected on Ubuntu and Windows.
-- [ ] Replace the repository Test Plan DOCX with the supplied implementation-aligned v1.1 revision: Section 6.1 and Appendix B use current parser syntax; zero-capacity validation is separated from valid config fixtures.
+- [x] Repository Test Plan DOCX updated to v1.2 (includes the v1.1 alignment): Section 6.1 and Appendix B use current parser syntax; zero-capacity validation is separated from valid config fixtures.
 - [x] Supplied Test Plan v1.1 documents the consolidated real-class C++ test harness and separates automated CI checks from the 66 acceptance cases.
-- [ ] Update Test Plan from Draft and obtain approval/sign-off.
+- [x] Test Plan moved from Draft to v1.2 (executed). Approval/sign-off is still pending (see Sign-off below).
 - [x] Review SAD v1.0 content: component responsibilities/descriptions, synchronous tick-driven modular architecture pattern, two textual workflows and partial C++ class interface outlines are present.
 - [x] Add two implementation-aligned PlantUML sequence diagram sources under `Documents/diagrams/` (`TMS_Vehicle_Admission_Sequence.puml` and `TMS_Signal_And_Dispatch_Sequence.puml`).
 - [x] Supplied SAD v3.1 includes both implementation-aligned sequence diagrams; PDF preview reviewed.
@@ -53,34 +53,36 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] Verify README build/run instructions from a clean checkout: main CI run #243 used a fresh checkout and passed compiler preflight, build, tests and smoke tests on Ubuntu/Windows.
 
 ## Part 3 — Testing and final documentation
-- [x] Unit Test Report records baseline main CI run #99: 436 checks passed on Ubuntu and Windows.
-- [x] System Validation Report distinguishes automated CI evidence from manual Test Plan execution.
-- [x] RTM updated after PR #94 merge; implementation, automated verification and manual acceptance are separate.
-- [ ] Update the earlier test cases and Test Case Document to reflect changes made during the sprints.
-- [x] Create `docs/TEST_EXECUTION_REGISTER.md` with all 66 Test Plan case IDs, owners and initial NOT RUN status.
-- [x] Refresh `docs/TEST_CASE_AUTOMATION_CROSSWALK.md` after PRs #115–#122 plus the current diagnostic-test PR once merged: 44 cases have direct automated checks, 18 have partial evidence, and 4 have no direct automated check identified (PR #123 added direct checks for TC-Sim-001-N and TC-Port-01-N) (PR #123 added direct checks for TC-Sim-001-N and TC-Port-01-N) (PRs #120–#123 merged; main CI run #241 passed). This remains a mapping, not execution of all 66 Test Plan cases.
-- [ ] Execute and record the 66 Test Plan cases individually; do not infer their results from 436 automated assertions.
-- [ ] Perform manual Ctrl+C stop and verify the partial-run summary (TMS-F-061).
-- [ ] Test geometric movement conflicts (TMS-F-022); current automated invariant only checks at most one GREEN lane.
-- [x] Test destination queue backpressure (PR #99; CI run #142 passed).
-- [x] Verify exact one-tick transfer latency (PR #107; CI run #159 passed).
-- [ ] Verify invalid-intersection isolation (TMS-F-040–042).
-- [x] Test adaptive timing boundaries (PR #98; CI run #141 passed).
-- [ ] Verify emergency maximum-wait/preemption delay (TMS-F-030).
-- [x] Test emergency queue priority and FIFO ordering (PR #101; CI run #143 passed).
-- [x] Execute repeated simulation create/run/destroy lifecycle (PR #108; CI run #162 passed).
-- [ ] Retain quantified memory-growth/leak evidence if required (TMS-NF-002 / PRJ-SR-003); repeated lifecycle execution is not a leak report.
-- [x] Automated console assertions for long lane names/high queue lengths (PR #102; CI run #144 passed).
-- [ ] Manually inspect visual console usability (TMS-NF-004).
-- [x] Verify vehicle ID uniqueness across multiple lanes/intersections (PR #104; CI run #153 passed).
-- [x] Verify engine dequeues vehicles only on green (PR #105; CI run #154 passed).
-- [x] Local Windows benchmark met 500 ticks/sec for its fixture (median 88,344.30 ticks/sec); connected-topology and evaluator-hardware evidence remain outstanding.
-- [x] Generate final main line/branch coverage: run #241, 88.0% lines (667/758), 54.8% branches (686/1,252), scope documented in QA reports.
-- [x] Place the four QA reports in `docs/QA_Reports/`, satisfying Part 3's requirement to upload the reports to the `docs` folder. Final main run #235 generated whole-production-source coverage: 88.0% lines and 54.6% branches.
-- [x] Draft `docs/FINAL_PROJECT_REPORT.md` from repository, CI, QA and Jira evidence.
+
+### 1. Test case updation
+- [x] Update the earlier test cases to reflect the sprint changes: Test Plan v1.2 revises 38 cases, each with a "Change in v1.2" row (`Documents/Test_Plan_Traffic_Management_System.docx`).
+- [x] Update the Test Case Document: every one of the 66 cases now records the automated check, the actual result and the status; RTM status, Section 5.1, Section 6.1 test data and Appendix B updated; revision history rows 1.1 and 1.2 added.
+
+### 2. Testing
+- [x] Complete the testing according to the Test Plan: all 66 cases executed individually on 16-11-2026 — 60 PASS, 0 FAIL, 6 PENDING CI (`docs/TEST_EXECUTION_REGISTER.md`).
+- [x] Unit Test Report: 42 test functions, 1,198 checks, 0 failures (`docs/QA_Reports/Unit_Test_Report.md`).
+- [x] System Validation Report: 29/33 requirements accepted, 4 pending the Linux memory-tool/portability verdict (`docs/QA_Reports/System_Validation_Report.md`).
+- [x] Code Coverage Report: 92.3% lines (849/920), 90.4% functions (`docs/QA_Reports/Code_Coverage_Report.md`, HTML in `docs/QA_Reports/coverage/`).
+- [x] Branch Coverage Report: 58.9% raw (942/1,600); 85.7% excluding compiler-generated exception branches (`docs/QA_Reports/Branch_Coverage_Report.md`).
+- [x] Upload all the reports to the `docs` folder: `docs/QA_Reports/` with `coverage/` and `evidence/`.
+- [x] Manual Ctrl+C stop verified with a genuine console Ctrl+C (TC-Sim-002-N).
+- [x] Emergency preemption delay verified (TC-Emg-003-P: delay 2 with a configured maximum of 2).
+- [x] Invalid-intersection isolation verified (TC-Multi-001-N: fail-fast rejection plus runtime isolation).
+- [x] Conflicting-Green safety verified, including forced same-tick overrides (TC-Sig-003-P/N). The design serves one lane at a time; turning-movement modelling is a documented deviation.
+- [x] Console usability verified by automated alignment checks (TC-UX-01-P/N) after fixing DEF-04.
+- [x] Connected-topology performance measured (TC-Perf-01-N: 8 chained intersections).
+- [ ] **After pushing:** close the 6 PENDING CI cases (TC-Rob-001-P, TC-Rel-01-P/N, TC-Rob-003-P/N, TC-Port-01-P) from the GitHub Actions `acceptance-evidence-Linux` artifact and the `portability-compare` job. Steps are at the end of `docs/TEST_EXECUTION_REGISTER.md`.
+- [ ] **After pushing:** record the CI run link in the Unit Test, System Validation and Coverage reports.
+
+### 3. Optional Sprint 3
+- [x] Spill-over development completed as Sprint 3: six items DEF-01 to DEF-06 (`docs/SPRINT_3.md`).
+- [x] Testing and reports completed in parallel; the two failures found during execution (TC-Perf-01-N, TC-UX-01-N) were fixed and re-executed.
+- [ ] Record the Sprint 3 items in the team's backlog tool (GitHub Project / Jira) with owners and story points.
+
+### Sign-off
 - [ ] Review and approve `docs/FINAL_PROJECT_REPORT.md` with the full team.
 - [ ] Review the final academic report, demo guide and presentation.
-- [ ] Verify final repository/submission links and obtain required sign-offs.
+- [ ] Verify final repository/submission links and obtain the required sign-offs.
 
 ## Latest QA regression evidence
 - PR #115 sibling-lane isolation and zero-emergency-probability checks: https://github.com/team16-traffic-management/team16-traffic-management-system/pull/115 (CI run #43377370669 passed Ubuntu and Windows).

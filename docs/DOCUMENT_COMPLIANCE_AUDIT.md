@@ -2,6 +2,8 @@
 
 **Audit basis:** The three DOCX files currently stored under `Documents/`, the Part 1 assignment brief supplied by the team, and the current `main` repository tree. This is a document-compliance review, not a claim that the system has passed acceptance testing.
 
+> **Update 16-11-2026 (Part 3):** The repository Test Plan is now v1.2. It includes the v1.1 alignment and records the executed result of all 66 cases (60 PASS, 0 FAIL, 6 pending the Linux CI run), so the "all 66 cases Not Run" finding below no longer applies. The Sprint 3 design changes are recorded in `docs/SAD_IMPLEMENTATION_ADDENDUM.md` Section 8. The SRS and SAD findings below are unchanged.
+
 ## Executive finding
 
 The documents are present and contain substantial requirements, design and test-plan material. They are **not yet fully compliant with all explicitly listed Part 1 items**. The largest gaps are the absence of clearly evidenced UML use-case and sequence diagrams, a missing security architecture section, incomplete requirement traceability in the SAD, and a Test Plan that explicitly labels all 66 cases Not Run.

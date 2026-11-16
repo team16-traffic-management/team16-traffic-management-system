@@ -20,8 +20,8 @@ The recorded functional scope included randomized arrivals, independent lane pro
 
 ## Current source of truth
 For current test-suite scope, CI evidence, tested commits and limitations, use:
-- `reports/Unit_Test_Report.md`
-- `reports/System_Validation_Report.md`
+- `docs/QA_Reports/Unit_Test_Report.md`
+- `docs/QA_Reports/System_Validation_Report.md`
 - `docs/TRACEABILITY.md`
 - `Documents/RTM_Implementation_Status.md`
 
