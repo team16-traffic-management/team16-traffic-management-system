@@ -9,7 +9,7 @@
 |---|---|
 | Execution date | 16-11-2026 |
 | Local environment | Windows 11, MSYS2 UCRT64 `g++ 16.2.0`, `-std=c++17 -O2` |
-| Linux environment | GitHub Actions `ubuntu-latest` (ASan/UBSan/LeakSanitizer, Valgrind) — runs on push |
+| Linux environment | GitHub Actions `ubuntu-latest`, g++ 15.2.0 (ASan/UBSan/LeakSanitizer, Valgrind) — [CI run #246](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43938226798), 16-11-2026 19:22 UTC |
 | Code under test | Sprint 3 baseline (see `docs/SPRINT_3.md`) |
 | Command | `bash scripts/run_acceptance.sh` (or `make acceptance-full`) |
 | In-process runner | `tests/acceptance/test_plan_acceptance.cpp` — one function per TC ID, 62 cases |
@@ -20,7 +20,7 @@
 
 - `PASS` — executed against the recorded build; actual result matched the v1.2 expected result.
 - `FAIL` — executed; actual result did not match. Logged as a defect (see `docs/SPRINT_3.md`).
-- `PENDING CI` — functional part executed locally; the verdict needs a Linux-only tool (Valgrind, LeakSanitizer, AddressSanitizer) or the Linux build, which the GitHub Actions workflow runs on push. Update these rows with the run link once CI finishes.
+- Six cases (TC-Rob-001-P, TC-Rel-01-P/N, TC-Rob-003-P/N, TC-Port-01-P) need Linux-only tools or the Linux build; their verdicts come from [CI run #246](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43938226798).
 - `BLOCKED` / `NOT RUN` — not executed.
 - Expected results are those of Test Plan v1.2. Cases whose expectations changed during the sprints are listed in the "Change in v1.2" rows of the Test Plan and in `docs/SPRINT_3.md`.
 
@@ -87,20 +87,20 @@ Requirement gaps closed before execution (TMS-F-032 preemption delay, configurab
 | TC-Sim-002-N | TMS-F-061 | Manually stopped run produces clean summary | Khushi Gupta | **PASS** | `run_acceptance.sh` | real Ctrl+C after 1 s: exit 0, summary for 20420 ticks = 20420 rendered tick blocks |
 | TC-Perf-01-P | TMS-NF-001 | Throughput performance target is met | Tarun Gowda P | **PASS** | `perfTarget` | 4 intersections x 4 lanes, 10,000 ticks: 15437 ticks/s (target >= 500) |
 | TC-Perf-01-N | TMS-NF-001 | Performance does not collapse under maximum load | Tarun Gowda P | **PASS** | `perfMaxLoad` | 4-intersection baseline 28379 ticks/s; 8 chained intersections @0.95 arrival 10222 ticks/s (ratio 0.36, linear expectation 0.50) |
-| TC-Rel-01-P | TMS-NF-002 | No crashes or leaks over a long run | Tarun Gowda P | **PENDING CI** | `relLongRun` | Functional part passed on Windows (10,000 ticks completed=yes, throughput=6217 (leak verdict: memory tool run)). The 0-leak verdict needs Valgrind/LeakSanitizer, which run in CI on push. |
-| TC-Rel-01-N | TMS-NF-002 | Repeated start/stop cycles do not accumulate leaks | Tarun Gowda P | **PENDING CI** | `relRepeatedRuns` | Functional part passed on Windows (10/10 sequential create/run/destroy cycles completed (leak verdict: memory tool run)). The 0-leak verdict needs Valgrind/LeakSanitizer, which run in CI on push. |
+| TC-Rel-01-P | TMS-NF-002 | No crashes or leaks over a long run | Tarun Gowda P | **PASS** | `relLongRun` + Linux CI | Linux CI run #246: 10,000-tick connected/adaptive run (long_run.cfg) under Valgrind — clean exit, 0 bytes in use at exit, 182,701 allocs / 182,701 frees, ERROR SUMMARY 0 errors (evidence/valgrind_linux.txt). |
+| TC-Rel-01-N | TMS-NF-002 | Repeated start/stop cycles do not accumulate leaks | Tarun Gowda P | **PASS** | `relRepeatedRuns` + Linux CI | Linux CI run #246: 10 repeated create/run/destroy cycles — LeakSanitizer reports no leaks; Valgrind over the acceptance runner: all heap blocks freed, 0 errors. |
 | TC-Maint-01-P | TMS-NF-003 | New topology can be added via config only | Tarun Gowda P | **PASS** | `maintNewTopology` + `run_acceptance.sh` | 3rd intersection added by config only: intersections=3, transfers=17, Harbor throughput=23; unchanged binary ran three_intersections.cfg: 3 intersection(s), Harbor reported |
 | TC-Maint-01-N | TMS-NF-003 | Invalid topology is rejected, not silently accepted | Tarun Gowda P | **PASS** | `maintInvalidTopology` | connection.One=One -> "Invalid configured connection: An intersection cannot connect to itself" |
 | TC-UX-01-P | TMS-NF-004 | Console output is readable during a run | Khushi Gupta | **PASS** | `uxReadable` | 30 tick blocks, 150 table rows checked, columns aligned=yes |
 | TC-UX-01-N | TMS-NF-004 | Output remains readable with long lane/high queue | Khushi Gupta | **PASS** | `uxLongName` | 29-char lane name, queue 15: 5 rows, columns aligned=yes, 15-char bar=yes |
-| TC-Port-01-P | TMS-NF-005 | Build succeeds on Linux and Windows | Tarun Gowda P | **PENDING CI** | `run_acceptance.sh` | Windows half executed: built with g++.exe (Rev4, Built by MSYS2 project) 16.2.0 on windows; reference output saved for cross-platform comparison. The Linux build and the Linux-vs-Windows output diff run in CI (`portability-compare` job). |
+| TC-Port-01-P | TMS-NF-005 | Build succeeds on Linux and Windows | Tarun Gowda P | **PASS** | `run_acceptance.sh` + Linux CI | Built and run on Windows (local g++ 16.2.0; CI MinGW g++ 15.2.0) and Linux (CI g++ 15.2.0). CI job 'portability-compare' in run #246: baseline.cfg output identical on Linux and Windows (196 lines). |
 | TC-Port-01-N | TMS-NF-005 | Missing build dependency fails with clear message | Tarun Gowda P | **PASS** | `run_acceptance.sh` | 'make' absent from PATH -> exit 127: scripts/run_acceptance.sh: line 138: make: command not found |
-| TC-Rob-001-P | PRJ-SR-001 | Container access is bounds-checked | Tejas Shetty | **PENDING CI** | — | ASan/UBSan is not available for MinGW on Windows. Runs on Ubuntu in CI (`make sanitize` and the ASan stage of `scripts/run_acceptance.sh`). |
+| TC-Rob-001-P | PRJ-SR-001 | Container access is bounds-checked | Tejas Shetty | **PASS** | — + Linux CI | Linux CI run #246 (Ubuntu, g++ 15.2.0): unit suite (1,198 checks), 60 acceptance cases and a 10,000-tick app run under AddressSanitizer + UBSan — no out-of-bounds or undefined-behaviour reports (evidence/sanitizers_linux.txt). |
 | TC-Rob-001-N | PRJ-SR-001 | Invalid index access is caught | Tejas Shetty | **PASS** | `robInvalidIndex` | lane index 10 of 4 -> out_of_range; generator lane 10 -> "Lane index is out of range"; engine -> "Unknown intersection ID: Intersection-10" |
 | TC-Rob-002-P | PRJ-SR-002 | Invalid config values are rejected safely | Tejas Shetty | **PASS** | `robInvalidValues` + `run_acceptance.sh` | arrival_rate=-0.5 -> "Value must be a finite number between 0 and 1: arrival_rate"; queue_capacity=0 -> "queue_capacity must be between 1 and 10000"; invalid_values.cfg -> "Value must be a finite number between 0 and 1: arrival_rate"; CLI invalid_values.cfg exit 1: Simulation failed: Value must be a finite number between 0 and 1: arrival_rate |
 | TC-Rob-002-N | PRJ-SR-002 | Wrong-type config value does not crash parser | Tejas Shetty | **PASS** | `robWrongType` | arrival_rate=abc -> "Invalid number for: arrival_rate"; total_ticks=ten -> "Invalid total_ticks value" |
-| TC-Rob-003-P | PRJ-SR-003 | Zero memory leaks over sustained run | Tejas Shetty | **PENDING CI** | `robSustainedRun` | Functional part passed on Windows (10,000-tick connected run completed at tick 10000 (0-byte leak verdict: memory tool run)). The 0-leak verdict needs Valgrind/LeakSanitizer, which run in CI on push. |
-| TC-Rob-003-N | PRJ-SR-003 | Mid-run exception still releases memory | Tejas Shetty | **PENDING CI** | `robMidRunException` | Functional part passed on Windows (exception "injected fault at tick 500" propagated out of a live engine at tick 500 and was caught; engine destroyed by stack unwinding (0-byte leak verdict: memory tool run)). The 0-leak verdict needs Valgrind/LeakSanitizer, which run in CI on push. |
+| TC-Rob-003-P | PRJ-SR-003 | Zero memory leaks over sustained run | Tejas Shetty | **PASS** | `robSustainedRun` + Linux CI | Linux CI run #246: Valgrind on the 10,000-tick connected run — 'All heap blocks were freed -- no leaks are possible', 0 bytes definitely/indirectly lost, 0 errors. |
+| TC-Rob-003-N | PRJ-SR-003 | Mid-run exception still releases memory | Tejas Shetty | **PASS** | `robMidRunException` + Linux CI | Linux CI run #246: exception thrown from a live engine at tick 500 and caught — LeakSanitizer and Valgrind both report no leaks (acceptance runner: 311,327 allocs / 311,327 frees, 0 errors). |
 | TC-Rob-004-P | PRJ-SR-004 | Queue overflow is handled safely | Tejas Shetty | **PASS** | `robOverflow` | capacity 3 @0.95 for 200 ticks: Hot blocked=140, Cold blocked=0, Hot size=3 |
 | TC-Rob-004-N | PRJ-SR-004 | Simultaneous overflow on every lane is handled | Tejas Shetty | **PASS** | `robOverflowEveryLane` | all 4 lanes capacity 1 @0.95, 50 ticks: blocked North=39 South=35 East=43 West=47 |
 | TC-Rob-005-P | PRJ-SR-005 | Malformed input does not cause abnormal termination | Tejas Shetty | **PASS** | `robMalformedInput` + `run_acceptance.sh` | corrupted.cfg -> "Invalid configuration at line 8" (CLI exit code checked by run_acceptance.sh); CLI corrupted.cfg exit 1 (handled): Simulation failed: Invalid configuration at line 8 |
@@ -117,16 +117,19 @@ Requirement gaps closed before execution (TMS-F-032 preemption delay, configurab
 
 | Status | Count |
 |---|---:|
-| PASS | 60 |
+| PASS | 66 |
 | FAIL | 0 |
-| PENDING CI | 6 |
 | BLOCKED | 0 |
 | NOT RUN | 0 |
 | **Total** | **66** |
 
-## After pushing: closing the PENDING CI rows
+## CI verification record ([CI run #246](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43938226798))
 
-1. Open the GitHub Actions run for the pushed commit (workflow "Traffic Management CI").
-2. Download the `acceptance-evidence-Linux` artifact and check `acceptance_results_linux.txt`, `sanitizers_linux.txt` and `valgrind_linux.txt`.
-3. Confirm the `portability-compare` job passed.
-4. Change each PENDING CI row above to PASS (or FAIL) and paste the run link, and update the matching "Status" rows in the Test Plan DOCX and `docs/QA_Reports/System_Validation_Report.md`.
+| Job | Result |
+|---|---|
+| Build and test (ubuntu-latest) | PASS — 1,198 unit checks; ASan/UBSan; Valgrind; 77 acceptance results PASS, 0 FAIL |
+| Build and test (windows-latest) | PASS — 1,198 unit checks; 69 acceptance results PASS, 0 FAIL, 1 BLOCKED (console Ctrl+C cannot be sent on a headless runner; TC-Sim-002-N passed locally on Windows and via SIGINT on Linux) |
+| Cross-platform output comparison | PASS — identical output on Linux and Windows |
+| Source line and branch coverage | PASS |
+
+The CI runs tested commit `1f39d1e`, the merge preview GitHub builds for the pull request of branch `part3-testing-sprint3` (head `a92de57`). The artifacts are copied into `docs/QA_Reports/evidence/` (`*_linux.txt`) and `docs/QA_Reports/evidence/ci_windows/`.

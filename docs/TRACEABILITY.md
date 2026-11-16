@@ -29,22 +29,22 @@ Connects each requirement group to its implementation, its Test Plan cases, and 
 | TMS-F-050–052 | Average wait, max queue, throughput | TC-Stats-001…003-P/N | 6/6 PASS |
 | TMS-F-060–061 | Configuration; start/stop with summary (real Ctrl+C) | TC-Sim-001…002-P/N | 4/4 PASS |
 | TMS-NF-001 | Performance ≥ 500 ticks/s, graceful under load | TC-Perf-01-P/N | 2/2 PASS |
-| TMS-NF-002 | 10,000+ ticks without crash or leak | TC-Rel-01-P/N | Functional PASS; leak verdict PENDING CI |
+| TMS-NF-002 | 10,000+ ticks without crash or leak | TC-Rel-01-P/N | 2/2 PASS (Valgrind/LSan in CI) |
 | TMS-NF-003 | Topology via config only | TC-Maint-01-P/N | 2/2 PASS |
 | TMS-NF-004 | Readable console | TC-UX-01-P/N | 2/2 PASS |
-| TMS-NF-005 | Linux and Windows | TC-Port-01-P/N | Port-01-N PASS; Port-01-P Windows PASS, Linux PENDING CI |
-| PRJ-SR-001 | Bounds checking | TC-Rob-001-P/N | Rob-001-N PASS; ASan run PENDING CI |
+| TMS-NF-005 | Linux and Windows | TC-Port-01-P/N | 2/2 PASS (identical Linux/Windows output in CI) |
+| PRJ-SR-001 | Bounds checking | TC-Rob-001-P/N | 2/2 PASS (ASan/UBSan in CI) |
 | PRJ-SR-002 | Config validation | TC-Rob-002-P/N | 2/2 PASS |
-| PRJ-SR-003 | RAII, zero leaks | TC-Rob-003-P/N | Functional PASS; leak verdict PENDING CI |
+| PRJ-SR-003 | RAII, zero leaks | TC-Rob-003-P/N | 2/2 PASS (Valgrind/LSan in CI) |
 | PRJ-SR-004 | Overflow handling | TC-Rob-004-P/N | 2/2 PASS |
 | PRJ-SR-005 | No abnormal termination | TC-Rob-005-P/N | 2/2 PASS |
 
-**Totals:** 66/66 executed; 60 PASS, 0 FAIL, 6 PENDING CI.
+**Totals:** 66/66 executed; 66 PASS, 0 FAIL. Linux-only verdicts: [CI run #246](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43938226798).
 
 ## Evidence rules
 
 1. Link each requirement to a source file and to the named check that executes each of its Test Plan cases.
-2. Record PASS, FAIL, BLOCKED, PENDING CI or NOT RUN; missing evidence is never PASS.
+2. Record PASS, FAIL, BLOCKED or NOT RUN; missing evidence is never PASS.
 3. Record the date, compiler, operating system and command for each execution (`docs/QA_Reports/evidence/environment_*.txt`).
 4. Unit-check counts support the Test Plan cases but are not the same thing; each case is reported on its own.
 5. Re-run `scripts/run_acceptance.sh` and update this matrix after any implementation change.

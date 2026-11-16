@@ -2,7 +2,7 @@
 
 **Deliverable:** Mini-Project Part 3, item 3 (optional Sprint 3, run in parallel with testing).
 **Work recorded:** 16-11-2026.
-**Outcome:** Six spill-over items closed; the 66 Test Plan cases executed (60 PASS, 0 FAIL, 6 pending the Linux CI memory-tool/portability run).
+**Outcome:** Six spill-over items closed; the 66 Test Plan cases executed: 66 PASS, 0 FAIL (Linux verdicts from [CI run #246](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43938226798)).
 
 ## Why a Sprint 3 was needed
 
@@ -61,6 +61,5 @@ Updating the test cases against the Sprint 2 code (Part 3, item 1) showed that s
 
 ## Open items
 
-- The six PENDING CI cases need the GitHub Actions run on push (see the end of `docs/TEST_EXECUTION_REGISTER.md`).
 - Record the Sprint 3 items in the team's backlog tool and assign owners, as for Sprints 1 and 2.
 - Team review and sign-off.

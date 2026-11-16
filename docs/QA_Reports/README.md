@@ -5,7 +5,7 @@ These are the four Part 3 testing deliverables plus their raw evidence. All resu
 | Report | Result |
 |---|---|
 | [Unit_Test_Report.md](Unit_Test_Report.md) | 42 test functions, 1,198 checks, 0 failures |
-| [System_Validation_Report.md](System_Validation_Report.md) | 66/66 Test Plan cases executed: 60 PASS, 0 FAIL, 6 PENDING CI (Linux memory tools/portability); 29/33 requirements fully validated |
+| [System_Validation_Report.md](System_Validation_Report.md) | 66/66 Test Plan cases executed: 66 PASS, 0 FAIL; all 33 requirements validated (Linux verdicts from [CI run #246](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43938226798)) |
 | [Code_Coverage_Report.md](Code_Coverage_Report.md) | 92.3% lines (849/920), 90.4% functions (103/114) |
 | [Branch_Coverage_Report.md](Branch_Coverage_Report.md) | 58.9% raw GCC branches (942/1,600); 85.7% excluding compiler-generated exception branches (926/1,081) |
 
@@ -32,7 +32,7 @@ These are the four Part 3 testing deliverables plus their raw evidence. All resu
 | `portability_output_windows.txt` | Reference output compared with Linux by CI (TC-Port-01-P) |
 | `benchmark_windows.txt` | Performance benchmark (TMS-NF-001) |
 
-CI adds the matching `*_linux.txt` files, including `sanitizers_linux.txt` and `valgrind_linux.txt`, to the `acceptance-evidence-Linux` artifact of every run.
+The `*_linux.txt` files (including `sanitizers_linux.txt` and `valgrind_linux.txt`) and the `ci_windows/` folder come from the artifacts of [CI run #246](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43938226798).
 
 ## Reproducing
 

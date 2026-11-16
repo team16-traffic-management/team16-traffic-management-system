@@ -1,6 +1,6 @@
 # System Validation Report
 
-**Status: 29 of 33 requirements validated; 4 await the Linux CI memory-tool/portability verdict. Test Plan v1.2: 66/66 cases executed — 60 PASS, 0 FAIL, 6 PENDING CI.**
+**Status: All 33 requirements validated. Test Plan v1.2: 66/66 cases executed — 66 PASS, 0 FAIL.**
 
 ## Objective
 
@@ -12,7 +12,7 @@ Validate the complete system against every SRS requirement by executing the 66 T
 |---|---|
 | Code under test | Sprint 3 baseline (`docs/SPRINT_3.md`) |
 | Local platform | Windows 11, MSYS2 UCRT64 `g++ 16.2.0`, `-std=c++17 -O2` |
-| Linux platform | GitHub Actions `ubuntu-latest`: same script plus ASan/UBSan/LeakSanitizer and Valgrind; runs on push |
+| Linux platform | GitHub Actions `ubuntu-latest`, g++ 15.2.0: same script plus ASan/UBSan/LeakSanitizer and Valgrind — [CI run #246](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43938226798), 16-11-2026 19:22 UTC |
 | Executed | 16-11-2026 |
 | Command | `bash scripts/run_acceptance.sh` (`make acceptance-full`) |
 | Test basis | `Documents/Test_Plan_Traffic_Management_System.docx` v1.2, Section 13 |
@@ -53,13 +53,13 @@ Method:
 | TMS-F-060 | Configuration | PASS | PASS | **Validated** |
 | TMS-F-061 | Start / clean stop with summary | PASS | PASS | **Validated** |
 | TMS-NF-001 | Performance ≥ 500 ticks/s | PASS | PASS | **Validated** |
-| TMS-NF-002 | 10,000+ ticks, no crash/leak | PENDING CI | PENDING CI | Validated functionally; leak verdict pending CI |
+| TMS-NF-002 | 10,000+ ticks, no crash/leak | PASS | PASS | **Validated** (Valgrind: 0 bytes in use at exit, 0 errors) |
 | TMS-NF-003 | Topology via config only | PASS | PASS | **Validated** |
 | TMS-NF-004 | Readable console | PASS | PASS | **Validated** |
-| TMS-NF-005 | Linux + Windows portability | PENDING CI | PASS | Windows validated; Linux build/output diff pending CI |
-| PRJ-SR-001 | Bounds checking | PENDING CI | PASS | Invalid-index rejection validated; ASan run pending CI |
+| TMS-NF-005 | Linux + Windows portability | PASS | PASS | **Validated** (identical output on Linux and Windows) |
+| PRJ-SR-001 | Bounds checking | PASS | PASS | **Validated** (no ASan/UBSan reports) |
 | PRJ-SR-002 | Config validation | PASS | PASS | **Validated** |
-| PRJ-SR-003 | No leaks (RAII) | PENDING CI | PENDING CI | Validated functionally; leak verdict pending CI |
+| PRJ-SR-003 | No leaks (RAII) | PASS | PASS | **Validated** (Valgrind + LeakSanitizer: no leaks) |
 | PRJ-SR-004 | Overflow handling | PASS | PASS | **Validated** |
 | PRJ-SR-005 | No abnormal termination | PASS | PASS | **Validated** |
 
@@ -110,13 +110,22 @@ These cases were revised in Test Plan v1.1/v1.2 and are traceable through the "C
 - **Fault isolation:** a config containing an invalid intersection is rejected as a whole (fail-fast). Runtime isolation between intersections is validated separately (TC-Multi-001-N). Module faults are contained at module boundaries rather than by a per-tick try/catch (TC-Rob-005-N).
 - **Conflict safety:** the controller serves one lane at a time, which is stricter than "conflict-free sets" (TC-Sig-003-P/N). Geometric turning-movement modelling is outside the implemented design.
 
-## Pending items
+## Linux CI verification ([CI run #246](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43938226798))
 
-The six PENDING CI cases (TC-Rob-001-P, TC-Rel-01-P/N, TC-Rob-003-P/N, TC-Port-01-P) are fully automated in `.github/workflows/ci-cd.yml`. After pushing, take the verdicts from the `acceptance-evidence-Linux` artifact (`sanitizers_linux.txt`, `valgrind_linux.txt`, `acceptance_results_linux.txt`) and the `portability-compare` job, then update this report and the register.
+| Check | Result |
+|---|---|
+| AddressSanitizer + UBSan (unit suite, 60 acceptance cases, 10,000-tick app run) | No reports (`evidence/sanitizers_linux.txt`) |
+| Valgrind, 10,000-tick connected run | 0 bytes in use at exit; 182,701 allocs / 182,701 frees; 0 errors (`evidence/valgrind_linux.txt`) |
+| Valgrind, acceptance runner (repeated runs, mid-run exception) | 0 bytes in use at exit; 311,327 allocs / 311,327 frees; 0 errors |
+| LeakSanitizer, repeated runs and mid-run exception | No leaks |
+| Real SIGINT on Linux (TC-Sim-002-N) | Exit 0; summary for 293,210 ticks = 293,210 rendered tick blocks |
+| Linux vs Windows output (TC-Port-01-P) | Identical (196 lines) |
+| Linux acceptance results | 77 PASS, 0 FAIL |
+| CI benchmark medians | Linux 242,845 ticks/s; Windows 204,859 ticks/s |
 
 ## Conclusion
 
-On the final Sprint 3 build every functional requirement (TMS-F-001 to TMS-F-061) is validated by both its positive and negative case. So are performance, maintainability, usability, and the PRJ-SR-002/004/005 robustness requirements. No case failed on the final build. Two defects found during execution were fixed and re-tested. System acceptance becomes complete once the Linux CI run confirms the four memory-tool/portability requirements and the team and instructor sign off.
+On the final Sprint 3 build every functional requirement (TMS-F-001 to TMS-F-061) is validated by both its positive and negative case. So are performance, maintainability, usability, and the PRJ-SR-002/004/005 robustness requirements. No case failed on the final build. Two defects found during execution were fixed and re-tested. With the Linux CI run confirming the memory-tool and portability requirements, all 33 requirements are validated. Only team and instructor sign-off remain.
 
 ## Earlier validation history
 

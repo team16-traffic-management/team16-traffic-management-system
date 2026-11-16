@@ -80,4 +80,4 @@ On Windows Git Bash, put your compiler's `bin` folder (for example `/c/msys64/uc
 - [Test Plan to automated test crosswalk](docs/TEST_CASE_AUTOMATION_CROSSWALK.md)
 - [Final project report](docs/FINAL_PROJECT_REPORT.md)
 
-Test Plan v1.2 status (16-11-2026): 66/66 cases executed — 60 PASS, 0 FAIL, 6 pending the Linux CI memory-tool/portability verdict. See the [execution register](docs/TEST_EXECUTION_REGISTER.md).
+Test Plan v1.2 status (16-11-2026): 66/66 cases executed — 66 PASS, 0 FAIL (Linux verdicts from [CI run #246](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43938226798)). See the [execution register](docs/TEST_EXECUTION_REGISTER.md).

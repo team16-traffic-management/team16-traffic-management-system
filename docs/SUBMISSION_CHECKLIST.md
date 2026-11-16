@@ -59,9 +59,9 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] Update the Test Case Document: every one of the 66 cases now records the automated check, the actual result and the status; RTM status, Section 5.1, Section 6.1 test data and Appendix B updated; revision history rows 1.1 and 1.2 added.
 
 ### 2. Testing
-- [x] Complete the testing according to the Test Plan: all 66 cases executed individually on 16-11-2026 — 60 PASS, 0 FAIL, 6 PENDING CI (`docs/TEST_EXECUTION_REGISTER.md`).
+- [x] Complete the testing according to the Test Plan: all 66 cases executed individually on 16-11-2026 — 66 PASS, 0 FAIL; Linux-only verdicts from [CI run #246](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43938226798) (`docs/TEST_EXECUTION_REGISTER.md`).
 - [x] Unit Test Report: 42 test functions, 1,198 checks, 0 failures (`docs/QA_Reports/Unit_Test_Report.md`).
-- [x] System Validation Report: 29/33 requirements accepted, 4 pending the Linux memory-tool/portability verdict (`docs/QA_Reports/System_Validation_Report.md`).
+- [x] System Validation Report: all 33 requirements validated (`docs/QA_Reports/System_Validation_Report.md`).
 - [x] Code Coverage Report: 92.3% lines (849/920), 90.4% functions (`docs/QA_Reports/Code_Coverage_Report.md`, HTML in `docs/QA_Reports/coverage/`).
 - [x] Branch Coverage Report: 58.9% raw (942/1,600); 85.7% excluding compiler-generated exception branches (`docs/QA_Reports/Branch_Coverage_Report.md`).
 - [x] Upload all the reports to the `docs` folder: `docs/QA_Reports/` with `coverage/` and `evidence/`.
@@ -71,8 +71,8 @@ Use this as the final evidence checklist. Mark an item complete only when the de
 - [x] Conflicting-Green safety verified, including forced same-tick overrides (TC-Sig-003-P/N). The design serves one lane at a time; turning-movement modelling is a documented deviation.
 - [x] Console usability verified by automated alignment checks (TC-UX-01-P/N) after fixing DEF-04.
 - [x] Connected-topology performance measured (TC-Perf-01-N: 8 chained intersections).
-- [ ] **After pushing:** close the 6 PENDING CI cases (TC-Rob-001-P, TC-Rel-01-P/N, TC-Rob-003-P/N, TC-Port-01-P) from the GitHub Actions `acceptance-evidence-Linux` artifact and the `portability-compare` job. Steps are at the end of `docs/TEST_EXECUTION_REGISTER.md`.
-- [ ] **After pushing:** record the CI run link in the Unit Test, System Validation and Coverage reports.
+- [x] Linux CI verdicts recorded for TC-Rob-001-P, TC-Rel-01-P/N, TC-Rob-003-P/N and TC-Port-01-P (all PASS: Valgrind 0 bytes lost, no ASan/UBSan/LSan reports, identical Linux/Windows output).
+- [x] CI run link recorded in the Unit Test, System Validation and Coverage reports: [CI run #246](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43938226798).
 
 ### 3. Optional Sprint 3
 - [x] Spill-over development completed as Sprint 3: six items DEF-01 to DEF-06 (`docs/SPRINT_3.md`).

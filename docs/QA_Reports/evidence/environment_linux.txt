@@ -1,0 +1,6 @@
+Date (UTC): 2026-11-16 19:22:00
+Platform: linux (Linux 7.0.0-1019-azure x86_64)
+Compiler: g++ (Ubuntu 15.2.0-16ubuntu1) 15.2.0
+Flags: -std=c++17 -Wall -Wextra -Wpedantic -pthread (-O2 for app/acceptance/benchmark)
+Commit: 1f39d1eac488919db4b56e2728eb20a42bb01ed2
+Recorded results: 77 PASS, 0 FAIL, 0 BLOCKED (see build/evidence/acceptance_results_linux.txt)

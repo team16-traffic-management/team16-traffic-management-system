@@ -40,7 +40,7 @@ The project objectives reflected in the implemented system are to:
 - Console columns that stay aligned for long lane names.
 
 ### Verification status
-All 66 Test Plan cases have been executed (60 PASS, 0 FAIL). Six cases await the Linux CI memory-tool/portability verdict; see Section 5.
+All 66 Test Plan cases have been executed and passed; see Section 5.
 
 ### Configuration and execution
 Build and run from the repository root:
@@ -108,9 +108,9 @@ Part 3 testing was carried out on the Sprint 3 code on 16-11-2026. Full details 
 | Deliverable | Result |
 |---|---|
 | Updated test cases (Test Plan v1.2 DOCX) | 38 cases revised for the sprint changes; every case records the automated check, actual result and status |
-| Test Plan execution | 66/66 cases executed: 60 PASS, 0 FAIL, 6 PENDING CI (Linux-only memory tools and the Linux half of portability) |
+| Test Plan execution | 66/66 cases executed: 66 PASS, 0 FAIL (Linux-only verdicts from [CI run #246](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43938226798)) |
 | Unit Test Report | 42 test functions, 1,198 checks, 0 failures |
-| System Validation Report | 29/33 requirements accepted; 4 functional PASS awaiting the Linux CI verdict |
+| System Validation Report | All 33 requirements validated |
 | Code Coverage Report | 92.3% lines (849/920), 90.4% functions (103/114) |
 | Branch Coverage Report | 58.9% raw GCC branches (942/1,600); 85.7% excluding compiler-generated exception branches |
 
@@ -163,7 +163,6 @@ The repository's current role allocation is documented in `docs/TEAM_ROLES.md`:
 
 ## 8. Limitations and future work
 
-- Six Test Plan cases need the Linux CI run (ASan, LeakSanitizer, Valgrind and the Linux build/output comparison) to record their final verdict.
 - Signal safety serves one Green lane at a time; modelled turning-movement conflict sets would be a future extension.
 - Configuration validation is fail-fast: a file containing an invalid intersection is rejected as a whole.
 - Performance was measured on a development laptop, not on evaluator hardware.
@@ -171,7 +170,7 @@ The repository's current role allocation is documented in `docs/TEAM_ROLES.md`:
 
 ## 9. Conclusion
 
-The project delivers a working C++17 traffic simulation with configurable multi-intersection topologies, bounded queues, fixed and adaptive signals, bounded emergency preemption, linked green-wave transfers with spillback, statistics at lane, intersection and system level, a readable live console, and graceful Ctrl+C stop. All 66 Test Plan cases have been executed: 60 pass and none fail. The remaining 6 depend only on Linux-only memory tools that run automatically in CI. With the CI verdicts recorded and team sign-off, the system meets its SRS.
+The project delivers a working C++17 traffic simulation with configurable multi-intersection topologies, bounded queues, fixed and adaptive signals, bounded emergency preemption, linked green-wave transfers with spillback, statistics at lane, intersection and system level, a readable live console, and graceful Ctrl+C stop. All 66 Test Plan cases have been executed and passed, including Valgrind and sanitizer runs with no leaks or memory errors and identical output on Linux and Windows. With team sign-off, the system meets its SRS.
 
 ## Appendix — submission evidence checklist
 

@@ -108,4 +108,4 @@ The jump from 985 to 1,198 checks comes from the 7 new Sprint 3 tests (+222 chec
 ## Limitations
 
 - Unit checks confirm the behaviour of individual classes and small integrations. Requirement-level acceptance is reported separately in `System_Validation_Report.md` and `docs/TEST_EXECUTION_REGISTER.md`.
-- The Ubuntu run and the sanitizer run of this exact code happen in GitHub Actions on push. Record that run's link here once it finishes.
+- [CI run #246](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43938226798) repeated the suite on Ubuntu (g++ 15.2.0) and Windows (MinGW g++ 15.2.0) — all 1,198 checks passed on both — and ran it under ASan/UBSan and Valgrind with no reports.

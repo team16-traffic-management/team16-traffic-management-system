@@ -1,12 +1,12 @@
 # SRS / SAD / Test Plan Implementation Status (RTM)
 
-**Updated 16-11-2026 after Part 3 testing and Sprint 3.** Every requirement is implemented and both of its Test Plan v1.2 cases have been executed. 29 of 33 requirements are accepted; the other 4 pass functionally and await the Linux CI memory-tool/portability verdict.
+**Updated 16-11-2026 after Part 3 testing and Sprint 3.** Every requirement is implemented and both of its Test Plan v1.2 cases have been executed. All 33 requirements are accepted. The Linux-only verdicts come from [CI run #246](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43938226798).
 
 Case-level results: `docs/TEST_EXECUTION_REGISTER.md`. Reports: `docs/QA_Reports/`. Sprint 3 changes: `docs/SPRINT_3.md`.
 
 ## Full requirement-level RTM
 
-**Status convention:** ACCEPTED = both Test Plan cases executed and passed on the final build. PENDING CI = the functional part passed locally and the verdict needs a Linux-only tool that runs in GitHub Actions on push.
+**Status convention:** ACCEPTED = both Test Plan cases executed and passed on the final build.
 
 | Requirement | Implementation component(s) | Test Plan cases | Executable checks (acceptance runner / script) | Acceptance status |
 |---|---|---|---|---|
@@ -34,13 +34,13 @@ Case-level results: `docs/TEST_EXECUTION_REGISTER.md`. Reports: `docs/QA_Reports
 | TMS-F-060 | SimulationEngine::loadConfigFromFile | TC-Sim-001-P/N | `simConfigApplied`; `simMissingConfig` | **ACCEPTED (both cases PASS)** |
 | TMS-F-061 | main / SimulationEngine | TC-Sim-002-P/N | `simNaturalCompletion`; run_acceptance.sh (real Ctrl+C) | **ACCEPTED (both cases PASS)** |
 | TMS-NF-001 | SimulationEngine / ConsoleView | TC-Perf-01-P/N | `perfTarget`; `perfMaxLoad` | **ACCEPTED (both cases PASS)** |
-| TMS-NF-002 | SimulationEngine / RAII containers | TC-Rel-01-P/N | `relLongRun`; `relRepeatedRuns` | Functional PASS; Rel-01-P PENDING CI, Rel-01-N PENDING CI |
+| TMS-NF-002 | SimulationEngine / RAII containers | TC-Rel-01-P/N | `relLongRun`; `relRepeatedRuns` | **ACCEPTED (both cases PASS)** |
 | TMS-NF-003 | SimulationEngine and domain modules | TC-Maint-01-P/N | `maintNewTopology`; `maintInvalidTopology` | **ACCEPTED (both cases PASS)** |
 | TMS-NF-004 | ConsoleView | TC-UX-01-P/N | `uxReadable`; `uxLongName` | **ACCEPTED (both cases PASS)** |
-| TMS-NF-005 | Makefile / GitHub Actions | TC-Port-01-P/N | run_acceptance.sh + CI portability-compare; run_acceptance.sh (missing make) | Functional PASS; Port-01-P PENDING CI |
-| PRJ-SR-001 | LaneQueue / Intersection / SimulationEngine | TC-Rob-001-P/N | ASan/UBSan (Linux CI); `robInvalidIndex` | Functional PASS; Rob-001-P PENDING CI |
+| TMS-NF-005 | Makefile / GitHub Actions | TC-Port-01-P/N | run_acceptance.sh + CI portability-compare; run_acceptance.sh (missing make) | **ACCEPTED (both cases PASS)** |
+| PRJ-SR-001 | LaneQueue / Intersection / SimulationEngine | TC-Rob-001-P/N | ASan/UBSan (Linux CI); `robInvalidIndex` | **ACCEPTED (both cases PASS)** |
 | PRJ-SR-002 | SimulationEngine::loadConfigFromFile | TC-Rob-002-P/N | `robInvalidValues`; `robWrongType` | **ACCEPTED (both cases PASS)** |
-| PRJ-SR-003 | RAII / standard containers | TC-Rob-003-P/N | `robSustainedRun`; `robMidRunException` | Functional PASS; Rob-003-P PENDING CI, Rob-003-N PENDING CI |
+| PRJ-SR-003 | RAII / standard containers | TC-Rob-003-P/N | `robSustainedRun`; `robMidRunException` | **ACCEPTED (both cases PASS)** |
 | PRJ-SR-004 | LaneQueue / StatisticsCollector | TC-Rob-004-P/N | `robOverflow`; `robOverflowEveryLane` | **ACCEPTED (both cases PASS)** |
 | PRJ-SR-005 | SimulationEngine / main | TC-Rob-005-P/N | `robMalformedInput`; `robModuleFault` | **ACCEPTED (both cases PASS)** |
 
@@ -59,12 +59,12 @@ Case-level results: `docs/TEST_EXECUTION_REGISTER.md`. Reports: `docs/QA_Reports
 
 | Previously open item | Resolution |
 |---|---|
-| Execute the 66 Test Plan cases individually | Done: 60 PASS, 0 FAIL, 6 PENDING CI |
+| Execute the 66 Test Plan cases individually | Done: 66 PASS, 0 FAIL |
 | Manual Ctrl+C run (TMS-F-061) | Executed with a genuine console Ctrl+C (TC-Sim-002-N): exit 0, summary ticks = rendered ticks |
 | Geometric movement conflicts (TMS-F-022) | The controller grants Green to one lane at a time, which is stricter than conflict-free sets. TC-Sig-003-P/N verify no simultaneous Greens, including under forced same-tick overrides. Turning-movement modelling is outside the implemented design (documented deviation). |
 | Invalid-intersection isolation (TMS-F-040) | Fail-fast rejection of invalid definitions plus verified runtime isolation (TC-Multi-001-N) |
 | Emergency preemption delay (TMS-F-032) | Implemented and verified (DEF-01; TC-Emg-003-P/N) |
-| Quantified leak evidence (TMS-NF-002 / PRJ-SR-003) | Valgrind and LeakSanitizer stages added to CI; verdict pending the push run |
+| Quantified leak evidence (TMS-NF-002 / PRJ-SR-003) | Valgrind: 0 bytes in use at exit, 0 errors; LeakSanitizer: no leaks (CI run #246) |
 | Manual console usability (TMS-NF-004) | Automated alignment checks over 30 rendered ticks and a 29-character lane name, plus DEF-04 fix |
 | Connected-topology benchmark (TMS-NF-001) | TC-Perf-01-N: 8 chained intersections at 0.95 arrival, 10,222 ticks/s |
 | SRS/Test Plan conflict on invalid config | Resolved in Test Plan v1.1/v1.2: rejection with a clear error, matching PRJ-SR-002 |

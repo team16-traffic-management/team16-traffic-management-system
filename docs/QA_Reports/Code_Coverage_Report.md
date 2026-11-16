@@ -9,7 +9,7 @@
 | Code under test | Sprint 3 baseline (`docs/SPRINT_3.md`) |
 | Script | `bash scripts/run_coverage.sh` (`make coverage`) |
 | Toolchain | MSYS2 UCRT64 `g++ 16.2.0` / `gcov 16.2.0`, gcovr 8.8; `--coverage -O0 -g` |
-| Platform | Windows 11 (local). CI repeats the same script on `ubuntu-latest` on every push and uploads the HTML/XML artifact. |
+| Platform | Windows 11 (local). CI repeats the same script on `ubuntu-latest`; the coverage job of [CI run #246](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43938226798) passed and uploaded the HTML/XML artifact. |
 | Production scope | Every `.cpp` under `src/` and `vehicle/` (including `src/main.cpp`), plus instrumented inline code in `vehicle/VehicleGenerator.h` |
 | Excluded | Test code (`tests/`), benchmark, and header-only declarations in `include/` |
 | Executions that contribute | Unit suite (42 tests, 1,198 checks); Test Plan acceptance runner (60 in-process cases, `--no-perf`); application runs on `baseline.cfg`, `zero_values.cfg`, `high_load.cfg` and the built-in default topology; rejected runs on `invalid_values.cfg` and `corrupted.cfg` |
