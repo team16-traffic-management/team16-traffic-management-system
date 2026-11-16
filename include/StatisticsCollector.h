@@ -19,6 +19,20 @@ struct DequeueEvent {
     bool isEmergency;
 };
 
+struct IntersectionTotals {
+    std::int64_t throughput{0};
+    std::int64_t totalWaitTime{0};
+    std::int64_t blocked{0};
+    std::int64_t preemptions{0};
+    std::size_t maxQueueLength{0};
+
+    double averageWaitTime() const {
+        return throughput > 0
+            ? static_cast<double>(totalWaitTime) / static_cast<double>(throughput)
+            : 0.0;
+    }
+};
+
 class StatisticsCollector {
 public:
     // Intersection-aware methods
@@ -68,6 +82,12 @@ public:
     std::int64_t totalBlocked() const;
     std::int64_t totalPreemptions() const;
 
+    // Per-intersection totals (TMS-F-042 / TMS-F-052). Every intersection that
+    // has recorded any lane activity appears, including zero-throughput ones.
+    std::map<std::string, IntersectionTotals> intersectionTotals() const;
+    std::int64_t intersectionThroughput(const std::string& intersectionId) const;
+    std::int64_t blockedFor(const std::string& intersectionId, const std::string& laneName) const;
+
     void printEndOfRunReport(int runTicks) const;
 
 private:
@@ -75,6 +95,7 @@ private:
         const std::string& intersectionId,
         const std::string& laneName
     );
+    static std::string intersectionFromKey(const std::string& laneKey);
 
     std::vector<DequeueEvent> events_;
 

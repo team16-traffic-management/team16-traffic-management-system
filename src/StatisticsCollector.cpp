@@ -1,5 +1,6 @@
 #include "../include/StatisticsCollector.h"
 
+#include <algorithm>
 #include <iomanip>
 #include <sstream>
 #include <stdexcept>
@@ -79,6 +80,43 @@ void StatisticsCollector::updateMaxQueueLength(
     if (currentLength > maxQueueLengths_[key]) {
         maxQueueLengths_[key] = currentLength;
     }
+}
+
+std::string StatisticsCollector::intersectionFromKey(const std::string& laneKey) {
+    return laneKey.substr(0, laneKey.find("::"));
+}
+
+std::map<std::string, IntersectionTotals> StatisticsCollector::intersectionTotals() const {
+    std::map<std::string, IntersectionTotals> totals;
+
+    for (const auto& entry : maxQueueLengths_) {
+        IntersectionTotals& total = totals[intersectionFromKey(entry.first)];
+        if (entry.second > total.maxQueueLength) total.maxQueueLength = entry.second;
+    }
+    for (const auto& entry : perLaneThroughput_)
+        totals[intersectionFromKey(entry.first)].throughput += entry.second;
+    for (const auto& entry : perLaneWaitTime_)
+        totals[intersectionFromKey(entry.first)].totalWaitTime += entry.second;
+    for (const auto& entry : blockedEvents_)
+        totals[intersectionFromKey(entry.first)].blocked += entry.second;
+    for (const auto& entry : preemptionEvents_)
+        totals[intersectionFromKey(entry.first)].preemptions += entry.second;
+
+    return totals;
+}
+
+std::int64_t StatisticsCollector::blockedFor(
+    const std::string& intersectionId,
+    const std::string& laneName
+) const {
+    const auto it = blockedEvents_.find(makeLaneKey(intersectionId, laneName));
+    return it == blockedEvents_.end() ? 0 : it->second;
+}
+
+std::int64_t StatisticsCollector::intersectionThroughput(const std::string& intersectionId) const {
+    const auto totals = intersectionTotals();
+    const auto it = totals.find(intersectionId);
+    return it == totals.end() ? 0 : it->second.throughput;
 }
 
 // Backward-compatible methods use a default intersection label.
@@ -175,13 +213,25 @@ void StatisticsCollector::printEndOfRunReport(int runTicks) const {
         << "Total Emergency Preemption Events   : "
         << totalPreemptions() << "\n\n";
 
+    // Column widths grow with the longest IDs/lane names so long names never
+    // run into the next column (TMS-NF-004).
+    std::size_t idWidth = 18;
+    std::size_t laneWidth = 17;
+    for (const auto& entry : maxQueueLengths_) {
+        const std::size_t separator = entry.first.find("::");
+        idWidth = std::max(idWidth, separator + 2);
+        laneWidth = std::max(laneWidth, entry.first.size() - separator);
+    }
+    const int idColumn = static_cast<int>(idWidth);
+    const int laneColumn = static_cast<int>(laneWidth);
+
     std::cout << "Per-Intersection Lane Breakdown:\n";
     std::cout
         << "--------------------------------------------------------------------------\n";
     std::cout
         << std::left
-        << std::setw(18) << "Intersection"
-        << std::setw(17) << "Lane"
+        << std::setw(idColumn) << "Intersection"
+        << std::setw(laneColumn) << "Lane"
         << std::setw(12) << "Throughput"
         << std::setw(16) << "Avg Wait"
         << std::setw(12) << "Max Queue"
@@ -209,8 +259,8 @@ void StatisticsCollector::printEndOfRunReport(int runTicks) const {
 
         std::cout
             << std::left
-            << std::setw(18) << intersectionId
-            << std::setw(17) << laneName
+            << std::setw(idColumn) << intersectionId
+            << std::setw(laneColumn) << laneName
             << std::setw(12) << throughput
             << std::setw(16) << std::fixed
             << std::setprecision(2) << averageWait
@@ -219,5 +269,48 @@ void StatisticsCollector::printEndOfRunReport(int runTicks) const {
     }
 
     std::cout
+        << "==========================================================================\n";
+
+    std::cout << "\nPer-Intersection Totals:\n";
+    std::cout
+        << "--------------------------------------------------------------------------\n";
+    std::cout
+        << std::left
+        << std::setw(idColumn) << "Intersection"
+        << std::setw(12) << "Throughput"
+        << std::setw(12) << "Avg Wait"
+        << std::setw(10) << "Blocked"
+        << std::setw(13) << "Preemptions"
+        << "Max Queue\n";
+    std::cout
+        << "--------------------------------------------------------------------------\n";
+
+    IntersectionTotals system;
+    for (const auto& entry : intersectionTotals()) {
+        const IntersectionTotals& total = entry.second;
+        system.throughput += total.throughput;
+        system.totalWaitTime += total.totalWaitTime;
+        system.blocked += total.blocked;
+        system.preemptions += total.preemptions;
+        if (total.maxQueueLength > system.maxQueueLength) system.maxQueueLength = total.maxQueueLength;
+
+        std::cout
+            << std::left
+            << std::setw(idColumn) << entry.first
+            << std::setw(12) << total.throughput
+            << std::setw(12) << std::fixed << std::setprecision(2) << total.averageWaitTime()
+            << std::setw(10) << total.blocked
+            << std::setw(13) << total.preemptions
+            << total.maxQueueLength << "\n";
+    }
+    std::cout
+        << "--------------------------------------------------------------------------\n"
+        << std::left
+        << std::setw(idColumn) << "SYSTEM TOTAL"
+        << std::setw(12) << system.throughput
+        << std::setw(12) << std::fixed << std::setprecision(2) << system.averageWaitTime()
+        << std::setw(10) << system.blocked
+        << std::setw(13) << system.preemptions
+        << system.maxQueueLength << "\n"
         << "==========================================================================\n\n";
 }

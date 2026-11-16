@@ -1,0 +1,2 @@
+Ctrl+C delivered after 1000 ms; exit status 2; rendered tick blocks: 0
+

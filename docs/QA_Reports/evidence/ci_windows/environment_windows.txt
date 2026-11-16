@@ -1,0 +1,6 @@
+Date (UTC): 2026-11-16 19:21:08
+Platform: windows (MINGW64_NT-10.0-26100 3.6.10-5a1665c8.x86_64 x86_64)
+Compiler: g++.exe (x86_64-posix-seh-rev1, Built by MinGW-Builds project) 15.2.0
+Flags: -std=c++17 -Wall -Wextra -Wpedantic -pthread (-O2 for app/acceptance/benchmark)
+Commit: 1f39d1eac488919db4b56e2728eb20a42bb01ed2
+Recorded results: 69 PASS, 0 FAIL, 1 BLOCKED (see build/evidence/acceptance_results_windows.txt)

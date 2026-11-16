@@ -1,0 +1,196 @@
+
+Configuration loaded successfully from tests/data/baseline.cfg (1 intersection(s))
+TRAFFIC MANAGEMENT SYSTEM
+1 intersection(s) | 20 simulation ticks
+Press Ctrl+C at any time to stop safely and print the summary.
+
+[Intersection Main | Tick      1]
+  Lane           | Signal   | Queue   | Vehicles
+  ----------------------------------------------------------
+  North          | GREEN    | 0       | 
+  South          | RED      | 1       | #
+  East           | RED      | 1       | #
+  West           | RED      | 0       | 
+
+[Intersection Main | Tick 2     ]
+  Lane           | Signal   | Queue   | Vehicles
+  ----------------------------------------------------------
+  North          | GREEN    | 0       | 
+  South          | RED      | 2       | ##
+  East           | RED      | 1       | #
+  West           | RED      | 0       | 
+
+[Intersection Main | Tick 3     ]
+  Lane           | Signal   | Queue   | Vehicles
+  ----------------------------------------------------------
+  North          | GREEN    | 0       | 
+  South          | RED      | 3       | ###
+  East           | RED      | 1       | #
+  West           | RED      | 0       | 
+
+[Intersection Main | Tick 4     ]
+  Lane           | Signal   | Queue   | Vehicles
+  ----------------------------------------------------------
+  North          | GREEN    | 0       | 
+  South          | RED      | 3       | ###
+  East           | RED      | 1       | #
+  West           | RED      | 0       | 
+
+[Intersection Main | Tick 5     ]
+  Lane           | Signal   | Queue   | Vehicles
+  ----------------------------------------------------------
+  North          | GREEN    | 0       | 
+  South          | RED      | 3       | ###
+  East           | RED      | 1       | #
+  West           | RED      | 0       | 
+
+[Intersection Main | Tick 6     ]
+  Lane           | Signal   | Queue   | Vehicles
+  ----------------------------------------------------------
+  North          | GREEN    | 0       | 
+  South          | RED      | 3       | ###
+  East           | RED      | 1       | #
+  West           | RED      | 0       | 
+
+[Intersection Main | Tick 7     ]
+  Lane           | Signal   | Queue   | Vehicles
+  ----------------------------------------------------------
+  North          | GREEN    | 0       | 
+  South          | RED      | 3       | ###
+  East           | RED      | 1       | #
+  West           | RED      | 0       | 
+
+[Intersection Main | Tick 8     ]
+  Lane           | Signal   | Queue   | Vehicles
+  ----------------------------------------------------------
+  North          | GREEN    | 0       | 
+  South          | RED      | 3       | ###
+  East           | RED      | 2       | ##
+  West           | RED      | 0       | 
+
+[Intersection Main | Tick 9     ]
+  Lane           | Signal   | Queue   | Vehicles
+  ----------------------------------------------------------
+  North          | GREEN    | 0       | 
+  South          | RED      | 4       | ####
+  East           | RED      | 2       | ##
+  West           | RED      | 0       | 
+
+[Intersection Main | Tick 10    ]
+  Lane           | Signal   | Queue   | Vehicles
+  ----------------------------------------------------------
+  North          | YELLOW   | 0       | 
+  South          | RED      | 4       | ####
+  East           | RED      | 2       | ##
+  West           | RED      | 0       | 
+
+[Intersection Main | Tick 11    ]
+  Lane           | Signal   | Queue   | Vehicles
+  ----------------------------------------------------------
+  North          | YELLOW   | 0       | 
+  South          | RED      | 4       | ####
+  East           | RED      | 2       | ##
+  West           | RED      | 0       | 
+
+[Intersection Main | Tick 12    ]
+  Lane           | Signal   | Queue   | Vehicles
+  ----------------------------------------------------------
+  North          | YELLOW   | 0       | 
+  South          | RED      | 4       | ####
+  East           | RED      | 2       | ##
+  West           | RED      | 0       | 
+
+[Intersection Main | Tick 13    ]
+  Lane           | Signal   | Queue   | Vehicles
+  ----------------------------------------------------------
+  North          | RED      | 0       | 
+  South          | RED      | 5       | #####
+  East           | RED      | 2       | ##
+  West           | RED      | 1       | #
+
+[Intersection Main | Tick 14    ]
+  Lane           | Signal   | Queue   | Vehicles
+  ----------------------------------------------------------
+  North          | RED      | 0       | 
+  South          | RED      | 6       | ######
+  East           | RED      | 3       | ###
+  West           | RED      | 1       | #
+
+[Intersection Main | Tick 15    ]
+  Lane           | Signal   | Queue   | Vehicles
+  ----------------------------------------------------------
+  North          | RED      | 1       | #
+  South          | RED      | 7       | #######
+  East           | RED      | 4       | ####
+  West           | RED      | 1       | #
+
+[Intersection Main | Tick 16    ]
+  Lane           | Signal   | Queue   | Vehicles
+  ----------------------------------------------------------
+  North          | RED      | 1       | #
+  South          | RED      | 7       | #######
+  East           | RED      | 5       | #####
+  West           | RED      | 2       | ##
+
+[Intersection Main | Tick 17    ]
+  Lane           | Signal   | Queue   | Vehicles
+  ----------------------------------------------------------
+  North          | RED      | 1       | #
+  South          | RED      | 7       | #######
+  East           | RED      | 6       | ######
+  West           | RED      | 2       | ##
+
+[Intersection Main | Tick 18    ]
+  Lane           | Signal   | Queue   | Vehicles
+  ----------------------------------------------------------
+  North          | RED      | 1       | #
+  South          | RED      | 7       | #######
+  East           | RED      | 7       | #######
+  West           | RED      | 2       | ##
+
+[Intersection Main | Tick 19    ]
+  Lane           | Signal   | Queue   | Vehicles
+  ----------------------------------------------------------
+  North          | RED      | 1       | #
+  South          | RED      | 7       | #######
+  East           | RED      | 7       | #######
+  West           | RED      | 2       | ##
+
+[Intersection Main | Tick 20    ]
+  Lane           | Signal   | Queue   | Vehicles
+  ----------------------------------------------------------
+  North          | RED      | 1       | #
+  South          | GREEN    | 7       | #######
+  East           | RED      | 8       | ########
+  West           | RED      | 2       | ##
+
+==================================================
+         TMS SIMULATION REPORT (20 TICKS)
+==================================================
+Total Throughput (Processed)        : 6
+Overall Average Wait Time           : 0.00 ticks
+Total Overflow (Blocked) Vehicles   : 0
+Total Emergency Preemption Events   : 1
+
+Per-Intersection Lane Breakdown:
+--------------------------------------------------------------------------
+Intersection      Lane             Throughput  Avg Wait        Max Queue   
+--------------------------------------------------------------------------
+Main              East             0           0.00            8           
+Main              North            5           0.00            1           
+Main              South            1           0.00            8           
+Main              West             0           0.00            2           
+==========================================================================
+
+Per-Intersection Totals:
+--------------------------------------------------------------------------
+Intersection      Throughput  Avg Wait    Blocked   Preemptions  Max Queue
+--------------------------------------------------------------------------
+Main              6           0.00        0         1            8
+--------------------------------------------------------------------------
+SYSTEM TOTAL      6           0.00        0         1            8
+==========================================================================
+
+Run termination: configured tick limit reached (20 ticks executed)
+Total successful vehicle transfers: 0
+Vehicles still waiting for transfer: 0

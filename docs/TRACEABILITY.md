@@ -1,55 +1,50 @@
 # Requirements Traceability Matrix — Traffic Management System
 
-Purpose: connect each requirement group to implementation and actual verification evidence. Presence in source code alone does not establish acceptance.
+Connects each requirement group to its implementation, its Test Plan cases, and the execution result. The full 33-row matrix is in `Documents/RTM_Implementation_Status.md`; case-level results are in `docs/TEST_EXECUTION_REGISTER.md`.
 
 ## Source and test inventory
+
 | Area | Repository location | Evidence scope |
 |---|---|---|
-| Simulation entry point | `src/main.cpp`, `src/SimulationEngine.cpp` | Application entry, configuration-driven simulation and graceful stop |
-| Vehicle generation | `vehicle/VehicleGenerator.h/.cpp` | Seeded per-lane generation and configuration validation |
-| Vehicle and queues | `vehicle/Vehicle.h/.cpp`, `include/LaneQueue.h`, `src/LaneQueue.cpp` | Vehicle metadata, bounded FIFO queue and overflow behavior |
-| Signals and intersections | `include/TrafficSignalController.h`, `src/TrafficSignalController.cpp`, `include/Intersection.h`, `src/Intersection.cpp` | Signal phases, lane registration and intersection behavior |
-| Statistics / console | `include/StatisticsCollector.h`, `src/StatisticsCollector.cpp`, `src/ConsoleView.cpp` | Metrics and console output |
-| Automated tests | `tests/test_traffic_management.cpp` | Unit/integration assertions; see Unit Test Report and RTM for limitations |
-| Performance | `benchmarks/performance_benchmark.cpp` | Local four-independent-intersection benchmark fixture |
-| Build / CI | `Makefile`, `.github/workflows/ci-cd.yml` | C++17 build, Ubuntu/Windows tests, Linux sanitizer |
+| Simulation entry point | `src/main.cpp`, `src/SimulationEngine.cpp` | Configuration, tick loop, transfers with spillback, graceful stop |
+| Vehicle generation | `vehicle/VehicleGenerator.h/.cpp` | Seeded per-lane arrivals, emergency probability |
+| Vehicles and queues | `vehicle/Vehicle.h/.cpp`, `include/LaneQueue.h`, `src/LaneQueue.cpp` | Metadata, bounded FIFO with emergency priority |
+| Signals and intersections | `include/TrafficSignalController.h`, `src/TrafficSignalController.cpp`, `include/Intersection.h`, `src/Intersection.cpp` | Configurable phases, adaptive mode, bounded preemption |
+| Statistics and console | `include/StatisticsCollector.h`, `src/StatisticsCollector.cpp`, `src/ConsoleView.cpp` | Per-lane, per-intersection and system totals; aligned live view |
+| Unit tests | `tests/test_traffic_management.cpp` | 42 functions, 1,198 checks |
+| Test Plan acceptance | `tests/acceptance/test_plan_acceptance.cpp`, `tests/acceptance/send_ctrl_c.cpp`, `scripts/run_acceptance.sh` | One executable check per Test Plan case (66) |
+| Coverage | `scripts/run_coverage.sh` | Line, function and branch coverage of all production sources |
+| Performance | `benchmarks/performance_benchmark.cpp` | 4-intersection benchmark |
+| Build / CI | `Makefile`, `.github/workflows/ci-cd.yml` | Ubuntu and Windows builds, unit and acceptance suites, sanitizers, Valgrind, coverage, cross-platform output diff |
 
 ## Requirement-to-evidence mapping
-The detailed status and limitations are maintained in `Documents/RTM_Implementation_Status.md`. The following is a concise index, not an assertion that every requirement has passed acceptance.
 
-| Requirement group | Intended behavior | Evidence | Remaining verification |
+| Requirement group | Intended behaviour | Test Plan cases | Result (16-11-2026) |
 |---|---|---|---|
-| TMS-F-001–003 | Vehicle arrivals, metadata and FIFO handling | Generator and queue tests; PR #104 verifies 200 distinct IDs across multiple lanes/intersections (CI #153) | All detailed positive/negative Test Plan cases |
-| TMS-F-010–013 | Lane queues, capacity, green-only dequeue and waiting time | Queue capacity/FIFO/overflow; PR #105 engine-level green-only dequeue test (CI #154); signal and statistics tests | Full detailed Test Plan cases and broader wait-time behavior |
-| TMS-F-020–024 | Fixed/adaptive signals and safe phases | Signal transition tests; PR #90 80-tick at-most-one-GREEN-lane invariant; PR #98 adaptive extension cap/reset/invalid-boundary tests (CI #141) | Geometric movement-conflict matrix; full adaptive policy validation beyond tested boundaries |
-| TMS-F-030–032 | Emergency priority and preemption | Emergency request acceptance/rejection/deferred activation tests | Maximum emergency wait/preemption delay boundary |
-| TMS-F-040–042 | Multi-intersection transfer and reporting | Two-intersection transfer test; PR #99 destination-full backpressure (CI #142); PR #107 exact one-tick transfer (CI #159); config startup smoke tests | Invalid-intersection isolation |
-| TMS-F-050–052 | Statistics and reporting | Statistics calculation and report-format tests | End-to-end report workflow |
-| TMS-F-060 | Configuration and run length | PR #91 configuration boundary tests; application smoke tests | Full Test Plan case-by-case execution and SRS/Test Plan conflict resolution |
-| TMS-F-061 | Graceful start/stop and summary | PR #94 merged; workflow #132 passed Ubuntu/Windows; Linux ASan/UBSan passed | Manual interactive Ctrl+C acceptance record |
-| TMS-NF-001 | Performance | Local benchmark average 84,371.19 / median 88,344.30 ticks/sec | Connected topology and evaluator hardware |
-| TMS-NF-002 / PRJ-SR-003 | Memory safety and long-run stability | 10,000-tick run; PR #108 20 repeated engine lifecycles (CI #162); Linux ASan/UBSan | Quantified memory-growth/leak report or Valgrind evidence |
-| TMS-NF-003–005 | Modularity, usability and portability | Config-driven topology; PR #102 long lane/high queue console assertions (CI #144); Ubuntu/Windows CI | Manual visual usability and clean-checkout verification |
-| PRJ-SR-001–005 | Bounds, validation, RAII and robustness | Invalid-input tests, queue overflow tests, sanitizers | Full boundary/failure-injection cases |
+| TMS-F-001–003 | Vehicle arrivals, metadata, FIFO | TC-Gen-001…003-P/N | 6/6 PASS |
+| TMS-F-010–013 | Lane queues, capacity, green-only dequeue, wait time | TC-Queue-001…004-P/N | 8/8 PASS |
+| TMS-F-020–024 | Fixed/adaptive signals, no conflicts, Yellow, mode via config | TC-Sig-001…005-P/N | 10/10 PASS |
+| TMS-F-030–032 | Emergency probability, priority, bounded preemption | TC-Emg-001…003-P/N | 6/6 PASS |
+| TMS-F-040–042 | Multiple intersections, green-wave link, per-intersection stats | TC-Multi-001…003-P/N | 6/6 PASS |
+| TMS-F-050–052 | Average wait, max queue, throughput | TC-Stats-001…003-P/N | 6/6 PASS |
+| TMS-F-060–061 | Configuration; start/stop with summary (real Ctrl+C) | TC-Sim-001…002-P/N | 4/4 PASS |
+| TMS-NF-001 | Performance ≥ 500 ticks/s, graceful under load | TC-Perf-01-P/N | 2/2 PASS |
+| TMS-NF-002 | 10,000+ ticks without crash or leak | TC-Rel-01-P/N | 2/2 PASS (Valgrind/LSan in CI) |
+| TMS-NF-003 | Topology via config only | TC-Maint-01-P/N | 2/2 PASS |
+| TMS-NF-004 | Readable console | TC-UX-01-P/N | 2/2 PASS |
+| TMS-NF-005 | Linux and Windows | TC-Port-01-P/N | 2/2 PASS (identical Linux/Windows output in CI) |
+| PRJ-SR-001 | Bounds checking | TC-Rob-001-P/N | 2/2 PASS (ASan/UBSan in CI) |
+| PRJ-SR-002 | Config validation | TC-Rob-002-P/N | 2/2 PASS |
+| PRJ-SR-003 | RAII, zero leaks | TC-Rob-003-P/N | 2/2 PASS (Valgrind/LSan in CI) |
+| PRJ-SR-004 | Overflow handling | TC-Rob-004-P/N | 2/2 PASS |
+| PRJ-SR-005 | No abnormal termination | TC-Rob-005-P/N | 2/2 PASS |
 
-## Latest regression additions
-- PR #98 adaptive timing boundaries: CI run #141, merged.
-- PR #99 transfer backpressure: CI run #142, merged.
-- PR #101 emergency queue priority/order: CI run #143, merged.
-- PR #102 console long-lane/high-queue output: CI run #144, merged.
-- PR #104 vehicle ID uniqueness: CI run #153, merged.
-- PR #105 green-only engine dequeue: CI run #154, merged.
-- PR #107 exact one-tick transfer latency: CI run #159, merged.
-- PR #108 repeated simulation lifecycle: CI run #162, merged.
-- Post-merge main CI run #163 passed Ubuntu/Windows builds, tests and smoke tests; Ubuntu ASan/UBSan passed.
+**Totals:** 66/66 executed; 66 PASS, 0 FAIL. Linux-only verdicts: [CI run #246](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43938226798).
 
 ## Evidence rules
-1. Link each requirement to an actual source file and named test case.
-2. Record PASS, FAIL, BLOCKED or NOT RUN; missing evidence is not PASS.
-3. Record commit SHA, date, compiler, operating system and command for each execution.
-4. Do not equate 436 automated assertions with the 66 Test Plan cases.
-5. Coverage of a subset of source files is not whole-system coverage.
-6. Update this matrix after implementation changes and independent retesting.
 
-## Known acceptance gaps
-See `Documents/RTM_Implementation_Status.md` and `docs/SUBMISSION_CHECKLIST.md` for the current requirement-level list. Overall system acceptance remains PARTIAL.
+1. Link each requirement to a source file and to the named check that executes each of its Test Plan cases.
+2. Record PASS, FAIL, BLOCKED or NOT RUN; missing evidence is never PASS.
+3. Record the date, compiler, operating system and command for each execution (`docs/QA_Reports/evidence/environment_*.txt`).
+4. Unit-check counts support the Test Plan cases but are not the same thing; each case is reported on its own.
+5. Re-run `scripts/run_acceptance.sh` and update this matrix after any implementation change.

@@ -2,12 +2,14 @@
 #include "../include/LaneQueue.h"
 #include "../include/ConsoleView.h"
 #include "../vehicle/VehicleGenerator.h"
+#include <algorithm>
 #include <chrono>
 #include <csignal>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
+#include <map>
 #include <iostream>
 #include <sstream>
 #include <set>
@@ -297,8 +299,8 @@ void testPendingTransferWaitsForDestinationCapacity() {
     engine.loadConfig(0.0, 0.0, false);
     engine.connectIntersections("Transfer-Source", "Transfer-Destination");
 
-    // The source vehicle is scheduled while the destination lane is full.
-    // The transfer must remain pending until the destination lane can accept it.
+    // The destination lane is full, so the source vehicle is held upstream
+    // (spillback) and transferred only once the destination lane has room.
     for (int tick = 0; tick < 25; ++tick) {
         engine.tick(true);
     }
@@ -485,55 +487,50 @@ void testSignalPhaseTransitions() {
 }
 
 void testAdaptiveGreenExtensionBounds() {
+    // Configured base Green = 2 ticks; adaptive cap = base + maxExtension = 6.
     SignalController signals(2, 1, 1);
     signals.addLane("North");
     signals.addLane("South");
     signals.setAdaptiveMode(true, 4);
 
     const std::map<std::string, std::size_t> heavyQueue = {
-        {"North", 6}, {"South", 0}
+        {"North", 50}, {"South", 0}
     };
 
-    // The active lane's green duration must extend, but never beyond
-    // the configured base duration (10) plus maxExtension (4).
-    for (int tick = 1; tick <= 13; ++tick) {
+    for (int tick = 1; tick <= 5; ++tick) {
         signals.updateAdaptiveTimers(heavyQueue);
         signals.updateSignalState(1);
         check(signals.getCurrentPhase("North") == SignalPhase::GREEN,
               "adaptive green remains active before the configured maximum extension expires");
+        check(signals.getGreenDuration() <= 6,
+              "adaptive green never exceeds configured base plus maximum extension");
     }
     signals.updateAdaptiveTimers(heavyQueue);
+    check(signals.getGreenDuration() == 6,
+          "extreme queue length is capped at configured base plus maximum extension");
     signals.updateSignalState(1);
     check(signals.getCurrentPhase("North") == SignalPhase::YELLOW,
           "adaptive green transitions at the capped duration");
 
-    // A low queue restores the base green duration for the next cycle.
     signals.updateSignalState(1); // North YELLOW -> RED
     signals.updateSignalState(1); // South GREEN
-
-    // Let the South phase complete at its still-extended duration before
-    // checking the next North cycle.
-    for (int tick = 0; tick < 14; ++tick) {
-        signals.updateSignalState(1);
-    }
-    check(signals.getCurrentPhase("South") == SignalPhase::YELLOW,
-          "second lane completes its extended green phase");
-    signals.updateSignalState(1); // South YELLOW -> RED
-    signals.updateSignalState(1); // North GREEN
 
     const std::map<std::string, std::size_t> lightQueue = {
         {"North", 0}, {"South", 0}
     };
     signals.updateAdaptiveTimers(lightQueue);
-    for (int tick = 1; tick <= 10; ++tick) {
-        signals.updateSignalState(1);
-        if (tick < 10) {
-            check(signals.getCurrentPhase("North") == SignalPhase::GREEN,
-                  "low queue uses base green duration");
-        }
-    }
-    check(signals.getCurrentPhase("North") == SignalPhase::YELLOW,
-          "low queue green ends at base duration");
+    check(signals.getGreenDuration() == 2,
+          "low queue restores the configured base green duration, not a hard-coded value");
+    signals.updateSignalState(1);
+    check(signals.getCurrentPhase("South") == SignalPhase::GREEN,
+          "low queue green remains active before the base duration");
+    signals.updateSignalState(1);
+    check(signals.getCurrentPhase("South") == SignalPhase::YELLOW,
+          "low queue green ends at the configured base duration");
+
+    signals.setAdaptiveMode(false);
+    check(signals.getGreenDuration() == signals.getBaseGreenDuration(),
+          "disabling adaptive mode restores the configured base green duration");
 
     checkThrows<std::invalid_argument>(
         [] { SignalController s; s.setAdaptiveMode(true, -1); },
@@ -765,43 +762,293 @@ void testEmergencyProbabilityOneAlwaysGeneratesEmergencyVehicles() {
     }
 }
 
+
+// ---- Sprint 3: bounded emergency preemption (TMS-F-032) ----
+int countGreenLanes(const SignalController& signals, const std::vector<std::string>& lanes) {
+    int greens = 0;
+    for (const std::string& lane : lanes)
+        if (signals.getCurrentPhase(lane) == SignalPhase::GREEN) ++greens;
+    return greens;
 }
+
+void testBoundedEmergencyPreemptionDelay() {
+    const std::vector<std::string> lanes = {"North", "South", "East", "West"};
+    // Request preemption at every possible point of the first full cycle and
+    // confirm the emergency lane is Green within yellow + all-red ticks.
+    for (int offset = 0; offset < 23; ++offset) {
+        SignalController signals(10, 3, 10);
+        for (const std::string& lane : lanes) signals.addLane(lane);
+        for (int tick = 0; tick < offset; ++tick) signals.updateSignalState(1);
+
+        const bool northWasGreen = signals.getCurrentPhase("North") == SignalPhase::GREEN;
+        check(signals.preempt("East"), "emergency request for a red lane is accepted");
+
+        int updates = 0;
+        bool sawYellowBeforeGrant = !northWasGreen;
+        while (signals.getCurrentPhase("East") != SignalPhase::GREEN && updates < 50) {
+            signals.updateSignalState(1);
+            ++updates;
+            if (signals.getCurrentPhase("North") == SignalPhase::YELLOW) sawYellowBeforeGrant = true;
+            check(countGreenLanes(signals, lanes) <= 1,
+                  "preemption never creates two simultaneous green lanes");
+        }
+        // The engine raises the request and applies the first signal update in
+        // the same tick, so the delay in ticks is one less than the update count.
+        const int delay = updates - 1;
+        check(delay <= signals.worstCasePreemptionDelay(),
+              "emergency lane receives green within yellow + all-red delay bound");
+        check(delay <= signals.getMaxPreemptionDelay(),
+              "emergency lane receives green within the configured maximum preemption delay");
+        check(sawYellowBeforeGrant,
+              "interrupted green lane passes through yellow before the emergency grant");
+        check(!signals.isPreemptionPending(), "preemption request is cleared once granted");
+    }
+}
+
+void testPreemptionDelayConfigurationBounds() {
+    SignalController signals(10, 3, 10);
+    check(signals.worstCasePreemptionDelay() == 4, "worst-case delay is yellow plus one all-red tick");
+    check(signals.getMaxPreemptionDelay() == 4, "default preemption bound equals the worst-case delay");
+    checkThrows<std::invalid_argument>([&] { signals.setMaxPreemptionDelay(3); },
+                                       "preemption bound shorter than yellow clearance is rejected");
+    signals.setMaxPreemptionDelay(6);
+    check(signals.getMaxPreemptionDelay() == 6, "valid preemption bound is retained");
+    signals.setDurations(15, 1, 5);
+    check(signals.getGreenDuration() == 15 && signals.getYellowDuration() == 1 &&
+          signals.getRedDuration() == 5, "signal durations can be reconfigured");
+    check(signals.worstCasePreemptionDelay() == 2, "worst-case delay follows the new yellow duration");
+    checkThrows<std::invalid_argument>([&] { signals.setDurations(10, 0, 10); },
+                                       "zero yellow duration is rejected");
+}
+
+void testEnginePreemptsWithinConfiguredDelay() {
+    SimulationEngine engine;
+    Intersection intersection("Preempt-Junction");
+    intersection.addLane("North", 10);
+    intersection.addLane("East", 10);
+    // Pre-load the emergency vehicle so the request is raised on tick 3 while North is Green.
+    engine.addIntersection(intersection);
+    engine.loadConfig(0.0, 0.0, false);
+    for (int tick = 0; tick < 2; ++tick) engine.tick(true);
+
+    const SignalController& signals = engine.getIntersections().front().getSignalController();
+    check(signals.getCurrentPhase("North") == SignalPhase::GREEN &&
+          signals.getCurrentPhase("East") == SignalPhase::RED,
+          "north is green and east is red before the emergency request");
+
+    SimulationEngine emergencyEngine;
+    Intersection seeded("Preempt-Junction");
+    seeded.addLane("North", 10);
+    seeded.addLane("East", 10);
+    seeded.getLanes()[1].enqueue(Vehicle(9001, 0, VehicleType::EMERGENCY));
+    emergencyEngine.addIntersection(seeded);
+    emergencyEngine.loadConfig(0.0, 0.0, false);
+
+    const SignalController& live = emergencyEngine.getIntersections().front().getSignalController();
+    int grantedTick = -1;
+    for (int tick = 0; tick < 20 && grantedTick < 0; ++tick) {
+        emergencyEngine.tick(true);
+        if (live.getCurrentPhase("East") == SignalPhase::GREEN) grantedTick = emergencyEngine.getCurrentTick();
+    }
+    // The request is raised on tick 1, so the delay is grantedTick - 1.
+    check(grantedTick >= 0, "engine grants green to the emergency lane");
+    check(grantedTick - 1 <= live.getMaxPreemptionDelay(),
+          "engine-level preemption delay is within the configured bound");
+    check(emergencyEngine.getStats().totalPreemptions() == 1, "engine logs exactly one preemption event");
+    check(emergencyEngine.getStats().totalThroughput() == 1,
+          "emergency vehicle is dequeued once its lane is green");
+}
+
+// ---- Sprint 3: signal timings via configuration (TMS-F-020 / TMS-F-060) ----
+void writeTimingConfig(const char* path, const std::string& extra) {
+    std::ofstream file(path);
+    file << "total_ticks=10\narrival_rate=0.5\nemergency_probability=0\n"
+         << "adaptive_mode=false\nqueue_capacity=5\n"
+         << "intersection.Timed.lanes=North,South\n" << extra;
+}
+
+void testSignalTimingsLoadedFromConfiguration() {
+    const char* path = "test_signal_timing_config.tmp";
+    writeTimingConfig(path, "green_duration=15\nyellow_duration=2\nred_duration=5\nmax_preemption_delay=6\n"
+                            "max_green_extension=7\n");
+    {
+        SimulationEngine engine;
+        check(engine.loadConfigFromFile(path) == 10, "timing config returns run length");
+        const SignalController& signals = engine.getIntersections().front().getSignalController();
+        check(signals.getMaxGreenExtension() == 7, "max_green_extension is applied from configuration");
+        check(signals.getGreenDuration() == 15, "green_duration is applied from configuration");
+        check(signals.getYellowDuration() == 2, "yellow_duration is applied from configuration");
+        check(signals.getRedDuration() == 5, "red_duration is applied from configuration");
+        check(signals.getMaxPreemptionDelay() == 6, "max_preemption_delay is applied from configuration");
+    }
+    writeTimingConfig(path, "");
+    {
+        SimulationEngine engine;
+        engine.loadConfigFromFile(path);
+        const SignalController& signals = engine.getIntersections().front().getSignalController();
+        check(signals.getGreenDuration() == 10 && signals.getYellowDuration() == 3 &&
+              signals.getRedDuration() == 10 && signals.getMaxPreemptionDelay() == 4,
+              "omitted timing keys keep documented defaults");
+    }
+    const char* invalid[] = {"green_duration=0\n", "yellow_duration=-1\n", "red_duration=abc\n",
+                             "green_duration=1.5\n", "yellow_duration=2\nmax_preemption_delay=2\n",
+                             "red_duration=10001\n", "max_green_extension=-1\n"};
+    for (const char* extra : invalid) {
+        writeTimingConfig(path, extra);
+        SimulationEngine engine;
+        checkThrows<std::runtime_error>([&] { engine.loadConfigFromFile(path); },
+                                        "invalid signal timing configuration is rejected");
+    }
+    std::remove(path);
+}
+
+// ---- Sprint 3: transfers are bounded by downstream capacity (PRJ-SR-004 / TMS-NF-001) ----
+void testPendingTransfersBoundedByDownstreamCapacity() {
+    SimulationEngine engine;
+    const std::size_t capacity = 15;
+    for (int i = 1; i <= 8; ++i) {
+        Intersection intersection("Chain-" + std::to_string(i));
+        for (const char* lane : {"North", "South", "East", "West"}) intersection.addLane(lane, capacity);
+        engine.addIntersection(intersection);
+    }
+    for (int i = 1; i < 8; ++i)
+        engine.connectIntersections("Chain-" + std::to_string(i), "Chain-" + std::to_string(i + 1));
+    engine.loadConfig(0.95, 0.10, true);
+
+    // Each of the 7 linked destinations has 4 lanes of capacity 15.
+    const std::size_t bound = 7 * 4 * capacity;
+    std::size_t peakPending = 0;
+    bool lanesWithinCapacity = true;
+    for (int tick = 0; tick < 3000; ++tick) {
+        engine.tick(true);
+        peakPending = std::max(peakPending, engine.getPendingTransferCount());
+        for (const auto& intersection : engine.getIntersections())
+            for (const auto& lane : intersection.getLanes())
+                lanesWithinCapacity = lanesWithinCapacity && lane.size() <= lane.capacity();
+    }
+    check(peakPending <= bound, "in-flight transfers never exceed total downstream lane capacity");
+    check(lanesWithinCapacity, "no lane ever exceeds its configured capacity under chained overload");
+    check(engine.getTotalTransfers() > 0 && engine.getStats().totalThroughput() > 0,
+          "chained overload still transfers and processes vehicles");
+}
+
+// ---- Sprint 3: console columns stay aligned with long lane names (TMS-NF-004) ----
+void testConsoleColumnsStayAlignedWithLongLaneNames() {
+    Intersection intersection("Alignment");
+    intersection.addLane("NorthBoundExpressLaneExtended", 20);
+    intersection.addLane("South", 20);
+    intersection.addLane("E", 20);
+    for (int id = 1; id <= 15; ++id)
+        intersection.getLanes()[0].enqueue(Vehicle(id, 0, VehicleType::NORMAL));
+
+    std::ostringstream captured;
+    std::streambuf* previous = std::cout.rdbuf(captured.rdbuf());
+    ConsoleView().renderTick(7, intersection.getId(), intersection.getLanes(),
+                             intersection.getSignalController(), false);
+    std::cout.rdbuf(previous);
+
+    std::istringstream lines(captured.str());
+    std::string line;
+    std::vector<std::size_t> firstBar, secondBar;
+    while (std::getline(lines, line)) {
+        const std::size_t first = line.find(" | ");
+        if (first == std::string::npos || line.find("[Intersection") != std::string::npos) continue;
+        firstBar.push_back(first);
+        secondBar.push_back(line.find(" | ", first + 3));
+    }
+    check(firstBar.size() == 4, "header and three lane rows are rendered");
+    bool aligned = true;
+    for (std::size_t i = 1; i < firstBar.size(); ++i)
+        aligned = aligned && firstBar[i] == firstBar[0] && secondBar[i] == secondBar[0];
+    check(aligned, "signal and queue columns stay aligned when one lane name is very long");
+    check(captured.str().find(std::string(15, '#')) != std::string::npos,
+          "high queue bar is rendered in full");
+}
+
+// ---- Sprint 3: per-intersection totals (TMS-F-042 / TMS-F-052) ----
+void testPerIntersectionTotalsSumToAggregate() {
+    SimulationEngine engine;
+    Intersection busy("Busy");
+    busy.addLane("North", 10);
+    busy.addLane("South", 10);
+    Intersection quiet("Quiet");
+    quiet.addLane("North", 10);
+    engine.addIntersection(busy);
+    engine.addIntersection(quiet);
+    engine.loadConfig(0.6, 0.0, false);
+    engine.configureLaneArrivalRate("South", 0.2);
+
+    std::ostringstream captured;
+    std::streambuf* previous = std::cout.rdbuf(captured.rdbuf());
+    engine.run(200, true);
+    std::cout.rdbuf(previous);
+
+    const auto totals = engine.getStats().intersectionTotals();
+    check(totals.size() == 2, "both intersections appear in per-intersection totals");
+    std::int64_t sum = 0;
+    for (const auto& entry : totals) sum += entry.second.throughput;
+    check(sum == engine.getStats().totalThroughput(),
+          "per-intersection throughput sums exactly to the system aggregate");
+    check(engine.getStats().intersectionThroughput("Busy") > 0 &&
+          engine.getStats().intersectionThroughput("Quiet") > 0,
+          "each intersection reports its own throughput");
+    check(engine.getStats().intersectionThroughput("Missing") == 0,
+          "unknown intersection reports zero throughput");
+    const std::string report = captured.str();
+    check(report.find("Per-Intersection Totals:") != std::string::npos,
+          "end-of-run report contains per-intersection totals");
+    check(report.find("SYSTEM TOTAL") != std::string::npos,
+          "end-of-run report contains the system-wide total row");
+}
+
+}
+// Runs one test function and prints its name with the number of checks it passed.
+#define RUN_TEST(name) do { const int before = passed; name(); \
+    std::cout << "[PASS] " #name " (" << (passed - before) << " checks)" << std::endl; } while (0)
+
 int main() {
-    testProbabilityBoundaries();
-    testVehicleIdsAreUniqueAcrossLanesAndIntersections();
-    testArrivalRates();
-    testConfigurationUpdates();
-    testInvalidConfiguration();
-    testEmergencyQueuePriorityAndStableOrdering();
-    testQueueCapacityAndEmptyDequeue();
-    testMalformedConfiguration();
-    testMissingConfigurationFileRejected();
-    testConfigurationValidationBoundaries();
-    testEngineDequeuesVehiclesOnlyOnGreen();
-    testConfigDrivenIntersections();
-    testConnectedVehicleTransferTakesOneTick();
-    testPendingTransferWaitsForDestinationCapacity();
-    testConsoleLongLaneAndHighQueueDisplay();
-    testConsoleStatusFields();
-    testRepeatedSimulationLifecycle();
-    testTenThousandTickStability();
-    testZeroTickConfigurationMeansOpenEndedRun();
-    testManualStopProducesPartialSummary();
-    testSigintStopsOpenEndedRun();
-    testSignalPhaseTransitions();
-    testNoSimultaneousGreenSignals();
-    testAdaptiveGreenExtensionBounds();
-    testAdaptiveModeCanBeChangedDuringSignalOperation();
-    testAdaptiveModeLoadedFromConfiguration();
-    testEmergencyPreemption();
-    testStatisticsCalculations();
-    testMaxQueueLengthOneBoundary();
-    testZeroThroughputIntersectionAppearsInAggregateReport();
-    testSimultaneousOverflowAcrossEveryLane();
-    testIntersectionValidationAndSignalRegistration();
-    testSiblingLaneQueueIsolation();
-    testZeroEmergencyProbabilityProducesNormalVehicles();
-    testEmergencyProbabilityOneAlwaysGeneratesEmergencyVehicles();
+    RUN_TEST(testProbabilityBoundaries);
+    RUN_TEST(testVehicleIdsAreUniqueAcrossLanesAndIntersections);
+    RUN_TEST(testArrivalRates);
+    RUN_TEST(testConfigurationUpdates);
+    RUN_TEST(testInvalidConfiguration);
+    RUN_TEST(testEmergencyQueuePriorityAndStableOrdering);
+    RUN_TEST(testQueueCapacityAndEmptyDequeue);
+    RUN_TEST(testMalformedConfiguration);
+    RUN_TEST(testMissingConfigurationFileRejected);
+    RUN_TEST(testConfigurationValidationBoundaries);
+    RUN_TEST(testEngineDequeuesVehiclesOnlyOnGreen);
+    RUN_TEST(testConfigDrivenIntersections);
+    RUN_TEST(testConnectedVehicleTransferTakesOneTick);
+    RUN_TEST(testPendingTransferWaitsForDestinationCapacity);
+    RUN_TEST(testConsoleLongLaneAndHighQueueDisplay);
+    RUN_TEST(testConsoleStatusFields);
+    RUN_TEST(testRepeatedSimulationLifecycle);
+    RUN_TEST(testTenThousandTickStability);
+    RUN_TEST(testZeroTickConfigurationMeansOpenEndedRun);
+    RUN_TEST(testManualStopProducesPartialSummary);
+    RUN_TEST(testSigintStopsOpenEndedRun);
+    RUN_TEST(testSignalPhaseTransitions);
+    RUN_TEST(testNoSimultaneousGreenSignals);
+    RUN_TEST(testAdaptiveGreenExtensionBounds);
+    RUN_TEST(testAdaptiveModeCanBeChangedDuringSignalOperation);
+    RUN_TEST(testAdaptiveModeLoadedFromConfiguration);
+    RUN_TEST(testEmergencyPreemption);
+    RUN_TEST(testStatisticsCalculations);
+    RUN_TEST(testMaxQueueLengthOneBoundary);
+    RUN_TEST(testZeroThroughputIntersectionAppearsInAggregateReport);
+    RUN_TEST(testSimultaneousOverflowAcrossEveryLane);
+    RUN_TEST(testIntersectionValidationAndSignalRegistration);
+    RUN_TEST(testSiblingLaneQueueIsolation);
+    RUN_TEST(testZeroEmergencyProbabilityProducesNormalVehicles);
+    RUN_TEST(testEmergencyProbabilityOneAlwaysGeneratesEmergencyVehicles);
+    RUN_TEST(testBoundedEmergencyPreemptionDelay);
+    RUN_TEST(testPreemptionDelayConfigurationBounds);
+    RUN_TEST(testEnginePreemptsWithinConfiguredDelay);
+    RUN_TEST(testSignalTimingsLoadedFromConfiguration);
+    RUN_TEST(testPerIntersectionTotalsSumToAggregate);
+    RUN_TEST(testConsoleColumnsStayAlignedWithLongLaneNames);
+    RUN_TEST(testPendingTransfersBoundedByDownstreamCapacity);
     std::cout << "All " << passed << " checks passed." << std::endl;
     return EXIT_SUCCESS;
 }

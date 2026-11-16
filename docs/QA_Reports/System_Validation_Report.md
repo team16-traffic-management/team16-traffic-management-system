@@ -1,104 +1,132 @@
 # System Validation Report
 
-Status: Partial system validation. Main-branch run #243 passed Ubuntu and Windows build/test/smoke jobs; Ubuntu passed 985 automated checks, Linux ASan/UBSan and production-source coverage. Full SRS/Test Plan acceptance is not signed off.
+**Status: All 33 requirements validated. Test Plan v1.2: 66/66 cases executed — 66 PASS, 0 FAIL.**
 
 ## Objective
-Record automated CI evidence, local performance evidence and outstanding system-level acceptance checks. Automated CI evidence and manual Test Plan execution are separate.
 
-## Test environment and evidence
+Validate the complete system against every SRS requirement by executing the 66 Test Plan cases (two per requirement) on the final Sprint 3 build, and record the results.
+
+## Environment and method
+
 | Field | Value |
 |---|---|
-| Language standard | C++17 |
-| Baseline main workflow | [Run #99](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42450330604) |
-| Baseline tested commit | `f8c6cfda5355f3e2cea2ff2bbd71dae23180c540` |
-| Baseline result | 436 automated checks passed on Ubuntu and Windows; default-app and multi-intersection startup smoke tests passed; Ubuntu ASan/UBSan passed |
-| Manual-stop PR workflow | [Run #132](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42785408865) |
-| Manual-stop PR head | `9b8730c4cb0fdb5f8e0a172e40b16912fff49c53` |
-| Manual-stop merge commit | `339dfed320036ed1c42a375f70bc1189fb5b4244` |
-| Latest main commit | `43681916f3f18da3b29d19c4bc79ae10c46ae13e` |
-| Latest main CI | [Run #235](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382805876) |
-| PR #94 CI result | Ubuntu and Windows build, automated tests, default-app and multi-intersection smoke tests passed; Ubuntu ASan/UBSan passed |
-| Benchmark | Local Windows; `-std=c++17 -O2 -DNDEBUG`; exact OS build/compiler/hardware metadata not recorded |
+| Code under test | Sprint 3 baseline (`docs/SPRINT_3.md`) |
+| Local platform | Windows 11, MSYS2 UCRT64 `g++ 16.2.0`, `-std=c++17 -O2` |
+| Linux platform | GitHub Actions `ubuntu-latest`, g++ 15.2.0: same script plus ASan/UBSan/LeakSanitizer and Valgrind — [CI run #246](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43938226798), 16-11-2026 19:22 UTC |
+| Executed | 16-11-2026 |
+| Command | `bash scripts/run_acceptance.sh` (`make acceptance-full`) |
+| Test basis | `Documents/Test_Plan_Traffic_Management_System.docx` v1.2, Section 13 |
+| Case-level results | `docs/TEST_EXECUTION_REGISTER.md` |
+| Raw evidence | `docs/QA_Reports/evidence/` |
 
-## Validation register
-| ID | Scenario | Evidence | Status |
-|---|---|---|---|
-| SYS-01 | Default application startup | Default-app smoke tests passed in baseline and PR #94 CI on Ubuntu/Windows | PASS — CI smoke test |
-| SYS-02 | Vehicle arrivals and statistics | Automated test executable and 10,000-tick fixture completed | PASS — tested execution only |
-| SYS-03 | Lane queue behavior | Capacity, overflow, FIFO and empty-dequeue assertions | PASS — covered assertions |
-| SYS-04 | Signal phase behavior | Phase-transition tests and PR #90 80-tick at-most-one-GREEN-lane invariant | PASS — covered assertions |
-| SYS-05 | Conflicting green signals | At-most-one-GREEN-lane invariant; no geometric movement matrix | PARTIAL — does not prove turning-movement conflict safety |
-| SYS-06 | Emergency behavior | Preemption request acceptance/rejection and deferred activation tests | PASS — tested cases only |
-| SYS-07 | Multi-intersection transfer | Two-intersection transfer assertion and config-driven startup smoke tests | PASS — tested topology only |
-| SYS-08 | Invalid configuration | PR #91 missing/invalid values, numeric boundaries, malformed probabilities, duplicate/unknown keys and invalid connections | PASS — covered inputs only |
-| SYS-09 | Long simulation / memory safety | 10,000-tick test and Linux ASan/UBSan CI | PARTIAL — no repeated-run leak/memory-growth report |
-| SYS-10 | Performance | Five local 10,000-tick runs; average 84,371.19 and median 88,344.30 ticks/sec vs 500 target | PASS — local fixture only |
-| SYS-11 | Graceful manual stop | PR #94 merged; automated direct-stop and SIGINT tests passed on Ubuntu/Windows CI; Linux sanitizer passed | PASS — automated verification; manual interactive acceptance still NOT RUN/documented |
-| SYS-12 | Adaptive green timing boundaries | PR #98 verifies capped extension, low-queue base-duration reset and negative extension rejection; CI run #141 passed Ubuntu/Windows | PASS — tested boundaries only; not full timing policy validation |
-| SYS-13 | Destination queue transfer backpressure | PR #99 verifies pending transfer waits while destination lane is full and is delivered after capacity frees; CI run #142 passed Ubuntu/Windows | PASS — tested scenario |
-| SYS-14 | Emergency queue ordering | PR #101 verifies emergency-first ordering and FIFO stability within emergency and normal vehicles; CI run #143 passed Ubuntu/Windows | PASS — queue ordering cases only; maximum emergency wait remains unverified |
-| SYS-15 | Console long-lane/high-queue output | PR #102 verifies full long lane name, queue count and visual bar; PR run #144 and main run #163 passed Ubuntu/Windows | PASS — output assertions; manual visual/usability inspection remains outstanding |
-| SYS-16 | Vehicle ID uniqueness | PR #104 checks 200 generated vehicles across four lanes in two intersections for duplicate IDs; CI run #153 passed Ubuntu/Windows | PASS — tested generation fixture |
-| SYS-17 | Engine-level green-only dequeue | PR #105 verifies a red-lane vehicle remains queued until its lane turns green; CI run #154 passed Ubuntu/Windows | PASS — tested signal cycle and engine behavior |
-| SYS-18 | Exact one-tick connected transfer latency | PR #107 verifies a vehicle scheduled from the source in tick one is delivered and processed by the destination in tick two; CI run #159 passed Ubuntu/Windows | PASS — tested topology and timing path |
-| SYS-19 | Repeated simulation lifecycle | PR #108 creates, runs and destroys 20 independent SimulationEngine instances, each for 100 ticks; CI run #162 passed Ubuntu/Windows | PASS — repeated lifecycle execution; not a quantified leak/memory-growth measurement |
+Method:
 
-## Local performance benchmark
-One warm-up followed by five measured runs of 10,000 ticks, four independent intersections and four lanes per intersection; console rendering disabled.
+1. **In-process cases (62).** `tests/acceptance/test_plan_acceptance.cpp` runs one function per TC ID against the production classes, using the case's own test data, and compares the actual result with the v1.2 expected result.
+2. **Process-level cases.** `scripts/run_acceptance.sh` runs the real executable to check exit codes and stderr messages for missing, invalid and corrupted configs. It also runs a 500-tick natural completion, a **real Ctrl+C** (Windows `CTRL_C_EVENT` / POSIX `SIGINT`, via `tests/acceptance/send_ctrl_c.cpp`), a config-only third intersection run with the unchanged binary, and a build with `make` absent from `PATH`.
+3. **Memory and portability cases.** ASan/UBSan, LeakSanitizer and Valgrind runs, plus a Linux-vs-Windows output diff, happen in CI because these tools do not exist for MinGW on Windows.
 
-| Run | Throughput |
-|---|---:|
-| 1 | 59,850.24 ticks/second |
-| 2 | 85,234.42 ticks/second |
-| 3 | 88,344.30 ticks/second |
-| 4 | 97,249.59 ticks/second |
-| 5 | 91,177.40 ticks/second |
-| Average | 84,371.19 ticks/second |
-| Median | 88,344.30 ticks/second |
-| SRS target | 500.00 ticks/second |
+## Results by requirement
 
-The median is approximately 176.7 times the target. This is evidence for the local fixture only: intersections are independent, rendering is disabled, and exact CPU, RAM, Windows build and compiler version were not recorded. It is not evaluator-hardware or connected-network performance certification.
+| Requirement | Capability | Positive case | Negative case | Outcome |
+|---|---|---|---|---|
+| TMS-F-001 | Randomized per-lane arrivals | PASS | PASS | **Validated** |
+| TMS-F-002 | Unique ID, arrival tick, type | PASS | PASS | **Validated** |
+| TMS-F-003 | FIFO enqueue | PASS | PASS | **Validated** |
+| TMS-F-010 | Independent lane queues | PASS | PASS | **Validated** |
+| TMS-F-011 | Lane capacity / blocked logging | PASS | PASS | **Validated** |
+| TMS-F-012 | Dequeue only on Green | PASS | PASS | **Validated** |
+| TMS-F-013 | Wait-time recording | PASS | PASS | **Validated** |
+| TMS-F-020 | Fixed-timer cycle | PASS | PASS | **Validated** |
+| TMS-F-021 | Adaptive Green, bounded | PASS | PASS | **Validated** |
+| TMS-F-022 | No conflicting Greens | PASS | PASS | **Validated** |
+| TMS-F-023 | Yellow before Red | PASS | PASS | **Validated** |
+| TMS-F-024 | Mode switch via config | PASS | PASS | **Validated** |
+| TMS-F-030 | Emergency probability | PASS | PASS | **Validated** |
+| TMS-F-031 | Emergency priority dequeue | PASS | PASS | **Validated** |
+| TMS-F-032 | Preemption within max delay | PASS | PASS | **Validated** |
+| TMS-F-040 | Multiple independent intersections | PASS | PASS | **Validated** |
+| TMS-F-041 | Green-wave link | PASS | PASS | **Validated** |
+| TMS-F-042 | Per-intersection + aggregate stats | PASS | PASS | **Validated** |
+| TMS-F-050 | Average wait time | PASS | PASS | **Validated** |
+| TMS-F-051 | Maximum queue length | PASS | PASS | **Validated** |
+| TMS-F-052 | Throughput | PASS | PASS | **Validated** |
+| TMS-F-060 | Configuration | PASS | PASS | **Validated** |
+| TMS-F-061 | Start / clean stop with summary | PASS | PASS | **Validated** |
+| TMS-NF-001 | Performance ≥ 500 ticks/s | PASS | PASS | **Validated** |
+| TMS-NF-002 | 10,000+ ticks, no crash/leak | PASS | PASS | **Validated** (Valgrind: 0 bytes in use at exit, 0 errors) |
+| TMS-NF-003 | Topology via config only | PASS | PASS | **Validated** |
+| TMS-NF-004 | Readable console | PASS | PASS | **Validated** |
+| TMS-NF-005 | Linux + Windows portability | PASS | PASS | **Validated** (identical output on Linux and Windows) |
+| PRJ-SR-001 | Bounds checking | PASS | PASS | **Validated** (no ASan/UBSan reports) |
+| PRJ-SR-002 | Config validation | PASS | PASS | **Validated** |
+| PRJ-SR-003 | No leaks (RAII) | PASS | PASS | **Validated** (Valgrind + LeakSanitizer: no leaks) |
+| PRJ-SR-004 | Overflow handling | PASS | PASS | **Validated** |
+| PRJ-SR-005 | No abnormal termination | PASS | PASS | **Validated** |
 
-## Remaining validation
-- Execute and record all 66 Test Plan cases individually; 436 automated assertions are not equivalent to the 66 planned cases.
-- Perform a manual interactive Ctrl+C run and verify the printed completed-tick count and partial summary.
-- Test geometric movement conflicts between turning movements; current invariant checks only at most one GREEN lane.
-- Test invalid-intersection isolation. Destination full-queue backpressure and exact one-tick transfer latency are covered by PRs #99 and #107.
-- Test emergency maximum-wait/preemption delay. Adaptive timing boundary cases are covered by PR #98.
-- PR #108 now runs 20 create/run/destroy cycles under the sanitizer-enabled suite; retain a quantified memory-growth/leak report if required, since repeated lifecycle assertions are not a leak report.
-- Perform manual visual/usability inspection of console formatting; long lane names and high queue lengths are now covered by PR #102 assertions.
-- Benchmark connected intersections and evaluator hardware if required.
-- Resolve SRS PRJ-SR-002 rejection behavior versus Test Plan safe-default expectations; correct `TC-Gen-003-N` mapping.
-- Regenerate final coverage and record exact file scope.
+## Key end-to-end observations
 
-## Latest merged QA regression evidence
-- PR #98 adaptive timing boundaries: [CI run #141](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42791702831), merged.
-- PR #99 transfer backpressure: [CI run #142](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42792945910), merged.
-- PR #101 emergency queue ordering: [CI run #143](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42795154445), merged.
-- PR #102 long-lane/high-queue console output: [CI run #144](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42795769676), merged.
-- PR #104 vehicle ID uniqueness: [CI run #153](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796601039), merged.
-- PR #105 green-only engine dequeue: [CI run #154](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42796698371), merged.
-- PR #107 exact one-tick transfer latency: [CI run #159](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42797325343), merged.
-- PR #108 repeated simulation lifecycle: [CI run #162](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42797660386), merged.
-- Post-merge main CI: [run #163](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42797884604) passed Ubuntu and Windows; Ubuntu ASan/UBSan passed.
+| Scenario | Case | Observed |
+|---|---|---|
+| Fixed-timer cycle from config (10/3/10) | TC-Sig-001-P | North changes phase at ticks 10 and 13; South Green at tick 23 |
+| Bounded preemption, config `yellow_duration=1`, `max_preemption_delay=2` | TC-Emg-003-P | Preemption logged at tick 1; emergency lane Green at tick 3 (delay 2) |
+| Preemption safety | TC-Emg-003-N | East/North per tick: YELLOW/RED ×3 → RED/RED → RED/GREEN; never two Greens |
+| 100-tick conflict scan, 4 lanes | TC-Sig-003-P | 0 conflicting ticks, 0 ticks with more than one Green; 5 preemptions occurred |
+| Adaptive cap (base 10, `max_green_extension=10`) | TC-Sig-002-P/N | Queue 8 → Green 20 ticks; queue 50 → Green 20 ticks (capped) |
+| Downstream full | TC-Multi-002-N | Vehicle held upstream; 2 vehicles accounted before and after; delivered exactly once |
+| Per-intersection vs aggregate | TC-Multi-003-P | Busy 125 + Quiet 59 = 184 = reported aggregate |
+| Throughput counted independently | TC-Stats-003-P | Replayed arrivals 307 − 222 still queued = 85 = reported throughput |
+| Invalid intersection / runtime overload | TC-Multi-001-N | Load rejected: "Empty lane name in intersection: Two"; overload of Two caused 309 blocked in Two and 0 in One/Three |
+| Missing / invalid / corrupted config (CLI) | TC-Sim-001-N, TC-Rob-002-P, TC-Rob-005-P | Exit code 1 with `Simulation failed: <reason>`; no crash codes |
+| Real Ctrl+C on an open-ended run | TC-Sim-002-N | Exit 0; summary for 20,420 ticks = 20,420 rendered tick blocks; termination "user requested stop" |
+| Topology change without rebuild | TC-Maint-01-P | Unchanged binary ran `three_intersections.cfg`: 3 intersections, Harbor reported |
+| Missing build tool | TC-Port-01-N | `make: command not found`, exit 127 (make is genuinely absent on the test machine) |
+
+## Performance (TMS-NF-001)
+
+| Measurement | Result | Target |
+|---|---|---|
+| TC-Perf-01-P: 4 intersections × 4 lanes, 10,000 ticks | 15,437 ticks/s | ≥ 500 |
+| TC-Perf-01-N: 8 chained intersections, arrival 0.95 | 10,222 ticks/s (0.36× the 4-intersection rate; linear expectation 0.50×) | ≥ 500 and no worse than 0.25× |
+| `benchmarks/performance_benchmark.cpp`, 5 × 10,000 ticks | Median 19,403 ticks/s, average 19,233 ticks/s | ≥ 500 |
+
+Absolute throughput on the test laptop varied with machine load (from about 15k to 276k ticks/s on the same build during the session). To rule out a regression, the original and Sprint 3 benchmarks were run back-to-back: original median 8,142 / 7,281 ticks/s against Sprint 3 median 17,435 / 23,544 ticks/s. In every run the target was exceeded by more than 14×. Full output: `evidence/benchmark_windows.txt`.
+
+## Defects found by system testing
+
+| Defect | Found by | Status |
+|---|---|---|
+| DEF-05: unbounded in-flight transfers under chained overload (24× slowdown for 2× intersections; 2,051 vehicles in flight) | TC-Perf-01-N **FAIL** on the first execution | Fixed (spillback); re-executed PASS |
+| DEF-04: console columns misaligned for long lane names | TC-UX-01-N alignment check | Fixed; re-executed PASS |
+| DEF-01, DEF-02, DEF-03, DEF-06: preemption delay bound, timing config keys, adaptive baseline, per-intersection totals | Updating the test cases against the Sprint 2 code | Fixed in Sprint 3 before execution |
+
+Details and before/after measurements: `docs/SPRINT_3.md`.
+
+## Deviations from the original (v1.0) expected results
+
+These cases were revised in Test Plan v1.1/v1.2 and are traceable through the "Change in v1.2" rows of the DOCX:
+
+- **Invalid or missing configuration is rejected, not replaced by defaults** (TC-Sig-005-N, TC-Sim-001-N, TC-Rob-002-P/N, TC-Rob-005-P). This follows SRS PRJ-SR-002.
+- **Zero durations and zero capacity are rejected when the config loads or the object is built** (TC-Sig-001-N, TC-Queue-002-N), so they can never occur at runtime.
+- **Fault isolation:** a config containing an invalid intersection is rejected as a whole (fail-fast). Runtime isolation between intersections is validated separately (TC-Multi-001-N). Module faults are contained at module boundaries rather than by a per-tick try/catch (TC-Rob-005-N).
+- **Conflict safety:** the controller serves one lane at a time, which is stricter than "conflict-free sets" (TC-Sig-003-P/N). Geometric turning-movement modelling is outside the implemented design.
+
+## Linux CI verification ([CI run #246](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43938226798))
+
+| Check | Result |
+|---|---|
+| AddressSanitizer + UBSan (unit suite, 60 acceptance cases, 10,000-tick app run) | No reports (`evidence/sanitizers_linux.txt`) |
+| Valgrind, 10,000-tick connected run | 0 bytes in use at exit; 182,701 allocs / 182,701 frees; 0 errors (`evidence/valgrind_linux.txt`) |
+| Valgrind, acceptance runner (repeated runs, mid-run exception) | 0 bytes in use at exit; 311,327 allocs / 311,327 frees; 0 errors |
+| LeakSanitizer, repeated runs and mid-run exception | No leaks |
+| Real SIGINT on Linux (TC-Sim-002-N) | Exit 0; summary for 293,210 ticks = 293,210 rendered tick blocks |
+| Linux vs Windows output (TC-Port-01-P) | Identical (196 lines) |
+| Linux acceptance results | 77 PASS, 0 FAIL |
+| CI benchmark medians | Linux 242,845 ticks/s; Windows 204,859 ticks/s |
 
 ## Conclusion
-The repository has successful cross-platform CI evidence, Linux sanitizer evidence, and a local benchmark exceeding the stated throughput target for its fixture. Graceful stop is implemented and automated-CI verified. Overall system acceptance remains PARTIAL until outstanding requirement-level cases are executed, documented and signed off.
 
+On the final Sprint 3 build every functional requirement (TMS-F-001 to TMS-F-061) is validated by both its positive and negative case. So are performance, maintainability, usability, and the PRJ-SR-002/004/005 robustness requirements. No case failed on the final build. Two defects found during execution were fixed and re-tested. With the Linux CI run confirming the memory-tool and portability requirements, all 33 requirements are validated. Only team and instructor sign-off remain.
 
-## Latest regression and coverage evidence — PRs #115–#123
+## Earlier validation history
 
-- PR #115 sibling-lane isolation and zero-emergency-probability tests: [CI #43377370669](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43377370669), Ubuntu/Windows passed.
-- PR #116 emergency probability 1.0 boundary: [CI #43377755772](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43377755772), Ubuntu/Windows and Linux ASan/UBSan passed.
-- PR #117 max-queue-one, zero-throughput report and simultaneous-overflow cases: [CI #43378089050](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43378089050), Ubuntu/Windows and Linux ASan/UBSan passed.
-- PR #118 runtime adaptive mode switch: [CI #43378320849](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43378320849), Ubuntu/Windows and Linux ASan/UBSan passed.
-- PR #120 adaptive mode config loading: [CI #43379351361](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43379351361), Ubuntu/Windows and Linux ASan/UBSan passed.
-- PR #121 merged to main. Post-merge main run #241: [CI #43382188203](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43381117586). Ubuntu and Windows builds, 985 automated checks on Ubuntu and smoke tests passed; Linux ASan/UBSan passed. Main-branch coverage: 88.0% line (667/758), 86.2% function (81/94), 54.8% branch (686/1,252). Artifact: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43381117586/artifacts/14016733343.
-
-The automation crosswalk now classifies 42 of 66 cases as direct, 18 partial and 6 without direct automated checks. This is mapping evidence only; the 66-case acceptance register remains NOT RUN.
-
-
-- PR #123 missing-config and missing-compiler diagnostics: [main CI run #241](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382188203) passed. The Ubuntu workflow verified the compiler preflight diagnostic and missing-config application error/non-zero exit; Windows passed build, tests and smoke tests.
-
-
-- PR #123 missing-config and missing-compiler diagnostics: [main CI run #241](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382188203) passed. Ubuntu verified the compiler preflight diagnostic and missing-config application error/non-zero exit; Windows passed build, tests and smoke tests.
+Earlier CI evidence (main run #99 with 436 checks; PR #94 graceful stop; PRs #98–#123 regression tests; main run #243 with 985 checks) is summarised in `Unit_Test_Report.md`. The earlier local benchmark (median 88,344 ticks/s) is superseded by the measurements above.

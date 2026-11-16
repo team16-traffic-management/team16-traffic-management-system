@@ -18,7 +18,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - name: Set up MinGW-w64 on Windows
@@ -101,6 +101,25 @@ jobs:
         if: runner.os == 'Linux'
         shell: bash
         run: make sanitize
+      - name: Install Valgrind
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y valgrind
+      - name: Execute Test Plan v1.2 acceptance cases
+        shell: bash
+        env:
+          EVIDENCE_DIR: build/evidence
+          # Hosted Windows runners have no interactive console for CTRL_C_EVENT;
+          # the real Ctrl+C case runs locally on Windows and via SIGINT on Linux.
+          TMS_SKIP_CONSOLE_CTRL_C: ${{ runner.os == 'Windows' && '1' || '' }}
+        run: bash scripts/run_acceptance.sh
+      - name: Upload acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: acceptance-evidence-${{ runner.os }}
+          path: build/evidence
+          if-no-files-found: error
+          retention-days: 30
       - name: Upload Linux executable
         if: runner.os == 'Linux'
         uses: actions/upload-artifact@v4
@@ -109,6 +128,25 @@ jobs:
           path: build/traffic-management
           if-no-files-found: error
           retention-days: 14
+
+  portability-compare:
+    name: Cross-platform output comparison (TC-Port-01-P)
+    needs: build-test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Download Linux and Windows acceptance evidence
+        uses: actions/download-artifact@v4
+        with:
+          pattern: acceptance-evidence-*
+          path: evidence
+      - name: Compare simulation output for the same config and seed
+        shell: bash
+        run: |
+          linux=evidence/acceptance-evidence-Linux/portability_output_linux.txt
+          windows=evidence/acceptance-evidence-Windows/portability_output_windows.txt
+          diff -u <(tr -d '\r' < "$linux") <(tr -d '\r' < "$windows")
+          echo "TC-Port-01-P: Linux and Windows builds produced identical output for tests/data/baseline.cfg"
 
   coverage:
     name: Source line and branch coverage
@@ -130,7 +168,10 @@ jobs:
         with:
           name: traffic-management-coverage
           path: |
-            build/coverage/index.html
+            build/coverage/*.html
+            build/coverage/*.css
+            build/coverage/*.js
             build/coverage/coverage.xml
+            build/coverage/summary_excluding_throw_branches.txt
           if-no-files-found: error
           retention-days: 30

@@ -1,0 +1,18 @@
+Traffic Management System performance benchmark
+Configuration: 4 intersections, 4 lanes/intersection, 10,000 ticks/run
+Arrival rate: 0.4 | Emergency probability: 0.05
+Console rendering: disabled
+
+Warm-up run...
+Run 1: 19423.98 ticks/second
+Run 2: 21072.85 ticks/second
+Run 3: 19403.09 ticks/second
+Run 4: 19233.40 ticks/second
+Run 5: 17031.52 ticks/second
+
+Average: 19232.97 ticks/second
+Median:  19403.09 ticks/second
+SRS target: 500.00 ticks/second
+RESULT: TARGET MET (based on median run)
+
+Record the CPU, RAM, OS, compiler version, and these results with the submission evidence.

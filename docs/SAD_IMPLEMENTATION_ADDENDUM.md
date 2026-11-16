@@ -25,7 +25,7 @@ The engine increments the tick, attempts delivery of pending transfers, then vis
 
 ### 2.2 Signal update, emergency handling and dispatch
 
-For each intersection, the engine checks lane queues for emergency vehicles and requests preemption from the SignalController. It advances the intersection signal state, updates adaptive timing if enabled, and dequeues only from a lane whose current phase is GREEN. If that lane has a configured outgoing connection, the Vehicle is placed in the pending-transfer queue; otherwise its dequeue is recorded in statistics. The detailed UML sequence is in `Documents/diagrams/TMS_Signal_And_Dispatch_Sequence.puml`.
+For each intersection, the engine checks lane queues for emergency vehicles and requests preemption from the SignalController. It advances the intersection signal state, updates adaptive timing if enabled, and dequeues only from a lane whose current phase is GREEN. If that lane has a configured outgoing connection, the Vehicle leaves only when the downstream lane has room after counting transfers already in flight (spillback). It is then placed in the pending-transfer queue; otherwise the dequeue is recorded in statistics. An accepted preemption ends the current Green at once, keeps the full Yellow, holds one all-red tick and then grants Green to the emergency lane (Sprint 3, see Section 8). The detailed UML sequence is in `Documents/diagrams/TMS_Signal_And_Dispatch_Sequence.puml`.
 
 ### 2.3 Configuration and operator use cases
 
@@ -40,9 +40,9 @@ The following is a source-aligned summary of public interfaces. It is not a comp
 | SimulationEngine | `loadConfig(...)`, `addIntersection(...)`, `configureLaneArrivalRate(...)`, `connectIntersections(...)`, `loadConfigFromFile(...)`, `run(...)`, `tick(...)` | Invalid intersection IDs, duplicate IDs, invalid rates, invalid connection endpoints/lane matches and malformed config are rejected with exceptions. `loadConfigFromFile` returns configured tick count; zero means run until stopped. |
 | Intersection | `addLane(...)`, `update(...)`, `getLanes()`, `getSignalController()` | Rejects empty/duplicate lane names and zero capacity. Provides mutable/const access to owned lane and signal state. |
 | LaneQueue | `enqueue(...)`, `dequeue()`, `isFull()`, `isEmpty()`, `hasEmergency()`, `getQueueLength()` | Enqueue returns false when capacity prevents admission. Dequeue returns a Vehicle and throws `std::runtime_error` if called on an empty queue. |
-| SignalController | `addLane(...)`, `updateSignalState(...)`, `getCurrentPhase(...)`, `preempt(...)`, `setAdaptiveMode(...)`, `updateAdaptiveTimers(...)` | Rejects invalid phase durations and negative extension. `preempt` returns false for unknown lanes, a pending request or the already active lane. |
+| SignalController | `addLane(...)`, `setDurations(...)`, `updateSignalState(...)`, `getCurrentPhase(...)`, `preempt(...)`, `setMaxPreemptionDelay(...)`, `worstCasePreemptionDelay()`, `setAdaptiveMode(...)`, `updateAdaptiveTimers(...)` | Rejects non-positive durations, negative extension, and a preemption bound shorter than Yellow + 1. `preempt` returns false for unknown lanes, when a request is already pending, or when the lane is already Green. The adaptive cap is configured Green + maximum extension. |
 | VehicleGenerator | `configureLane(...)`, `shouldGenerate(...)`, `generateVehicle(...)`, `setEmergencyProbability(...)` | Probability inputs are validated; generation uses lane-specific random state and allocates vehicle IDs. |
-| StatisticsCollector | `recordDequeue(...)`, `recordBlocked(...)`, `recordPreemption(...)`, `updateMaxQueueLength(...)`, `averageWaitTime()`, `totalThroughput()`, `totalBlocked()`, `totalPreemptions()`, `printEndOfRunReport(...)` | Stores event and aggregate data, including intersection/lane identifiers. |
+| StatisticsCollector | `recordDequeue(...)`, `recordBlocked(...)`, `recordPreemption(...)`, `updateMaxQueueLength(...)`, `averageWaitTime()`, `totalThroughput()`, `totalBlocked()`, `totalPreemptions()`, `intersectionTotals()`, `intersectionThroughput(...)`, `blockedFor(...)`, `printEndOfRunReport(...)` | Stores event and aggregate data, including intersection/lane identifiers. The report prints per-lane rows, per-intersection totals and a `SYSTEM TOTAL` row. |
 | ConsoleView | `renderTick(...)` | Displays per-tick/per-intersection state unless silent rendering is requested. |
 
 ## 4. Error handling and validation
@@ -50,7 +50,7 @@ The following is a source-aligned summary of public interfaces. It is not a comp
 - **Configuration input:** `loadConfigFromFile` rejects unreadable files, malformed lines, empty/duplicate keys, missing required keys, unknown keys, invalid types, non-finite/out-of-range probabilities, invalid tick limits, invalid queue capacity and invalid intersection/connection definitions. It throws descriptive exceptions; `main` catches standard exceptions, prints `Simulation failed: ...` and exits with status 1.
 - **Object construction:** `Intersection`, `SignalController` and related constructors/mutators reject invalid identifiers, lane names, duplicate lanes, zero capacities, invalid signal durations and negative adaptive extensions with `std::invalid_argument`.
 - **Queue capacity:** `LaneQueue.enqueue` reports admission failure through its boolean return; the engine records a blocked event rather than treating a full queue as a successful arrival.
-- **Inter-intersection transfer:** pending transfers are retried on later ticks if the destination lane cannot accept the vehicle. A transfer is counted only after successful enqueue at the destination.
+- **Inter-intersection transfer:** a linked vehicle is released only if the destination lane has room after counting in-flight transfers (spillback), so in-flight transfers are bounded by downstream capacity. A transfer that still cannot be delivered is retried on later ticks, and it is counted only after a successful enqueue at the destination.
 - **Simulation lifecycle:** `run` rejects negative tick counts and durations that would overflow the tick counter. SIGINT requests a stop between ticks, after which the run summary is printed.
 - **Statistics and rendering:** the engine records dequeue, blocked and preemption events and calls the view once per intersection per tick. Silent mode suppresses interactive rendering for tests/benchmarks.
 
@@ -97,3 +97,16 @@ This section is a design description, not a claim of a formal penetration test o
 3. Review the security/trust-boundary text with the instructor; the project scope has no remote/network interface.
 4. Confirm the requirement groupings against the final approved SRS and complete any one-to-one RTM mapping needed.
 5. Reconcile all behavior described here with the final source revision before signing the SAD.
+
+## 8. Sprint 3 design changes (16-11-2026)
+
+| Change | Design decision | Requirement |
+|---|---|---|
+| Bounded emergency preemption | State machine: Green → Yellow immediately → full Yellow → 1 all-red tick → Green for the emergency lane. Worst-case delay = Yellow + 1. The configurable `max_preemption_delay` must be at least that, so a configuration cannot promise a bound the controller cannot honour, and Yellow is never skipped. | TMS-F-032, TMS-F-022, TMS-F-023 |
+| Signal timings in configuration | Optional keys `green_duration`, `yellow_duration`, `red_duration`, `max_preemption_delay`, `max_green_extension`, validated before any engine state changes | TMS-F-020, TMS-F-021, TMS-F-060, PRJ-SR-002 |
+| Adaptive baseline | Adaptive Green extends from the configured base up to base + `max_green_extension`; light queues restore the configured base | TMS-F-021 |
+| Spillback | `SimulationEngine::hasDownstreamCapacity` gates every linked dequeue | PRJ-SR-004, TMS-NF-001, TMS-F-041 |
+| Per-intersection statistics | `StatisticsCollector::intersectionTotals()` derives totals from the per-lane maps; the report adds a totals table | TMS-F-042, TMS-F-052 |
+| Console layout | Column widths follow the longest lane and intersection names | TMS-NF-004 |
+
+Full rationale and before/after measurements: `docs/SPRINT_3.md`. These changes are reflected in Test Plan v1.2. Transfer them into the SAD DOCX at the next revision.

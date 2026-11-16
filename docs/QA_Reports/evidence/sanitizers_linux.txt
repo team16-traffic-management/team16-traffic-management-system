@@ -1,0 +1,5 @@
+ASan/UBSan/LSan logs (empty stderr = clean)
+[PASS] testConsoleColumnsStayAlignedWithLongLaneNames (3 checks)
+[PASS] testPendingTransfersBoundedByDownstreamCapacity (3 checks)
+All 1198 checks passed.
+In-process acceptance cases: 60 passed, 0 failed, 60 executed.

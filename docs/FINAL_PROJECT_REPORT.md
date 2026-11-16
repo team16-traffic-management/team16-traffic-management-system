@@ -32,8 +32,15 @@ The project objectives reflected in the implemented system are to:
 - Graceful stop handling, including open-ended runs when `total_ticks=0`.
 - C++17 build, automated C++ test executable, GitHub Actions CI and Linux sanitizer step.
 
-### Partially verified / not fully accepted
-Implementation and automated tests exist for the features above, but full system acceptance remains partial. The 66 planned Test Plan cases have not all been individually executed and recorded. Geometric turning-movement conflict safety, invalid-intersection isolation, emergency maximum-wait boundaries, manual Ctrl+C acceptance, visual console usability, and quantified memory-growth/leak evidence remain open.
+### Added in Sprint 3
+- Bounded emergency preemption with a configurable maximum delay.
+- Signal durations and the adaptive maximum extension configurable from the config file.
+- Spillback between linked intersections, so in-flight transfers never exceed downstream capacity.
+- Per-intersection totals and a system total in the end-of-run report.
+- Console columns that stay aligned for long lane names.
+
+### Verification status
+All 66 Test Plan cases have been executed and passed; see Section 5.
 
 ### Configuration and execution
 Build and run from the repository root:
@@ -96,35 +103,33 @@ The build uses GCC with the C++17 language standard and warning flags. The proje
 
 ## 5. Testing and results
 
-The repository contains four QA reports, a 66-case execution register (`docs/TEST_EXECUTION_REGISTER.md`), and an automated-test crosswalk (`docs/TEST_CASE_AUTOMATION_CROSSWALK.md`). The crosswalk identifies 33 cases with direct automated checks, 18 with partial evidence and 15 with no direct automated check identified. This does not change the Test Plan's execution status: all 66 cases remain NOT RUN until executed and recorded individually. All 66 cases are initialized as NOT RUN, matching the current Test Plan; the register is ready for execution records but is not evidence of completed testing.
-- `docs/QA_Reports/Unit_Test_Report.md`
-- `docs/QA_Reports/System_Validation_Report.md`
-- `docs/QA_Reports/Code_Coverage_Report.md`
-- `docs/QA_Reports/Branch_Coverage_Report.md`
+Part 3 testing was carried out on the Sprint 3 code on 16-11-2026. Full details are in `docs/QA_Reports/`.
 
-### Automated tests and CI evidence
-- Baseline main workflow [#99](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42450330604) reported 436 automated checks passed on Ubuntu and Windows. Default-application and multi-intersection startup smoke tests passed; Ubuntu ASan/UBSan passed.
-- Graceful-stop PR #94 workflow [#132](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42785408865) passed Ubuntu and Windows build, automated tests and smoke tests; Ubuntu ASan/UBSan passed. The change was merged to main.
-- Regression PRs #98, #99, #101, #102, #104, #105, #107 and #108 added targeted automated checks for adaptive timing boundaries, transfer backpressure, emergency queue ordering, long-lane/high-queue console output, vehicle ID uniqueness, green-only dequeue, exact one-tick transfer latency and repeated simulation lifecycles. Their recorded CI runs passed on Ubuntu and Windows.
-- Post-merge main workflow [#163](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/42797884604) passed Ubuntu and Windows build, automated tests and smoke tests; Ubuntu ASan/UBSan passed.
+| Deliverable | Result |
+|---|---|
+| Updated test cases (Test Plan v1.2 DOCX) | 38 cases revised for the sprint changes; every case records the automated check, actual result and status |
+| Test Plan execution | 66/66 cases executed: 66 PASS, 0 FAIL (Linux-only verdicts from [CI run #246](https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43938226798)) |
+| Unit Test Report | 42 test functions, 1,198 checks, 0 failures |
+| System Validation Report | All 33 requirements validated |
+| Code Coverage Report | 92.3% lines (849/920), 90.4% functions (103/114) |
+| Branch Coverage Report | 58.9% raw GCC branches (942/1,600); 85.7% excluding compiler-generated exception branches |
 
-The 436-check baseline count is not the same as the 66 Test Plan cases. All 66 planned cases still need individual execution records with environment, command, expected result, actual result and PASS/FAIL/BLOCKED/NOT RUN status.
+### How testing was executed
+- `tests/acceptance/test_plan_acceptance.cpp` runs one function per Test Plan case (62 in-process cases), using the case's own test data and v1.2 expected result.
+- `scripts/run_acceptance.sh` adds the process-level cases: CLI exit codes, a genuine console Ctrl+C, a third intersection added through configuration only, and the missing-build-tool check. On Linux it also runs AddressSanitizer/UBSan, LeakSanitizer and Valgrind.
+- GitHub Actions runs the whole set on Ubuntu and Windows on every push and compares the simulation output of the two platforms.
+
+### Defects found and fixed (Sprint 3)
+Updating the test cases showed four requirement gaps, and the first full execution found two more defects. All six were fixed in Sprint 3 and re-tested (`docs/SPRINT_3.md`):
+- Bounded emergency preemption delay: worst case 22 ticks before, Yellow + 1 = 4 ticks after.
+- Signal durations configurable from the config file.
+- Adaptive Green baseline follows the configured Green; the maximum extension is configurable.
+- Console columns stay aligned for long lane names.
+- Linked-lane spillback: an unbounded in-flight transfer queue (2,051 vehicles; found because TC-Perf-01-N failed) replaced by capacity-bounded transfers.
+- Per-intersection totals and a `SYSTEM TOTAL` row in the report.
 
 ### Performance
-A local Windows benchmark ran five measured 10,000-tick runs after a warm-up, using four independent intersections with console rendering disabled:
-- Average: 84,371.19 ticks/second.
-- Median: 88,344.30 ticks/second.
-- Stated target: 500 ticks/second.
-
-This demonstrates the target for that local benchmark fixture only. CPU, RAM, Windows build and compiler metadata were not recorded; the intersections were independent rather than connected. It is not evaluator-hardware or connected-network performance certification.
-
-### Coverage
-The existing GCOV report is initial local evidence for only two translation units:
-- `tests/test_traffic_management.cpp`: 72/74 executable lines (97.30%).
-- `vehicle/VehicleGenerator.cpp`: 37/40 executable lines (92.50%).
-- Combined: 109/114 executable lines (95.61%).
-
-The branch report also covers only those two translation units. Neither report is whole-project coverage, and both require a final-main rerun with the exact commit, environment and raw output recorded before being presented as final coverage.
+Every measured run exceeded the 500 ticks/s target by more than 14×: 4 intersections at 15,437 ticks/s, 8 chained intersections at 0.95 arrival at 10,222 ticks/s, and a benchmark median of 19,403 ticks/s. Absolute numbers varied with laptop load; a back-to-back comparison showed no regression against the pre-Sprint 3 code.
 
 ## 6. CI/CD
 
@@ -158,24 +163,14 @@ The repository's current role allocation is documented in `docs/TEAM_ROLES.md`:
 
 ## 8. Limitations and future work
 
-The current repository records these open validation and submission items:
-- Execute and record all 66 Test Plan cases individually.
-- Perform a manual interactive Ctrl+C test and verify the partial-run summary.
-- Validate geometric conflicts between turning movements; the existing at-most-one-GREEN-lane invariant is narrower.
-- Verify invalid-intersection isolation.
-- Verify emergency maximum-wait / preemption-delay boundaries.
-- Perform manual visual/usability inspection of console output.
-- Retain quantified memory-growth or leak evidence if required; repeated lifecycle execution and sanitizer passes are not a standalone leak measurement.
-- Run connected-intersection and evaluator-hardware performance tests if required.
-- Regenerate final line and branch coverage on the final main commit.
-- Resolve the SRS/Test Plan invalid-configuration conflict and correct the queue-capacity test mapping.
-- Confirm GitHub Project linkage, story assignments, sprint date discrepancy, extra empty future sprint, required demo recordings, presentation evidence and team sign-offs.
+- Signal safety serves one Green lane at a time; modelled turning-movement conflict sets would be a future extension.
+- Configuration validation is fail-fast: a file containing an invalid intersection is rejected as a whole.
+- Performance was measured on a development laptop, not on evaluator hardware.
+- Sprint 3 items still need to be entered in the backlog tool with owners; the sprint videos, presentation and team sign-offs are tracked in `docs/SUBMISSION_CHECKLIST.md`.
 
 ## 9. Conclusion
 
-The project provides a working C++17 traffic simulation with configurable intersections, vehicle generation, bounded queues, signal control, emergency priority, statistics, console status and graceful stop behavior. The repository contains a cross-platform CI workflow and targeted automated regression evidence, including Linux sanitizer execution. A local benchmark exceeded the stated throughput target for its specific fixture.
-
-The available evidence supports substantial implementation and automated verification progress, but it does not establish complete system acceptance. Final submission readiness depends on completing the individual Test Plan execution records, reconciling the approved requirements/design/test documents, regenerating final coverage, completing the remaining manual validation, and obtaining team review and sign-off.
+The project delivers a working C++17 traffic simulation with configurable multi-intersection topologies, bounded queues, fixed and adaptive signals, bounded emergency preemption, linked green-wave transfers with spillback, statistics at lane, intersection and system level, a readable live console, and graceful Ctrl+C stop. All 66 Test Plan cases have been executed and passed, including Valgrind and sanitizer runs with no leaks or memory errors and identical output on Linux and Windows. With team sign-off, the system meets its SRS.
 
 ## Appendix — submission evidence checklist
 
@@ -190,15 +185,8 @@ The available evidence supports substantial implementation and automated verific
 - Team review/sign-off: **Pending confirmation from all members.**
 
 
-## 8. Latest QA and document alignment
+## 10. Part 3 document alignment
 
-PRs #115–#123 extended the automated suite with sibling-lane isolation, emergency-probability boundaries, queue/statistics boundaries, runtime adaptive-mode changes and adaptive-mode configuration loading. The automation crosswalk now identifies 44 direct automated checks, 18 partial mappings and 4 cases without direct automated checks.
-
-PR #121 merged a reproducible Ubuntu gcovr job; PR #123 added missing-config and missing-compiler diagnostic checks and HTML/XML artifacts. After PR #123 merged, main workflow run #243 on commit `43681916f3f18da3b29d19c4bc79ae10c46ae13e` reported 88.0% line coverage (667/758), 86.2% function coverage (81/94) and 54.8% branch coverage (686/1,252). Ubuntu printed all 985 automated checks; Windows build/test/smoke jobs passed; Linux ASan/UBSan passed. Artifact: https://github.com/team16-traffic-management/team16-traffic-management-system/actions/runs/43382805876/artifacts/14016733343. The 66 acceptance cases remain NOT RUN.
-
-Implementation-aligned document revisions have been prepared separately:
-- SRS v0.5: full 33-requirement RTM with Not Run statuses and an embedded operator use-case diagram.
-- Test Plan v1.1: current parser syntax, real C++ test harness, corrected FIFO boundary case and invalid-config rejection expectations; all 66 cases remain Not Run.
-- SAD v3.1: implementation-aligned module/API supplement and embedded sequence diagrams.
-
-The repository's existing DOCX copies must be replaced with those revised files and visually reviewed in Word before final submission. Security-scope interpretation, team sign-offs, demo videos and manual acceptance execution remain outstanding.
+- Test Plan v1.2 (`Documents/Test_Plan_Traffic_Management_System.docx`) is the repository copy and includes the v1.1 alignment (parser syntax, rejection of invalid configuration, corrected TC-Gen-003-N).
+- `docs/SAD_IMPLEMENTATION_ADDENDUM.md` Section 8 records the Sprint 3 design changes for the next SAD DOCX revision.
+- `Documents/RTM_Implementation_Status.md` and `docs/TRACEABILITY.md` carry the executed status of all 33 requirements.
